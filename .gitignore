@@ -25,4 +25,4 @@ go.work.sum
 .env
 
 # Custom ignore files
-configuration/dbconf.yaml
+go/npcGen/configuration/dbconf.yaml
