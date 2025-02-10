@@ -1,0 +1,22 @@
+# Server Configurations
+server:
+  host: "localhost"
+  port: 5454
+
+# Database Configurations
+database:
+  db-name: "npcg"
+  user: "postgres"
+  password: "secret"
+  sslmode: "disable"
+  csv-path: "database/rawdata/csv"
+  json-path: "database/rawdata/json"
+  migration-path: "file://database/migrations"
+  req-files:
+    - "Fantasy_Names.csv"
+    - "Genders.csv"
+    - "NPC_Job_List_Fantasy.csv"
+    - "Races_5e.csv"
+    - "Sexual_Orientations.csv"
+  optional-files:
+    - "Fantasy_Names_NGrams.csv"
