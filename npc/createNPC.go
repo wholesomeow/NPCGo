@@ -30,6 +30,10 @@ func CreateName(config *configuration.Config) string {
 	return name
 }
 
+// TODO(wholesomeow): Implement enums into NPC here
+
+// TODO(wholesomeow): Implement create body type into NPC here
+
 func CreateNPC(config *configuration.Config) NPCBase {
 	var npc NPCBase
 	npc.Name = CreateName(config)

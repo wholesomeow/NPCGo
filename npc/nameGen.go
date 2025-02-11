@@ -34,6 +34,7 @@ func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int)
 
 	mc.n_gram = compilation
 
+	// TODO(wholesomeow): Move these to another config file
 	vowles := []string{"a", "e", "i", "o", "u"}
 	accepted_bigrams := []string{"br", "dr", "fr", "gr", "kr", "pr", "tr", "cr", "sn", "sw", "th",
 		"sh", "ch", "cl", "sl", "sm", "sn", "sp", "st", "sk", "bl", "fl",
@@ -53,6 +54,7 @@ func getStartPoint(mchain *MarkovChain) (string, string) {
 }
 
 func makeName(mchain *MarkovChain) string {
+	// TODO(wholesomeow): Implement better error checking and handling here
 	log.Print("start of name creation")
 	result, current_gram := getStartPoint(mchain)
 
