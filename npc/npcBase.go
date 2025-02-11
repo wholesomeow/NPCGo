@@ -4,14 +4,12 @@ import (
 	"fmt"
 )
 
+// TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
 type NPCBase struct {
-	UUID           int
-	Name           string
-	Social_Network [3]string //Putting 3 in for now, will need to research for proper implementation
-	CS_Dimension   string
-	REI_Data       string
+	UUID int
+	Name string
 }
 
-func (npc NPCBase) DisplayName() {
+func DisplayName(npc NPCBase) {
 	fmt.Printf("NPC Name: %s\n", npc.Name)
 }

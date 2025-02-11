@@ -93,3 +93,13 @@ func CheckFilePath(path string, required bool) bool {
 	}
 	return !found
 }
+
+func SliceContainsString(str string, slc []string) bool {
+	for _, char := range slc {
+		if char == str {
+			return true
+		}
+	}
+
+	return false
+}

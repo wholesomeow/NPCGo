@@ -11,7 +11,6 @@ import (
 	"strings"
 )
 
-// TODO(wholesomeow): Properly implement this to check for required files from config and rebuild optional files if not found
 func dbPreFlight(config *configuration.Config) {
 	log.Print("starting database pre-flight checks")
 
@@ -30,6 +29,9 @@ func dbPreFlight(config *configuration.Config) {
 		optional_path := fmt.Sprintf("%s/%s", csv_path, file)
 		found := utilities.CheckFilePath(optional_path, false)
 		optional_found = append(optional_found, found)
+
+		// TODO(wholesomeow): If file(s) not found, ask what should be rebuilt
+		// TODO(wholesomeow): Add force rebuild to CLI portion
 	}
 
 	// Build Optional data if files don't exist
@@ -44,26 +46,25 @@ func main() {
 	// Read in Database Config file
 	var config configuration.Config
 	conf_path := os.Args[1]
+	log.Printf("database conf file at path %s", conf_path)
 	utilities.ReadConfig(conf_path, &config)
 
 	// Run all Pre-Flight checks
 	dbPreFlight(&config)
 
-	// Create and populate Database if not already done
-	database.ConectDatabase(&config)
-	// TODO(wholesomeow): Figure out why program is exiting after migrations complete
-	arg := os.Args[2]
-	option := strings.ToUpper(arg)
-	database.MigrateDB(&config, option)
+	// If SKIP, then skip all database portions and build datafiles normally
+	if os.Args[2] != "SKIP" {
+		// Create and populate Database if not already done
+		database.ConectDatabase(&config)
+		// TODO(wholesomeow): Figure out why program is exiting after migrations complete
+		arg := os.Args[2]
+		option := strings.ToUpper(arg)
+		database.MigrateDB(&config, option)
+	} else {
+		log.Printf("reading in command line option %s", os.Args[2])
+	}
 
 	// Create NPC
-	var npc npc.NPCBase
-
-	npc.UUID = 412341234
-	npc.Name = "Test Name"
-	npc.Social_Network = [3]string{"person_1", "person_2", "person_3"}
-	npc.CS_Dimension = "up"
-	npc.REI_Data = "down"
-
-	npc.DisplayName()
+	npc_object := npc.CreateNPC(&config)
+	fmt.Printf("npc_object: %v\n", npc_object)
 }
