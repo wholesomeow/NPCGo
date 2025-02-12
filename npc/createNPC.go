@@ -33,8 +33,6 @@ func CreateName(config *configuration.Config) string {
 	return name
 }
 
-// TODO(wholesomeow): Implement enums into NPC here
-
 // TODO(wholesomeow): There's probably a better way to implement these values here
 func makeBMI(BMI float64) int {
 	if BMI <= 18.5 {
@@ -96,18 +94,56 @@ func CreateBodyType(cm float64, kg float64) npc.BodyType {
 	return npc.BodyType(body_select)
 }
 
+func CreateGenderType() npc.GenderType {
+	gender_select := rand.Intn(8) + 1
+	return npc.GenderType(gender_select)
+}
+
+// TODO(wholesomeow): Rework this to allow with mixing pronouns
+func CreatePronouns(gender npc.GenderType) string {
+	var pronouns string
+	r_val := rand.Intn(3) + 1
+	switch gender {
+	case 1:
+		pronouns = npc.Pronouns[4][0]
+	case 2:
+		pronouns = npc.Pronouns[r_val][0]
+	case 3: // TODO(wholesomeow): Figure out how to have sex influence pronoun selection for intersex cisgendered people
+		pronouns = npc.Pronouns[r_val][0]
+	case 4: // TODO(wholesomeow): Figure out how gender fluid people prefer to use pronouns
+		pronouns = npc.Pronouns[3][0]
+	case 5: // TODO(wholesomeow): Figure out how gender varient people prefer to use pronouns
+		pronouns = npc.Pronouns[r_val][0]
+	case 6:
+		pronouns = npc.Pronouns[4][0]
+	case 7:
+		pronouns = npc.Pronouns[1][0]
+	case 8:
+		pronouns = npc.Pronouns[2][0]
+	}
+
+	return pronouns
+}
+
 func CreateNPC(config *configuration.Config) NPCBase {
 	var npc NPCBase
 	npc.Name = CreateName(config)
 
+	// TODO(wholesomeow): Implement enums into NPC here
+	npc.NPCEnums.NPCType = 0 // Set to DEFAULT on init
+
 	ft, inch, lbs, inches := MakeSizeImperial()
 	cm, kg := MakeSizeMetric(inches, lbs)
+	npc.NPCEnums.BodyType = CreateBodyType(cm, kg)
+
+	npc.NPCEnums.GenderType = CreateGenderType()
+	npc.Pronouns = CreatePronouns(npc.NPCEnums.GenderType)
+
 	npc.NPCAppearance.Height_Ft = ft
 	npc.NPCAppearance.Height_In = inch
 	npc.NPCAppearance.Weight_Lbs = lbs
 	npc.NPCAppearance.Height_Cm = cm
 	npc.NPCAppearance.Weight_Kg = kg
-	npc.NPCEnums.BodyType = CreateBodyType(cm, kg)
 
 	return npc
 }

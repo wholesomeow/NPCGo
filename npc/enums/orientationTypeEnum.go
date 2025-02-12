@@ -21,14 +21,25 @@ const (
 )
 
 // map of enum states with descriptor
+var oriStateDesc = map[OrientationType]string{
+	ASEXUAL:    "Doesn't often experience sexual attraction.",
+	AROMANTIC:  "Doesn't often experience romantic attraction.",
+	STRAIGHT:   "Attracted to the sex/gender opposite their own on the spectrum.",
+	DEMISEXUAL: "Doesn't experience sexual attraction to someone unless they have a deep, emotional connection with them.",
+	GAY:        "Attracted to the sex/gender on the same side of the spectrum.",
+	BISEXUAL:   "Attracted to more than one gender or gender identity.",
+	PANSEXUAL:  "Attracted to the person rather than their sex, gender, or gender identity.",
+}
+
+// map of enum states with descriptor
 var oriStateName = map[OrientationType]string{
-	ASEXUAL:    "Male descriptor",
-	AROMANTIC:  "Female descriptor",
-	STRAIGHT:   "Straight descriptor",
-	DEMISEXUAL: "Demisexual descriptor",
-	GAY:        "Gay descriptor",
-	BISEXUAL:   "Bisexual descriptor",
-	PANSEXUAL:  "Pansexual descriptor",
+	ASEXUAL:    "ASEXUAL",
+	AROMANTIC:  "AROMANTIC",
+	STRAIGHT:   "STRAIGHT",
+	DEMISEXUAL: "DEMISEXUAL",
+	GAY:        "GAY",
+	BISEXUAL:   "BISEXUAL",
+	PANSEXUAL:  "PANSEXUAL",
 }
 
 // string func takes state and returns descriptor

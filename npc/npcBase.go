@@ -17,14 +17,11 @@ type NPCBase struct {
 	// REI
 
 	// v0.2
-	// Type
 	// Race
 	// Sex
-	// Gender
-	// Pronouns
+	Pronouns string
 	// Sexual Orientation
-	// Collector for all NPC Enums
-	NPCEnums struct {
+	NPCEnums struct { // Collector for all NPC Enums
 		npc.NPCType
 		npc.BodyType
 		npc.GenderType

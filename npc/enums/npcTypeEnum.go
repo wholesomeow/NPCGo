@@ -24,18 +24,33 @@ const (
 )
 
 // map of enum states with descriptor
+var npcStateDesc = map[NPCType]string{
+	DEFAULT:   "Default NPC State",
+	MAIN:      "This NPC is a main character in the plot",
+	SIDE:      "This NPC is a side character in the plot",
+	IMPORTANT: "This NPC is a important character in the plot",
+	RETURNING: "This NPC is a returning character in the plot",
+	ONEOFF:    "This NPC is a one-off character in the plot",
+	COMPANION: "This NPC is a companion to the party",
+	FRIEND:    "This NPC is a friend to the party",
+	NEUTRAL:   "This NPC is neutral to the party",
+	ENEMY:     "This NPC is an enemy to the party",
+	DEAD:      "This NPC is dead",
+}
+
+// map of enum states with descriptor
 var npcStateName = map[NPCType]string{
-	DEFAULT:   "Default descriptor",
-	MAIN:      "Main descriptor",
-	SIDE:      "Side descriptor",
-	IMPORTANT: "Important descriptor",
-	RETURNING: "Returning descriptor",
-	ONEOFF:    "One-off descriptor",
-	COMPANION: "Companion descriptor",
-	FRIEND:    "Friend descriptor",
-	NEUTRAL:   "Neutral descriptor",
-	ENEMY:     "Enemy descriptor",
-	DEAD:      "Dead descriptor",
+	DEFAULT:   "DEFAULT",
+	MAIN:      "MAIN",
+	SIDE:      "SIDE",
+	IMPORTANT: "IMPORTANT",
+	RETURNING: "RETURNING",
+	ONEOFF:    "ONEOFF",
+	COMPANION: "COMPANION",
+	FRIEND:    "FRIEND",
+	NEUTRAL:   "NEUTRAL",
+	ENEMY:     "ENEMY",
+	DEAD:      "DEAD",
 }
 
 // string func takes state and returns descriptor

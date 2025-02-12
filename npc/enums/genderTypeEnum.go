@@ -8,6 +8,12 @@ import (
 // Enum for the Gender type of an NPC. Returns a unique int as a descriptor of that state.
 type GenderType int
 
+var Pronouns = map[int][]string{
+	1: {"he", "him"},
+	2: {"she", "her"},
+	3: {"they", "them"},
+}
+
 // TODO(wholesomeow): Update these values to contribute to UUID
 // const value of enum states
 const (
@@ -21,16 +27,16 @@ const (
 	TRANSGENDERWOMAN GenderType = 8
 )
 
-// map of enum states with descriptor
+// map of enum states
 var genStateName = map[GenderType]string{
-	AGENDER:          "Agender descriptor",
-	BIGENDER:         "Bi gender descriptor",
-	CISGENDER:        "Cis gender descriptor",
-	GENDERFLUID:      "Gender fluid descriptor",
-	GENDERVARIANT:    "Gender variant descriptor",
-	NONBINARY:        "Nonbinary descriptor",
-	TRANSGENDERMAN:   "Transgender man descriptor",
-	TRANSGENDERWOMAN: "Transgender woman descriptor",
+	AGENDER:          "AGENDER",
+	BIGENDER:         "BIGENDER",
+	CISGENDER:        "CISGENDER",
+	GENDERFLUID:      "GENDERFLUID",
+	GENDERVARIANT:    "GENDERVARIANT",
+	NONBINARY:        "NONBINARY",
+	TRANSGENDERMAN:   "TRANSGENDERMAN",
+	TRANSGENDERWOMAN: "TRANSGENDERWOMAN",
 }
 
 // string func takes state and returns descriptor
