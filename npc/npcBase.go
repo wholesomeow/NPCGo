@@ -2,6 +2,7 @@ package npc
 
 import (
 	"fmt"
+	npc "go/npcGen/npc/enums"
 )
 
 // TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
@@ -22,8 +23,21 @@ type NPCBase struct {
 	// Gender
 	// Pronouns
 	// Sexual Orientation
-	// Body Type
-	// Height and Weight
+	// Collector for all NPC Enums
+	NPCEnums struct {
+		npc.NPCType
+		npc.BodyType
+		npc.GenderType
+		npc.SexType
+		npc.OrientationType
+	}
+	NPCAppearance struct {
+		Height_Ft  int
+		Height_In  int
+		Weight_Lbs int
+		Height_Cm  float64
+		Weight_Kg  float64
+	}
 
 	// v1.0
 	// Social Role

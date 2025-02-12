@@ -4,6 +4,8 @@ go 1.22.5
 
 replace go/npcGen/npc => ../npc
 
+replace go/npcGen/npc/enums => ../npc/enums
+
 replace go/npcGen/database => ../database
 
 replace go/npcGen/utilities => ../utilities

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go/npcGen/configuration"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -102,4 +103,16 @@ func SliceContainsString(str string, slc []string) bool {
 	}
 
 	return false
+}
+
+func ImperialToMetric(inches int, lbs int) (float64, float64) {
+	cm := float64(inches) * 2.54
+	kg := float64(lbs) * 0.453592
+
+	return cm, kg
+}
+
+func RoundToDecimal(number float64, decimals int) float64 {
+	multiplier := math.Pow(10, float64(decimals))
+	return math.Round(number*multiplier) / multiplier
 }

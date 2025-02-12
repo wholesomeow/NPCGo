@@ -2,7 +2,10 @@ package npc
 
 import (
 	"go/npcGen/configuration"
+	npc "go/npcGen/npc/enums"
+	"go/npcGen/utilities"
 	"log"
+	"math/rand"
 	"time"
 )
 
@@ -32,11 +35,79 @@ func CreateName(config *configuration.Config) string {
 
 // TODO(wholesomeow): Implement enums into NPC here
 
-// TODO(wholesomeow): Implement create body type into NPC here
+// TODO(wholesomeow): There's probably a better way to implement these values here
+func makeBMI(BMI float64) int {
+	if BMI <= 18.5 {
+		return 1
+	} else if 18.5 < BMI || BMI <= 24.9 {
+		return 2
+	} else if 25 < BMI || BMI <= 29.29 {
+		return 3
+	} else {
+		return 4
+	}
+}
+
+// TODO(wholesomeow): There's probably a better way to implement these values here
+func MakeSizeImperial() (int, int, int, int) {
+	ft := 0
+	inch := 0
+	lbs := 0
+
+	ft_medium := []int{4, 5, 6, 7}
+	ft_small := []int{2, 3}
+
+	lbs_min := 110
+	lbs_max := 250
+
+	r_height := rand.Intn(2)
+	if r_height == 0 {
+		ft = ft_medium[rand.Intn(len(ft_medium))]
+		inch = rand.Intn(11)
+		lbs = rand.Intn(lbs_max-lbs_min+1) + lbs_min
+	} else {
+		ft = ft_small[rand.Intn(len(ft_small))]
+		inch = rand.Intn(11)
+		lbs = rand.Intn(lbs_max-lbs_min+1) + lbs_min
+	}
+
+	inches := (ft * 12) + inch
+
+	return ft, inch, lbs, inches
+}
+
+func MakeSizeMetric(inches int, lbs int) (float64, float64) {
+	return utilities.ImperialToMetric(inches, lbs)
+}
+
+// TODO(wholesomeow): There's probably a better way to implement these values here
+func CreateBodyType(cm float64, kg float64) npc.BodyType {
+	meters := cm / 100
+	meters_square := meters * meters
+	BMI := utilities.RoundToDecimal((kg / meters_square), 2)
+
+	health_min := 5
+	health_max := 7
+	health_level := rand.Intn(health_max-health_min+1) + health_min
+
+	body_id := makeBMI(BMI)
+	body_select := health_level * body_id
+
+	return npc.BodyType(body_select)
+}
 
 func CreateNPC(config *configuration.Config) NPCBase {
 	var npc NPCBase
 	npc.Name = CreateName(config)
+
+	ft, inch, lbs, inches := MakeSizeImperial()
+	cm, kg := MakeSizeMetric(inches, lbs)
+	npc.NPCAppearance.Height_Ft = ft
+	npc.NPCAppearance.Height_In = inch
+	npc.NPCAppearance.Weight_Lbs = lbs
+	npc.NPCAppearance.Height_Cm = cm
+	npc.NPCAppearance.Weight_Kg = kg
+	npc.NPCEnums.BodyType = CreateBodyType(cm, kg)
 
 	return npc
 }
