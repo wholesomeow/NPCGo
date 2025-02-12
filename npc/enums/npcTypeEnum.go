@@ -53,7 +53,12 @@ var npcStateName = map[NPCType]string{
 	DEAD:      "DEAD",
 }
 
-// string func takes state and returns descriptor
+// string func takes state and returns string descriptor
+func GetNPCStateDescription(npc_state NPCType) string {
+	return npcStateDesc[npc_state]
+}
+
+// string func takes state and returns string name
 func NPCStateToString(npc_state NPCType) string {
 	return npcStateName[npc_state]
 }
@@ -68,7 +73,7 @@ func checkNPCTransitionState(state NPCType, desired_state string) bool {
 // Transitions current state of the enum to a specific desired state.
 // Takes in a string and the enum and returns the updated enum.
 // Returns enum in it's original state if desired state cannot be transitioned to.
-func npcTransition(state NPCType, desired_state string) NPCType {
+func NPCTransition(state NPCType, desired_state string) NPCType {
 	desired_state = strings.ToUpper(desired_state)
 	switch desired_state {
 	case "DEFAULT":

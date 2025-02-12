@@ -8,6 +8,7 @@ import (
 // Enum for the Sex type of an NPC. Returns a unique int as a descriptor of that state.
 type SexType int
 
+// TODO(wholesomeow): I'm sure there's more depth to be added here for intersex people and others I'm not aware of
 // const value of enum states
 const (
 	MALE   SexType = 1
@@ -15,14 +16,14 @@ const (
 	OTHER  SexType = 3
 )
 
-// map of enum states with descriptor
+// map of enum states
 var sexStateName = map[SexType]string{
-	MALE:   "Male descriptor",
-	FEMALE: "Female descriptor",
-	OTHER:  "Other descriptor",
+	MALE:   "MALE",
+	FEMALE: "FEMALE",
+	OTHER:  "OTHER",
 }
 
-// string func takes state and returns descriptor
+// string func takes state and returns string name
 func SexStateToString(sex_state SexType) string {
 	return sexStateName[sex_state]
 }
@@ -37,7 +38,7 @@ func checkSexTransitionState(sex_state SexType, desired_state string) bool {
 // Transitions current state of the enum to a specific desired state.
 // Takes in a string and the enum and returns the updated enum.
 // Returns enum in it's original state if desired state cannot be transitioned to.
-func sexTransition(sex_state SexType, desired_state string) SexType {
+func SexTransition(sex_state SexType, desired_state string) SexType {
 	desired_state = strings.ToUpper(desired_state)
 	switch desired_state {
 	case "MALE":

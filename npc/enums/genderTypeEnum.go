@@ -14,6 +14,12 @@ var Pronouns = map[int][]string{
 	3: {"they", "them"},
 }
 
+const (
+	Masc_Pronouns    int = 1
+	Femme_Pronouns   int = 2
+	Neutral_Pronouns int = 3
+)
+
 // TODO(wholesomeow): Update these values to contribute to UUID
 // const value of enum states
 const (
@@ -28,7 +34,7 @@ const (
 )
 
 // map of enum states
-var genStateName = map[GenderType]string{
+var GenStateName = map[GenderType]string{
 	AGENDER:          "AGENDER",
 	BIGENDER:         "BIGENDER",
 	CISGENDER:        "CISGENDER",
@@ -41,7 +47,7 @@ var genStateName = map[GenderType]string{
 
 // string func takes state and returns descriptor
 func GenStateToString(gen_state GenderType) string {
-	return genStateName[gen_state]
+	return GenStateName[gen_state]
 }
 
 // Checks if the desired state of the enum matches the current state of the enum.
@@ -54,7 +60,7 @@ func checkGenTransitionState(gen_state GenderType, desired_state string) bool {
 // Transitions current state of the enum to a specific desired state.
 // Takes in a string and the enum and returns the updated enum.
 // Returns enum in it's original state if desired state cannot be transitioned to.
-func genTransition(gen_state GenderType, desired_state string) GenderType {
+func GenTransition(gen_state GenderType, desired_state string) GenderType {
 	desired_state = strings.ToUpper(desired_state)
 	switch desired_state {
 	case "AGENDER":

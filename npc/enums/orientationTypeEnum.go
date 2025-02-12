@@ -32,7 +32,7 @@ var oriStateDesc = map[OrientationType]string{
 }
 
 // map of enum states with descriptor
-var oriStateName = map[OrientationType]string{
+var OriStateName = map[OrientationType]string{
 	ASEXUAL:    "ASEXUAL",
 	AROMANTIC:  "AROMANTIC",
 	STRAIGHT:   "STRAIGHT",
@@ -42,9 +42,14 @@ var oriStateName = map[OrientationType]string{
 	PANSEXUAL:  "PANSEXUAL",
 }
 
-// string func takes state and returns descriptor
+// string func takes state and returns string description
+func GetOriDescription(ori_state OrientationType) string {
+	return oriStateDesc[ori_state]
+}
+
+// string func takes state and returns string name
 func OriStateToString(ori_state OrientationType) string {
-	return oriStateName[ori_state]
+	return OriStateName[ori_state]
 }
 
 // Checks if the desired state of the enum matches the current state of the enum.
@@ -57,7 +62,7 @@ func checkOriTransitionState(ori_state OrientationType, desired_state string) bo
 // Transitions current state of the enum to a specific desired state.
 // Takes in a string and the enum and returns the updated enum.
 // Returns enum in it's original state if desired state cannot be transitioned to.
-func oriTransition(ori_state OrientationType, desired_state string) OrientationType {
+func OriTransition(ori_state OrientationType, desired_state string) OrientationType {
 	desired_state = strings.ToUpper(desired_state)
 	switch desired_state {
 	case "ASEXUAL":

@@ -94,35 +94,47 @@ func CreateBodyType(cm float64, kg float64) npc.BodyType {
 	return npc.BodyType(body_select)
 }
 
+func CreateSexType() npc.SexType {
+	sex_select := rand.Intn(3) + 1
+	return npc.SexType(sex_select)
+}
+
 func CreateGenderType() npc.GenderType {
-	gender_select := rand.Intn(8) + 1
+	gender_select := rand.Intn(len(npc.GenStateName)) + 1
 	return npc.GenderType(gender_select)
 }
 
-// TODO(wholesomeow): Rework this to allow with mixing pronouns
+// TODO(wholesomeow): Rework this to allow mixing pronouns
+// TODO(wholesomeow): Rework this to be more clear with case to pronoun mapping
 func CreatePronouns(gender npc.GenderType) string {
 	var pronouns string
-	r_val := rand.Intn(3) + 1
+	// TODO(wholesomeow): Rework better random selection
+	r_val := rand.Intn(len(npc.Pronouns)) + 1
 	switch gender {
 	case 1:
-		pronouns = npc.Pronouns[4][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
 	case 2:
 		pronouns = npc.Pronouns[r_val][0]
 	case 3: // TODO(wholesomeow): Figure out how to have sex influence pronoun selection for intersex cisgendered people
 		pronouns = npc.Pronouns[r_val][0]
 	case 4: // TODO(wholesomeow): Figure out how gender fluid people prefer to use pronouns
-		pronouns = npc.Pronouns[3][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
 	case 5: // TODO(wholesomeow): Figure out how gender varient people prefer to use pronouns
 		pronouns = npc.Pronouns[r_val][0]
 	case 6:
-		pronouns = npc.Pronouns[4][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
 	case 7:
-		pronouns = npc.Pronouns[1][0]
+		pronouns = npc.Pronouns[npc.Masc_Pronouns][0]
 	case 8:
-		pronouns = npc.Pronouns[2][0]
+		pronouns = npc.Pronouns[npc.Femme_Pronouns][0]
 	}
 
 	return pronouns
+}
+
+func CreateOrientationType() npc.OrientationType {
+	orientation_select := rand.Intn(len(npc.OriStateName)) + 1
+	return npc.OrientationType(orientation_select)
 }
 
 func CreateNPC(config *configuration.Config) NPCBase {
@@ -132,12 +144,18 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	// TODO(wholesomeow): Implement enums into NPC here
 	npc.NPCEnums.NPCType = 0 // Set to DEFAULT on init
 
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	ft, inch, lbs, inches := MakeSizeImperial()
 	cm, kg := MakeSizeMetric(inches, lbs)
 	npc.NPCEnums.BodyType = CreateBodyType(cm, kg)
 
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	npc.NPCEnums.SexType = CreateSexType()
 	npc.NPCEnums.GenderType = CreateGenderType()
 	npc.Pronouns = CreatePronouns(npc.NPCEnums.GenderType)
+
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	npc.NPCEnums.OrientationType = CreateOrientationType()
 
 	npc.NPCAppearance.Height_Ft = ft
 	npc.NPCAppearance.Height_In = inch

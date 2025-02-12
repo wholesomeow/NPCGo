@@ -17,17 +17,15 @@ type NPCBase struct {
 	// REI
 
 	// v0.2
-	// Race
-	// Sex
-	Pronouns string
-	// Sexual Orientation
+	// Race - Will need to be its own struct
 	NPCEnums struct { // Collector for all NPC Enums
 		npc.NPCType
 		npc.BodyType
-		npc.GenderType
 		npc.SexType
+		npc.GenderType
 		npc.OrientationType
 	}
+	Pronouns      string
 	NPCAppearance struct {
 		Height_Ft  int
 		Height_In  int

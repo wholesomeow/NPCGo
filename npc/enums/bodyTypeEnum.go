@@ -24,20 +24,20 @@ const (
 	FAT     BodyType = 28
 )
 
-// map of enum states with descriptor
+// map of enum states
 var bodStateName = map[BodyType]string{
-	SINEWY:  "SINEWY descriptor",
-	LEAN:    "Bi gender descriptor",
-	BUFF:    "Cis gender descriptor",
-	BUILT:   "Gender fluid descriptor",
-	THIN:    "Gender variant descriptor",
-	AVERAGE: "AVERAGE descriptor",
-	BIGGER:  "Transgender man descriptor",
-	LARGE:   "Transgender woman descriptor",
-	REEDY:   "Transgender woman descriptor",
-	SOFT:    "Transgender woman descriptor",
-	PLUMP:   "Transgender woman descriptor",
-	FAT:     "Transgender woman descriptor",
+	SINEWY:  "SINEWY",
+	LEAN:    "LEAN",
+	BUFF:    "BUFF",
+	BUILT:   "BUILT",
+	THIN:    "THIN",
+	AVERAGE: "AVERAGE",
+	BIGGER:  "BIGGER",
+	LARGE:   "LARGE",
+	REEDY:   "REEDY",
+	SOFT:    "SOFT",
+	PLUMP:   "PLUMP",
+	FAT:     "FAT",
 }
 
 // string func takes state and returns descriptor
@@ -55,7 +55,7 @@ func checkBodTransitionState(bod_state BodyType, desired_state string) bool {
 // Transitions current state of the enum to a specific desired state.
 // Takes in a string and the enum and returns the updated enum.
 // Returns enum in it's original state if desired state cannot be transitioned to.
-func bodTransition(bod_state BodyType, desired_state string) BodyType {
+func BodTransition(bod_state BodyType, desired_state string) BodyType {
 	desired_state = strings.ToUpper(desired_state)
 	switch desired_state {
 	case "SINEWY":
