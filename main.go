@@ -42,10 +42,10 @@ func dbPreFlight(config *configuration.Config) {
 }
 
 func main() {
-	// Usage: go run main.go ./configuration/dbconf.yaml UP
+	// Usage: go run main.go UP
 	// Read in Database Config file
 	var config configuration.Config
-	conf_path := os.Args[1]
+	conf_path := "configuration/dbconf.yaml"
 	log.Printf("database conf file at path %s", conf_path)
 	utilities.ReadConfig(conf_path, &config)
 
@@ -53,11 +53,11 @@ func main() {
 	dbPreFlight(&config)
 
 	// If SKIP, then skip all database portions and build datafiles normally
-	if os.Args[2] != "SKIP" {
+	if os.Args[1] != "SKIP" {
 		// Create and populate Database if not already done
 		database.ConectDatabase(&config)
 		// TODO(wholesomeow): Figure out why program is exiting after migrations complete
-		arg := os.Args[2]
+		arg := os.Args[1]
 		option := strings.ToUpper(arg)
 		database.MigrateDB(&config, option)
 	} else {

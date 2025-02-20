@@ -1,20 +1,36 @@
 package npc
 
 import (
-	"fmt"
 	npc "go/npcGen/npc/enums"
 )
 
 // TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
 type NPCBase struct {
 	// v0.1
-	UUID int
-	Name string
-	// OCEAN
+	UUID  int
+	Name  string
+	OCEAN struct {
+		Aspect      []float64
+		Description []string
+		Use         string
+	}
 	// Enneagram
-	// MICE
-	// CS
-	// REI
+	MICE struct {
+		Aspect      string
+		Description string
+		Use         string
+	}
+	CS struct {
+		Aspect      string
+		Data        [2]int
+		Description string
+		Use         string
+	}
+	REI struct {
+		Aspect      string
+		Description string
+		Use         string
+	}
 
 	// v0.2
 	// Race - Will need to be its own struct
@@ -47,6 +63,10 @@ type NPCBase struct {
 	// Jobs Known
 }
 
-func DisplayName(npc NPCBase) {
-	fmt.Printf("NPC Name: %s\n", npc.Name)
+func GetAllNPCData(npc NPCBase) NPCBase {
+	return npc
+}
+
+func GetName(npc NPCBase) string {
+	return npc.Name
 }

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func ReadCSV(path string) [][]string {
+func ReadCSV(path string, header bool) [][]string {
 	// Open CSV File
 	log.Printf("reading %s file", path)
 	f, err := os.OpenFile(path, os.O_RDONLY, 0)
@@ -25,6 +25,11 @@ func ReadCSV(path string) [][]string {
 	// Read CSV File
 	reader := csv.NewReader(f)
 	data, err := reader.ReadAll()
+
+	// If csv has a header row, remove that row from the parsed data
+	if header {
+		data = data[1:]
+	}
 	if err != nil {
 		log.Printf("error reading CSV: %s", err)
 	}
@@ -105,6 +110,9 @@ func SliceContainsString(str string, slc []string) bool {
 	return false
 }
 
+// TODO(wholesomeow): Implement RandomRange function that uses generics and optional parameters to return random value in a range
+//                    This function -> r_val := rand.Intn(len(npc.Pronouns)) + 1
+
 func ImperialToMetric(inches int, lbs int) (float64, float64) {
 	cm := float64(inches) * 2.54
 	kg := float64(lbs) * 0.453592
@@ -115,4 +123,20 @@ func ImperialToMetric(inches int, lbs int) (float64, float64) {
 func RoundToDecimal(number float64, decimals int) float64 {
 	multiplier := math.Pow(10, float64(decimals))
 	return math.Round(number*multiplier) / multiplier
+}
+
+func ChangeWorkingDir(path_diff string) error {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	// Change to project root before executing test
+	root := filepath.Join(cwd, path_diff)
+	err = os.Chdir(root)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

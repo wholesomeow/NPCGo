@@ -22,7 +22,7 @@ type MarkovChain struct {
 func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int) {
 	//Get data from some place here, if no data then error
 	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.OptionalFiles[0])
-	n_grams := utilities.ReadCSV(path)
+	n_grams := utilities.ReadCSV(path, false)
 	compilation := map[string][]string{}
 
 	// Split n_gram values into key and value slices

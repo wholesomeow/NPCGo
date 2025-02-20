@@ -1,14 +1,17 @@
 package npc
 
 import (
+	"fmt"
 	"go/npcGen/configuration"
 	npc "go/npcGen/npc/enums"
 	"go/npcGen/utilities"
 	"log"
+	"math"
 	"math/rand"
 	"time"
 )
 
+// --------------------------------------------------- CREATE NPC NAME BEGIN ---------------------------------------------------
 func CreateName(config *configuration.Config) string {
 	var mchain MarkovChain
 	var name string
@@ -33,6 +36,7 @@ func CreateName(config *configuration.Config) string {
 	return name
 }
 
+// --------------------------------------------------- CREATE NPC BODY BEGIN ---------------------------------------------------
 // TODO(wholesomeow): There's probably a better way to implement these values here
 func makeBMI(BMI float64) int {
 	if BMI <= 18.5 {
@@ -94,6 +98,7 @@ func CreateBodyType(cm float64, kg float64) npc.BodyType {
 	return npc.BodyType(body_select)
 }
 
+// --------------------------------------------------- CREATE NPC SEX-GENDER-SEXUAL ORIENTATION BEGIN ---------------------------------------------------
 func CreateSexType() npc.SexType {
 	sex_select := rand.Intn(3) + 1
 	return npc.SexType(sex_select)
@@ -137,9 +142,106 @@ func CreateOrientationType() npc.OrientationType {
 	return npc.OrientationType(orientation_select)
 }
 
+// --------------------------------------------------- CREATE NPC MICE BEGIN ---------------------------------------------------
+func CreateMICE(mice_data [][]string) (string, string, string) {
+	r_val := rand.Intn(len(mice_data)) + 1
+	selection := mice_data[r_val]
+
+	aspect := selection[1]
+	description := selection[3]
+	use := "used to list the primary reasons why someone would become a spy, insider threat, or collaborate with a hostile organization"
+
+	return aspect, description, use
+}
+
+func CreateCSData(cs_data [][]string) (string, [2]int, string, string) {
+	var cs_coords = [2]int{0, 0}
+	var selection = []string{}
+
+	min := -100
+	max := 100
+	cs_coords[0] = rand.Intn((max - min + 1)) + min
+	cs_coords[1] = rand.Intn((max - min + 1)) + min
+
+	if cs_coords[0] <= 0 && cs_coords[1] <= 0 {
+		selection = cs_data[0]
+	} else if cs_coords[0] <= 0 && cs_coords[1] >= 0 {
+		selection = cs_data[1]
+	} else if cs_coords[0] >= 0 && cs_coords[1] >= 0 {
+		selection = cs_data[2]
+	} else if cs_coords[0] >= 0 && cs_coords[1] <= 0 {
+		selection = cs_data[3]
+	}
+
+	aspect := selection[1]
+	description := selection[3]
+	use := "used to quantify at which cognitive aspects a person either excels at, struggles with, or a combination of both"
+
+	return aspect, cs_coords, description, use
+}
+
+func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string, string) {
+	aspect := []float64{}
+	ocean_cast := []float64{}
+
+	for idx := range ocean_data {
+		// X Coord cast first
+		if ocean_data[idx][0] == "-100" {
+			ocean_cast = append(ocean_cast, -100.0)
+		} else if ocean_data[idx][0] == "-0" {
+			ocean_cast = append(ocean_cast, 0.0)
+		} else {
+			ocean_cast = append(ocean_cast, 100.0)
+		}
+
+		// Y Coord cast second
+		if ocean_data[idx][1] == "-100" {
+			ocean_cast = append(ocean_cast, -100.0)
+		} else if ocean_data[idx][1] == "-0" || ocean_data[idx][1] == "0" {
+			ocean_cast = append(ocean_cast, 0.0)
+		} else {
+			ocean_cast = append(ocean_cast, 100.0)
+		}
+
+		// Variable casting
+		x1 := ocean_cast[0]
+		y1 := ocean_cast[1]
+		x2 := float64(cs_data[0])
+		y2 := float64(cs_data[1])
+
+		out := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
+		aspect = append(aspect, out)
+	}
+
+	description := []string{}
+	description = append(description, "A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative.")
+	description = append(description, "A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent.")
+	description = append(description, "A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle.")
+	description = append(description, "A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial.")
+	description = append(description, "A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings.")
+
+	use := "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
+
+	return aspect, description, use
+}
+
+// --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) NPCBase {
 	var npc NPCBase
+	// TOOD(wholesomeow): Create UUID function here
 	npc.Name = CreateName(config)
+
+	// Read in the CS Data csv file
+	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[5])
+	cognitive_data := utilities.ReadCSV(path, true)
+	mice_data := cognitive_data[:3]
+	cs_data := cognitive_data[4:7]
+	ocean_data := cognitive_data[8:12]
+	// enneagram_centers := cognitive_data[13:]
+
+	npc.MICE.Aspect, npc.MICE.Description, npc.MICE.Use = CreateMICE(mice_data)
+	npc.CS.Aspect, npc.CS.Data, npc.CS.Description, npc.CS.Use = CreateCSData(cs_data)
+	npc.OCEAN.Aspect, npc.OCEAN.Description, npc.OCEAN.Use = CreateOCEANData(ocean_data, npc.CS.Data)
 
 	// TODO(wholesomeow): Implement enums into NPC here
 	npc.NPCEnums.NPCType = 0 // Set to DEFAULT on init

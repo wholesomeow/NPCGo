@@ -11,7 +11,7 @@ import (
 
 func BuildNGramFromData(config *configuration.Config) {
 	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[0])
-	pre_name_data := utilities.ReadCSV(path)
+	pre_name_data := utilities.ReadCSV(path, false)
 	var collected_strings strings.Builder
 
 	// Dump the csv data into a single slice
