@@ -9,9 +9,9 @@ import (
 type GenderType int
 
 var Pronouns = map[int][]string{
-	1: {"he", "him"},
-	2: {"she", "her"},
-	3: {"they", "them"},
+	1: {"he", "him", "his"},
+	2: {"she", "her", "hers"},
+	3: {"they", "them", "theirs"},
 }
 
 const (
@@ -34,6 +34,18 @@ const (
 )
 
 // map of enum states
+var genStateDesc = map[GenderType]string{
+	AGENDER:          "Not having a gender or identifying with a gender.",
+	BIGENDER:         "A person who fluctuates between traditionally “male” and “female” gender-based behaviours and identities.",
+	CISGENDER:        "A person whose gender identity and biological sex assigned at birth are the same.",
+	GENDERFLUID:      "A person who is gender fluid may always feel like a mix of the two traditional genders but may feel more man some days, and more woman other days.",
+	GENDERVARIANT:    "Someone who either by nature or by choice does not conform to gender-based expectations of society.",
+	NONBINARY:        "A gender identity and an umbrella term for people whose identity falls outside of the binary of male and female.",
+	TRANSGENDERMAN:   "A term used to describe someone who is assigned female at birth but identifies and lives as a man.",
+	TRANSGENDERWOMAN: "A term used to describe someone who is assigned male at birth but identifies and lives as a woman.",
+}
+
+// map of enum states
 var GenStateName = map[GenderType]string{
 	AGENDER:          "AGENDER",
 	BIGENDER:         "BIGENDER",
@@ -43,6 +55,11 @@ var GenStateName = map[GenderType]string{
 	NONBINARY:        "NONBINARY",
 	TRANSGENDERMAN:   "TRANSGENDERMAN",
 	TRANSGENDERWOMAN: "TRANSGENDERWOMAN",
+}
+
+// string func takes state and returns string descriptor
+func GetGenderDescription(gen_state GenderType) string {
+	return genStateDesc[gen_state]
 }
 
 // string func takes state and returns descriptor

@@ -79,5 +79,5 @@ func main() {
 
 	// Create NPC
 	npc_object := npc.CreateNPC(&config)
-	fmt.Printf("npc_object: %v\n", npc_object)
+	fmt.Println(npc.DataToJSON(npc_object))
 }

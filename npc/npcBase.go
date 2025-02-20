@@ -1,6 +1,7 @@
 package npc
 
 import (
+	"encoding/json"
 	npc "go/npcGen/npc/enums"
 )
 
@@ -40,7 +41,25 @@ type NPCBase struct {
 		npc.GenderType
 		npc.OrientationType
 	}
-	Pronouns      string
+	NPCType struct {
+		Name        string
+		Description string
+	}
+	BodyType struct {
+		Name string
+	}
+	Sex struct {
+		Name string
+	}
+	Gender struct {
+		Name        string
+		Description string
+	}
+	SexualOrientation struct {
+		Name        string
+		Description string
+	}
+	Pronouns      []string
 	NPCAppearance struct {
 		Height_Ft  int
 		Height_In  int
@@ -64,6 +83,12 @@ type NPCBase struct {
 
 func GetAllNPCData(npc NPCBase) NPCBase {
 	return npc
+}
+
+func DataToJSON(npc NPCBase) string {
+	result, _ := json.MarshalIndent(npc, "", "  ")
+
+	return string(result)
 }
 
 func GetName(npc NPCBase) string {

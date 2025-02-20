@@ -42,6 +42,7 @@ func CreateName(config *configuration.Config) string {
 // --------------------------------------------------- CREATE NPC BODY BEGIN ---------------------------------------------------
 // TODO(wholesomeow): There's probably a better way to implement these values here
 func makeBMI(BMI float64) int {
+	log.Print("creating NPC BMI")
 	if BMI <= 18.5 {
 		return 1
 	} else if 18.5 < BMI || BMI <= 24.9 {
@@ -87,6 +88,7 @@ func MakeSizeMetric(inches int, lbs int) (float64, float64) {
 
 // TODO(wholesomeow): There's probably a better way to implement these values here
 func CreateBodyType(cm float64, kg float64) npc.BodyType {
+	log.Print("creating NPC body type")
 	meters := cm / 100
 	meters_square := meters * meters
 	BMI := utilities.RoundToDecimal((kg / meters_square), 2)
@@ -103,61 +105,68 @@ func CreateBodyType(cm float64, kg float64) npc.BodyType {
 
 // --------------------------------------------------- CREATE NPC SEX-GENDER-SEXUAL ORIENTATION BEGIN ---------------------------------------------------
 func CreateSexType() npc.SexType {
+	log.Print("selecting NPC Sex")
 	sex_select := rand.Intn(3) + 1
 	return npc.SexType(sex_select)
 }
 
 func CreateGenderType() npc.GenderType {
+	log.Print("selecting NPC Gender")
 	gender_select := rand.Intn(len(npc.GenStateName)) + 1
 	return npc.GenderType(gender_select)
 }
 
 // TODO(wholesomeow): Rework this to allow mixing pronouns
 // TODO(wholesomeow): Rework this to be more clear with case to pronoun mapping
-func CreatePronouns(gender npc.GenderType) string {
-	var pronouns string
+func CreatePronouns(gender npc.GenderType) []string {
+	log.Print("selecting NPC Pronouns")
+	var pronouns []string
 	// TODO(wholesomeow): Rework better random selection
 	r_val := rand.Intn(len(npc.Pronouns)) + 1
 	switch gender {
 	case 1:
-		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns]
 	case 2:
-		pronouns = npc.Pronouns[r_val][0]
+		pronouns = npc.Pronouns[r_val]
 	case 3: // TODO(wholesomeow): Figure out how to have sex influence pronoun selection for intersex cisgendered people
-		pronouns = npc.Pronouns[r_val][0]
+		pronouns = npc.Pronouns[r_val]
 	case 4: // TODO(wholesomeow): Figure out how gender fluid people prefer to use pronouns
-		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns]
 	case 5: // TODO(wholesomeow): Figure out how gender varient people prefer to use pronouns
-		pronouns = npc.Pronouns[r_val][0]
+		pronouns = npc.Pronouns[r_val]
 	case 6:
-		pronouns = npc.Pronouns[npc.Neutral_Pronouns][0]
+		pronouns = npc.Pronouns[npc.Neutral_Pronouns]
 	case 7:
-		pronouns = npc.Pronouns[npc.Masc_Pronouns][0]
+		pronouns = npc.Pronouns[npc.Masc_Pronouns]
 	case 8:
-		pronouns = npc.Pronouns[npc.Femme_Pronouns][0]
+		pronouns = npc.Pronouns[npc.Femme_Pronouns]
 	}
 
 	return pronouns
 }
 
 func CreateOrientationType() npc.OrientationType {
+	log.Print("selecting NPC Sexual Orientation")
 	orientation_select := rand.Intn(len(npc.OriStateName)) + 1
 	return npc.OrientationType(orientation_select)
 }
 
 // --------------------------------------------------- CREATE NPC MICE BEGIN ---------------------------------------------------
 func CreateMICE(mice_data [][]string) (string, string, string) {
-	r_val := rand.Intn(len(mice_data)) + 1
+	log.Print("setting MICE values for NPC")
+	r_val := rand.Intn(len(mice_data))
 	selection := mice_data[r_val]
 
 	aspect := selection[1]
 	description := selection[3]
+	log.Print("selecting specifc MICE description at index: 3")
 	use := "used to list the primary reasons why someone would become a spy, insider threat, or collaborate with a hostile organization"
 
 	return aspect, description, use
 }
 
 func CreateCSData(cs_data [][]string) (string, [2]int, string, string) {
+	log.Print("generating Cognitive Science data for NPC")
 	var cs_coords = [2]int{0, 0}
 	var selection = []string{}
 
@@ -184,27 +193,25 @@ func CreateCSData(cs_data [][]string) (string, [2]int, string, string) {
 }
 
 func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string, string) {
+	log.Print("generating OCEAN values for NPC")
 	aspect := []float64{}
-	ocean_cast := []float64{}
 
-	for idx := range ocean_data {
+	for _, val := range ocean_data {
+		ocean_cast := []float64{}
 		// X Coord cast first
-		if ocean_data[idx][0] == "-100" {
-			ocean_cast = append(ocean_cast, -100.0)
-		} else if ocean_data[idx][0] == "-0" {
-			ocean_cast = append(ocean_cast, 0.0)
-		} else {
-			ocean_cast = append(ocean_cast, 100.0)
+		split := strings.Split(string(val[2]), ",")
+		x, err := strconv.Atoi(strings.TrimSpace(split[0]))
+		if err != nil {
+			log.Fatalf("Error converting string to integer: %s", err)
 		}
+		ocean_cast = append(ocean_cast, float64(x))
 
 		// Y Coord cast second
-		if ocean_data[idx][1] == "-100" {
-			ocean_cast = append(ocean_cast, -100.0)
-		} else if ocean_data[idx][1] == "-0" || ocean_data[idx][1] == "0" {
-			ocean_cast = append(ocean_cast, 0.0)
-		} else {
-			ocean_cast = append(ocean_cast, 100.0)
+		y, err := strconv.Atoi(strings.TrimSpace(split[1]))
+		if err != nil {
+			log.Fatalf("Error converting string to integer: %s", err)
 		}
+		ocean_cast = append(ocean_cast, float64(y))
 
 		// Variable casting
 		x1 := ocean_cast[0]
@@ -230,6 +237,7 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string
 
 // --------------------------------------------------- CREATE ENNEAGRAM DATA BEGIN ---------------------------------------------------
 func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
+	log.Print("selecting NPC Enneagram")
 	var enneagram Enneagram
 	r_enneagram := rand.Intn(8) + 1
 	enneagram.ID = r_enneagram
@@ -289,15 +297,16 @@ func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
 
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) NPCBase {
-	var npc NPCBase
-	npc.Name = CreateName(config)
+	log.Print("start of NPC creation")
+	var npc_object NPCBase
+	npc_object.Name = CreateName(config)
 
 	// Read in the CS Data csv file
 	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[5])
 	cognitive_data := utilities.ReadCSV(path, true)
-	mice_data := cognitive_data[:3]
-	cs_data := cognitive_data[4:7]
-	ocean_data := cognitive_data[8:12]
+	mice_data := cognitive_data[:4]
+	cs_data := cognitive_data[4:8]
+	ocean_data := cognitive_data[8:13]
 	enneagram_centers := cognitive_data[13:]
 
 	// Read in Enneagram JSON file
@@ -309,35 +318,54 @@ func CreateNPC(config *configuration.Config) NPCBase {
 		log.Fatalf("Failed to unmarshal json, %s", err)
 	}
 
-	npc.Enneagram = CreateEnneagram(enneagram_data, enneagram_centers)
+	npc_object.Enneagram = CreateEnneagram(enneagram_data, enneagram_centers)
 
-	npc.MICE.Aspect, npc.MICE.Description, npc.MICE.Use = CreateMICE(mice_data)
-	npc.CS.Aspect, npc.CS.Data, npc.CS.Description, npc.CS.Use = CreateCSData(cs_data)
-	npc.OCEAN.Aspect, npc.OCEAN.Description, npc.OCEAN.Use = CreateOCEANData(ocean_data, npc.CS.Data)
+	npc_object.MICE.Aspect, npc_object.MICE.Description, npc_object.MICE.Use = CreateMICE(mice_data)
+	npc_object.CS.Aspect, npc_object.CS.Data, npc_object.CS.Description, npc_object.CS.Use = CreateCSData(cs_data)
+	npc_object.OCEAN.Aspect, npc_object.OCEAN.Description, npc_object.OCEAN.Use = CreateOCEANData(ocean_data, npc_object.CS.Data)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
-	npc.NPCEnums.NPCType = 0 // Set to DEFAULT on init
+	log.Print("setting NPC Body Type values from Enum")
+	npc_object.NPCEnums.NPCType = 0 // Set to DEFAULT on init
+	npc_object.NPCType.Name = npc.NPCStateToString(npc_object.NPCEnums.NPCType)
+	npc_object.NPCType.Description = npc.GetNPCStateDescription(npc_object.NPCEnums.NPCType)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	ft, inch, lbs, inches := MakeSizeImperial()
 	cm, kg := MakeSizeMetric(inches, lbs)
-	npc.NPCEnums.BodyType = CreateBodyType(cm, kg)
+	npc_object.NPCEnums.BodyType = CreateBodyType(cm, kg)
+	npc_object.BodyType.Name = npc.BodStateToString(npc_object.NPCEnums.BodyType)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
-	npc.NPCEnums.SexType = CreateSexType()
-	npc.NPCEnums.GenderType = CreateGenderType()
-	npc.Pronouns = CreatePronouns(npc.NPCEnums.GenderType)
+	log.Print("setting NPC Sex values from Enum")
+	npc_object.NPCEnums.SexType = CreateSexType()
+	npc_object.Sex.Name = npc.SexStateToString(npc_object.NPCEnums.SexType)
+
+	log.Print("setting NPC Gender values from Enum")
+	npc_object.NPCEnums.GenderType = CreateGenderType()
+	npc_object.Gender.Name = npc.GenStateToString(npc_object.NPCEnums.GenderType)
+	npc_object.Gender.Description = npc.GetGenderDescription(npc_object.NPCEnums.GenderType)
+
+	log.Print("setting NPC Pronoun values from Enum")
+	npc_object.Pronouns = CreatePronouns(npc_object.NPCEnums.GenderType)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
-	npc.NPCEnums.OrientationType = CreateOrientationType()
+	log.Print("setting NPC Sexual Orientation values from Enum")
+	npc_object.NPCEnums.OrientationType = CreateOrientationType()
+	npc_object.SexualOrientation.Name = npc.OriStateToString(npc_object.NPCEnums.OrientationType)
+	npc_object.SexualOrientation.Description = npc.GetOriDescription(npc_object.NPCEnums.OrientationType)
 
 	// TOOD(wholesomeow): Create UUID function here
+	log.Print("generating NPC UUID")
+	npc_object.UUID = 0
 
-	npc.NPCAppearance.Height_Ft = ft
-	npc.NPCAppearance.Height_In = inch
-	npc.NPCAppearance.Weight_Lbs = lbs
-	npc.NPCAppearance.Height_Cm = cm
-	npc.NPCAppearance.Weight_Kg = kg
+	log.Print("setting NPC Appearance values")
+	npc_object.NPCAppearance.Height_Ft = ft
+	npc_object.NPCAppearance.Height_In = inch
+	npc_object.NPCAppearance.Weight_Lbs = lbs
+	npc_object.NPCAppearance.Height_Cm = cm
+	npc_object.NPCAppearance.Weight_Kg = kg
 
-	return npc
+	log.Print("NPC generation finished")
+	return npc_object
 }
