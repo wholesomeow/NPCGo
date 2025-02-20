@@ -192,6 +192,10 @@ func CreateCSData(cs_data [][]string) (string, [2]int, string, string) {
 	return aspect, cs_coords, description, use
 }
 
+func remapOCEAN(value float64, minInput float64, maxInput float64, minOutput float64, maxOutput float64) float64 {
+	return (value-minInput)/(maxInput-minInput)*(maxOutput-minOutput) + minOutput
+}
+
 func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string, string) {
 	log.Print("generating OCEAN values for NPC")
 	aspect := []float64{}
@@ -220,7 +224,8 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string
 		y2 := float64(cs_data[1])
 
 		out := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
-		aspect = append(aspect, out)
+		remapped_out := remapOCEAN(out, -200, 200, -100, 100)
+		aspect = append(aspect, remapped_out)
 	}
 
 	description := []string{}
