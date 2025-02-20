@@ -1,6 +1,7 @@
 package npc
 
 import (
+	"encoding/json"
 	"fmt"
 	"go/npcGen/configuration"
 	npc "go/npcGen/npc/enums"
@@ -8,6 +9,8 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -225,10 +228,68 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string
 	return aspect, description, use
 }
 
+// --------------------------------------------------- CREATE ENNEAGRAM DATA BEGIN ---------------------------------------------------
+func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
+	var enneagram Enneagram
+	r_enneagram := rand.Intn(8) + 1
+	enneagram.ID = r_enneagram
+
+	// TODO(wholesomeow): Change this from random to normal distribution
+	r_health := rand.Intn(8) + 1
+	enneagram.LODLevel = r_health
+
+	// Find center from correlated Enneagram selection
+	for _, value := range centers {
+		var num_centers []int
+		split := strings.Split(string(value[2]), ",")
+		for _, val := range split {
+			num, err := strconv.Atoi(strings.TrimSpace(val))
+			if err != nil {
+				log.Fatalf("Error converting string to integer: %s", err)
+			}
+			num_centers = append(num_centers, num)
+		}
+		for idx, v := range num_centers {
+			if r_enneagram == v {
+				enneagram.Center = centers[idx][1]
+			}
+		}
+	}
+
+	// Set Dominant Emotion
+	switch enneagram.Center {
+	case "Thinking":
+		enneagram.DominantEmotion = "Fear"
+	case "Feeling":
+		enneagram.DominantEmotion = "Shame"
+	case "Instinctive":
+		enneagram.DominantEmotion = "Anger"
+	default:
+		enneagram.DominantEmotion = "Default"
+	}
+
+	// Get data from selected Enneagram
+	selection := data.EnneagramData[r_enneagram]
+
+	enneagram.Archetype = selection.Archetype
+	enneagram.Keywords = selection.Keywords
+	enneagram.Description = selection.Description
+	enneagram.Fear = selection.Fear
+	enneagram.Desire = selection.Desire
+	enneagram.Wings = selection.Wings
+	enneagram.CurrentLOD = selection.LevelOfDevelopment[r_health]
+	enneagram.LevelOfDevelopment = selection.LevelOfDevelopment
+	enneagram.KeyMotivations = selection.KeyMotivations
+	enneagram.Overview = selection.Overview
+	enneagram.Addictions = selection.Addictions
+	enneagram.GrowthRecommendations = selection.GrowthRecommendations
+
+	return enneagram
+}
+
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) NPCBase {
 	var npc NPCBase
-	// TOOD(wholesomeow): Create UUID function here
 	npc.Name = CreateName(config)
 
 	// Read in the CS Data csv file
@@ -237,13 +298,24 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	mice_data := cognitive_data[:3]
 	cs_data := cognitive_data[4:7]
 	ocean_data := cognitive_data[8:12]
-	// enneagram_centers := cognitive_data[13:]
+	enneagram_centers := cognitive_data[13:]
+
+	// Read in Enneagram JSON file
+	path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
+	data := utilities.ReadJSON(path)
+	var enneagram_data EnneagramStruct
+	err := json.Unmarshal(data, &enneagram_data)
+	if err != nil {
+		log.Fatalf("Failed to unmarshal json, %s", err)
+	}
+
+	npc.Enneagram = CreateEnneagram(enneagram_data, enneagram_centers)
 
 	npc.MICE.Aspect, npc.MICE.Description, npc.MICE.Use = CreateMICE(mice_data)
 	npc.CS.Aspect, npc.CS.Data, npc.CS.Description, npc.CS.Use = CreateCSData(cs_data)
 	npc.OCEAN.Aspect, npc.OCEAN.Description, npc.OCEAN.Use = CreateOCEANData(ocean_data, npc.CS.Data)
 
-	// TODO(wholesomeow): Implement enums into NPC here
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	npc.NPCEnums.NPCType = 0 // Set to DEFAULT on init
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
@@ -258,6 +330,8 @@ func CreateNPC(config *configuration.Config) NPCBase {
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	npc.NPCEnums.OrientationType = CreateOrientationType()
+
+	// TOOD(wholesomeow): Create UUID function here
 
 	npc.NPCAppearance.Height_Ft = ft
 	npc.NPCAppearance.Height_In = inch

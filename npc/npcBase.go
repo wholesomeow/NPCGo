@@ -6,15 +6,14 @@ import (
 
 // TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
 type NPCBase struct {
-	// v0.1
-	UUID  int
-	Name  string
-	OCEAN struct {
+	UUID      int
+	Name      string
+	Enneagram Enneagram
+	OCEAN     struct {
 		Aspect      []float64
 		Description []string
 		Use         string
 	}
-	// Enneagram
 	MICE struct {
 		Aspect      string
 		Description string
@@ -32,7 +31,7 @@ type NPCBase struct {
 		Use         string
 	}
 
-	// v0.2
+	// v1.1
 	// Race - Will need to be its own struct
 	NPCEnums struct { // Collector for all NPC Enums
 		npc.NPCType
@@ -50,15 +49,15 @@ type NPCBase struct {
 		Weight_Kg  float64
 	}
 
-	// v1.0
+	// v2.0
 	// Social Role
 	// Communication Matrix
 	// Social Circle
 
-	// v1.1
+	// v2.1
 	// Physical Description
 
-	// v1.2
+	// v2.2
 	// Rumors Known
 	// Jobs Known
 }

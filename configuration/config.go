@@ -5,6 +5,7 @@ type Config struct {
 	Server struct {
 		Port int    `yaml:"port"`
 		Host string `yaml:"host"`
+		Mode string `yaml:"mode"`
 	} `yaml:"server"`
 	Database struct {
 		DBName        string   `yaml:"db-name"`

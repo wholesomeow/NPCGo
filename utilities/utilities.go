@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"go/npcGen/configuration"
+	"io"
 	"log"
 	"math"
 	"os"
@@ -56,6 +57,21 @@ func WriteCSV(path string, filename string, data [][]string) {
 		row = append(row, val...)
 		writer.Write(row)
 	}
+}
+
+func ReadJSON(path string) []byte {
+	// Open JSON File
+	log.Printf("reading %s file", path)
+	f, err := os.Open(path)
+	if err != nil {
+		log.Printf("error opening JSON: %s", err)
+	}
+	defer f.Close()
+
+	// Read JSON File
+	byte_value, _ := io.ReadAll(f)
+
+	return byte_value
 }
 
 func ReadConfig(path string, config *configuration.Config) error {
