@@ -36,3 +36,6 @@ func TestNPCName(t *testing.T) {
 		t.Fatalf("Expected Name field to be of type string, got %v", nameField.Kind())
 	}
 }
+
+// TODO(wholesomeow): Implement test to gather distribution of OCEAN values over large sample size >1000
+// TODO(wholesomeow): Implement test to gather distribution of CS values over large sample size >1000

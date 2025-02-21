@@ -12,6 +12,8 @@ type NPCBase struct {
 	Enneagram Enneagram
 	OCEAN     struct {
 		Aspect      []float64
+		Traits      [][]string
+		Text        string
 		Description []string
 		Use         string
 	}

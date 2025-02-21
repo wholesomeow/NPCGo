@@ -196,7 +196,7 @@ func remapOCEAN(value float64, minInput float64, maxInput float64, minOutput flo
 	return (value-minInput)/(maxInput-minInput)*(maxOutput-minOutput) + minOutput
 }
 
-func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string, string) {
+func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]string, []string, string) {
 	log.Print("generating OCEAN values for NPC")
 	aspect := []float64{}
 
@@ -227,6 +227,12 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string
 		remapped_out := remapOCEAN(out, -200, 200, -100, 100)
 		aspect = append(aspect, remapped_out)
 	}
+	traits := [][]string{}
+	traits = append(traits, []string{"willing to try new things", "think outside the box", "curious", "creative", "imaginative"})
+	traits = append(traits, []string{"organized", "thoughtful", "goal-orientated", "disciplined", "persistent"})
+	traits = append(traits, []string{"sociable", "assertive", "energy", "talkative", "outgoing"})
+	traits = append(traits, []string{"kind", "altruistic", "trusting", "cooperative", "prosocial"})
+	traits = append(traits, []string{"anxious", "guilty", "angry", "sullen", "depressed"})
 
 	description := []string{}
 	description = append(description, "A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative.")
@@ -237,7 +243,7 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, []string
 
 	use := "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
 
-	return aspect, description, use
+	return aspect, traits, description, use
 }
 
 // --------------------------------------------------- CREATE ENNEAGRAM DATA BEGIN ---------------------------------------------------
@@ -300,6 +306,84 @@ func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
 	return enneagram
 }
 
+func CreateOCEANText(npc_object NPCBase) string {
+	log.Print("start of OCEAN Text Generation")
+	var text string
+	var text_slice []string
+
+	traits := npc_object.OCEAN.Traits
+	trait_name := []string{"open", "conscientious", "extraverted", "agreeable", "neurotic"}
+	name := npc_object.Name
+	pronouns := npc_object.Pronouns
+	// TODO(wholesomeow): Come up with a better name lol
+	post_pronoun := [][]string{{"is", "isn't"}, {"are", "aren't"}}
+	attribute_values := []string{"not at all", "not very", "not often", "can be", "kind of", "somewhat", "sometimes", "often", "very much", "extremely"}
+
+	log.Print("setting post pronoun selection")
+	var post_pronoun_gender []string
+	if pronouns[0] == "they" {
+		post_pronoun_gender = post_pronoun[1]
+	} else {
+		post_pronoun_gender = post_pronoun[0]
+	}
+
+	// Cycle through all OCEAN values to create text
+	for i := 0; i < 5; i++ {
+		log.Printf("generating keyword data for trait: %s", trait_name[i])
+		var attribute string
+		// Determine attribute string from Aspect value
+		// TODO(wholesomeow): Replace with fuzzy logic engine
+		for j := 0.0; j < 100.0; j += 10.0 {
+			var attribute_count float64
+			if j != 0.0 {
+				attribute_count = j / 10.0
+			} else {
+				attribute_count = 0.0
+			}
+
+			if npc_object.OCEAN.Aspect[i] < j {
+				log.Printf("match found for OCEAN aspect: %s", trait_name[i])
+				attribute = attribute_values[int(attribute_count)]
+
+				// Positive or Negative post pronoun term selection
+				var post_pronoun_selection string
+				if attribute_count < 50 {
+					post_pronoun_selection = post_pronoun_gender[0]
+				} else {
+					post_pronoun_selection = post_pronoun_gender[1]
+				}
+
+				// Build long and short trait descriptors
+				long_traits := traits[i][:2]
+				short_traits := traits[i][2:]
+
+				long_trait_descriptor := fmt.Sprintf("%s and %s", long_traits[0], long_traits[1])
+				short_trait_descriptor := fmt.Sprintf("%s, %s, and %s", short_traits[0], short_traits[1], short_traits[2])
+
+				// Template population
+				log.Printf("populating template for trait: %s", trait_name[i])
+				var pro_name string
+				var first_pro_name string
+				if i == 0 {
+					pro_name = name
+					first_pro_name = "is"
+				} else {
+					pro_name = pronouns[0]
+					first_pro_name = post_pronoun_gender[0]
+				}
+				// Template should read as: <Pronoun | Name> is <attribute> <Trait-Name>, which means <Pronoun> <are | aren't> <Trait-Descriptors> and <are | aren't> <Long-Trait-Descriptors>.
+				template := fmt.Sprintf("%s %s %s %s, which means %s %s %s and %s %s.", pro_name, first_pro_name, attribute, trait_name[i], pronouns[0], post_pronoun_selection, long_trait_descriptor, post_pronoun_selection, short_trait_descriptor)
+
+				text_slice = append(text_slice, template)
+				break
+			}
+		}
+	}
+	text = strings.Join(text_slice, "\n")
+
+	return text
+}
+
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) NPCBase {
 	log.Print("start of NPC creation")
@@ -323,11 +407,13 @@ func CreateNPC(config *configuration.Config) NPCBase {
 		log.Fatalf("Failed to unmarshal json, %s", err)
 	}
 
+	// Generate Enneagram Data
 	npc_object.Enneagram = CreateEnneagram(enneagram_data, enneagram_centers)
 
+	// Generate CS and Personality Base Data
 	npc_object.MICE.Aspect, npc_object.MICE.Description, npc_object.MICE.Use = CreateMICE(mice_data)
 	npc_object.CS.Aspect, npc_object.CS.Data, npc_object.CS.Description, npc_object.CS.Use = CreateCSData(cs_data)
-	npc_object.OCEAN.Aspect, npc_object.OCEAN.Description, npc_object.OCEAN.Use = CreateOCEANData(ocean_data, npc_object.CS.Data)
+	npc_object.OCEAN.Aspect, npc_object.OCEAN.Traits, npc_object.OCEAN.Description, npc_object.OCEAN.Use = CreateOCEANData(ocean_data, npc_object.CS.Data)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	log.Print("setting NPC Body Type values from Enum")
@@ -370,6 +456,10 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.NPCAppearance.Weight_Lbs = lbs
 	npc_object.NPCAppearance.Height_Cm = cm
 	npc_object.NPCAppearance.Weight_Kg = kg
+
+	// Initial attempt at Text Generation
+	log.Print("start of text generation")
+	npc_object.OCEAN.Text = CreateOCEANText(npc_object)
 
 	log.Print("NPC generation finished")
 	return npc_object

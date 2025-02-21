@@ -79,5 +79,8 @@ func main() {
 
 	// Create NPC
 	npc_object := npc.CreateNPC(&config)
-	fmt.Println(npc.DataToJSON(npc_object))
+
+	fmt.Println("----- OUTPUT -----")
+	// fmt.Println(npc.DataToJSON(npc_object))
+	fmt.Println(npc_object.OCEAN.Text)
 }
