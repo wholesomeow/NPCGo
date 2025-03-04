@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"go/npcGen/configuration"
 	npc "go/npcGen/npc/enums"
+	"go/npcGen/npc/generators"
+	textgen "go/npcGen/text_gen"
 	"go/npcGen/utilities"
 	"log"
-	"math"
 	"math/rand"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -151,239 +150,6 @@ func CreateOrientationType() npc.OrientationType {
 	return npc.OrientationType(orientation_select)
 }
 
-// --------------------------------------------------- CREATE NPC MICE BEGIN ---------------------------------------------------
-func CreateMICE(mice_data [][]string) (string, string, string) {
-	log.Print("setting MICE values for NPC")
-	r_val := rand.Intn(len(mice_data))
-	selection := mice_data[r_val]
-
-	aspect := selection[1]
-	description := selection[3]
-	log.Print("selecting specifc MICE description at index: 3")
-	use := "used to list the primary reasons why someone would become a spy, insider threat, or collaborate with a hostile organization"
-
-	return aspect, description, use
-}
-
-func CreateCSData(cs_data [][]string) (string, [2]int, string, string) {
-	log.Print("generating Cognitive Science data for NPC")
-	var cs_coords = [2]int{0, 0}
-	var selection = []string{}
-
-	min := -100
-	max := 100
-	cs_coords[0] = rand.Intn((max - min + 1)) + min
-	cs_coords[1] = rand.Intn((max - min + 1)) + min
-
-	if cs_coords[0] <= 0 && cs_coords[1] <= 0 {
-		selection = cs_data[0]
-	} else if cs_coords[0] <= 0 && cs_coords[1] >= 0 {
-		selection = cs_data[1]
-	} else if cs_coords[0] >= 0 && cs_coords[1] >= 0 {
-		selection = cs_data[2]
-	} else if cs_coords[0] >= 0 && cs_coords[1] <= 0 {
-		selection = cs_data[3]
-	}
-
-	aspect := selection[1]
-	description := selection[3]
-	use := "used to quantify at which cognitive aspects a person either excels at, struggles with, or a combination of both"
-
-	return aspect, cs_coords, description, use
-}
-
-func remapOCEAN(value float64, minInput float64, maxInput float64, minOutput float64, maxOutput float64) float64 {
-	return (value-minInput)/(maxInput-minInput)*(maxOutput-minOutput) + minOutput
-}
-
-func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]string, []string, string) {
-	log.Print("generating OCEAN values for NPC")
-	aspect := []float64{}
-
-	for _, val := range ocean_data {
-		ocean_cast := []float64{}
-		// X Coord cast first
-		split := strings.Split(string(val[2]), ",")
-		x, err := strconv.Atoi(strings.TrimSpace(split[0]))
-		if err != nil {
-			log.Fatalf("Error converting string to integer: %s", err)
-		}
-		ocean_cast = append(ocean_cast, float64(x))
-
-		// Y Coord cast second
-		y, err := strconv.Atoi(strings.TrimSpace(split[1]))
-		if err != nil {
-			log.Fatalf("Error converting string to integer: %s", err)
-		}
-		ocean_cast = append(ocean_cast, float64(y))
-
-		// Variable casting
-		x1 := ocean_cast[0]
-		y1 := ocean_cast[1]
-		x2 := float64(cs_data[0])
-		y2 := float64(cs_data[1])
-
-		out := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
-		remapped_out := remapOCEAN(out, -200, 200, -100, 100)
-		aspect = append(aspect, remapped_out)
-	}
-	traits := [][]string{}
-	traits = append(traits, []string{"willing to try new things", "think outside the box", "curious", "creative", "imaginative"})
-	traits = append(traits, []string{"organized", "thoughtful", "goal-orientated", "disciplined", "persistent"})
-	traits = append(traits, []string{"sociable", "assertive", "energy", "talkative", "outgoing"})
-	traits = append(traits, []string{"kind", "altruistic", "trusting", "cooperative", "prosocial"})
-	traits = append(traits, []string{"anxious", "guilty", "angry", "sullen", "depressed"})
-
-	description := []string{}
-	description = append(description, "A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative.")
-	description = append(description, "A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent.")
-	description = append(description, "A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle.")
-	description = append(description, "A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial.")
-	description = append(description, "A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings.")
-
-	use := "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
-
-	return aspect, traits, description, use
-}
-
-// --------------------------------------------------- CREATE ENNEAGRAM DATA BEGIN ---------------------------------------------------
-func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
-	log.Print("selecting NPC Enneagram")
-	var enneagram Enneagram
-	r_enneagram := rand.Intn(8) + 1
-	enneagram.ID = r_enneagram
-
-	// TODO(wholesomeow): Change this from random to normal distribution
-	r_health := rand.Intn(8) + 1
-	enneagram.LODLevel = r_health
-
-	// Find center from correlated Enneagram selection
-	for _, value := range centers {
-		var num_centers []int
-		split := strings.Split(string(value[2]), ",")
-		for _, val := range split {
-			num, err := strconv.Atoi(strings.TrimSpace(val))
-			if err != nil {
-				log.Fatalf("Error converting string to integer: %s", err)
-			}
-			num_centers = append(num_centers, num)
-		}
-		for idx, v := range num_centers {
-			if r_enneagram == v {
-				enneagram.Center = centers[idx][1]
-			}
-		}
-	}
-
-	// Set Dominant Emotion
-	switch enneagram.Center {
-	case "Thinking":
-		enneagram.DominantEmotion = "Fear"
-	case "Feeling":
-		enneagram.DominantEmotion = "Shame"
-	case "Instinctive":
-		enneagram.DominantEmotion = "Anger"
-	default:
-		enneagram.DominantEmotion = "Default"
-	}
-
-	// Get data from selected Enneagram
-	selection := data.EnneagramData[r_enneagram]
-
-	enneagram.Archetype = selection.Archetype
-	enneagram.Keywords = selection.Keywords
-	enneagram.Description = selection.Description
-	enneagram.Fear = selection.Fear
-	enneagram.Desire = selection.Desire
-	enneagram.Wings = selection.Wings
-	enneagram.CurrentLOD = selection.LevelOfDevelopment[r_health]
-	enneagram.LevelOfDevelopment = selection.LevelOfDevelopment
-	enneagram.KeyMotivations = selection.KeyMotivations
-	enneagram.Overview = selection.Overview
-	enneagram.Addictions = selection.Addictions
-	enneagram.GrowthRecommendations = selection.GrowthRecommendations
-
-	return enneagram
-}
-
-func CreateOCEANText(npc_object NPCBase) string {
-	log.Print("start of OCEAN Text Generation")
-	var text string
-	var text_slice []string
-
-	traits := npc_object.OCEAN.Traits
-	trait_name := []string{"open", "conscientious", "extraverted", "agreeable", "neurotic"}
-	name := npc_object.Name
-	pronouns := npc_object.Pronouns
-	// TODO(wholesomeow): Come up with a better name lol
-	post_pronoun := [][]string{{"is", "isn't"}, {"are", "aren't"}}
-	attribute_values := []string{"not at all", "not very", "not often", "can be", "kind of", "somewhat", "sometimes", "often", "very much", "extremely"}
-
-	log.Print("setting post pronoun selection")
-	var post_pronoun_gender []string
-	if pronouns[0] == "they" {
-		post_pronoun_gender = post_pronoun[1]
-	} else {
-		post_pronoun_gender = post_pronoun[0]
-	}
-
-	// Cycle through all OCEAN values to create text
-	for i := 0; i < 5; i++ {
-		log.Printf("generating keyword data for trait: %s", trait_name[i])
-		var attribute string
-		// Determine attribute string from Aspect value
-		// TODO(wholesomeow): Replace with fuzzy logic engine
-		for j := 0.0; j < 100.0; j += 10.0 {
-			var attribute_count float64
-			if j != 0.0 {
-				attribute_count = j / 10.0
-			} else {
-				attribute_count = 0.0
-			}
-
-			if npc_object.OCEAN.Aspect[i] < j {
-				log.Printf("match found for OCEAN aspect: %s", trait_name[i])
-				attribute = attribute_values[int(attribute_count)]
-
-				// Positive or Negative post pronoun term selection
-				var post_pronoun_selection string
-				if attribute_count < 50 {
-					post_pronoun_selection = post_pronoun_gender[0]
-				} else {
-					post_pronoun_selection = post_pronoun_gender[1]
-				}
-
-				// Build long and short trait descriptors
-				long_traits := traits[i][:2]
-				short_traits := traits[i][2:]
-
-				long_trait_descriptor := fmt.Sprintf("%s and %s", long_traits[0], long_traits[1])
-				short_trait_descriptor := fmt.Sprintf("%s, %s, and %s", short_traits[0], short_traits[1], short_traits[2])
-
-				// Template population
-				log.Printf("populating template for trait: %s", trait_name[i])
-				var pro_name string
-				var first_pro_name string
-				if i == 0 {
-					pro_name = name
-					first_pro_name = "is"
-				} else {
-					pro_name = pronouns[0]
-					first_pro_name = post_pronoun_gender[0]
-				}
-				// Template should read as: <Pronoun | Name> is <attribute> <Trait-Name>, which means <Pronoun> <are | aren't> <Trait-Descriptors> and <are | aren't> <Long-Trait-Descriptors>.
-				template := fmt.Sprintf("%s %s %s %s, which means %s %s %s and %s %s.", pro_name, first_pro_name, attribute, trait_name[i], pronouns[0], post_pronoun_selection, long_trait_descriptor, post_pronoun_selection, short_trait_descriptor)
-
-				text_slice = append(text_slice, template)
-				break
-			}
-		}
-	}
-	text = strings.Join(text_slice, "\n")
-
-	return text
-}
-
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) NPCBase {
 	log.Print("start of NPC creation")
@@ -401,19 +167,19 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	// Read in Enneagram JSON file
 	path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
 	data := utilities.ReadJSON(path)
-	var enneagram_data EnneagramStruct
+	var enneagram_data generators.EnneagramStruct
 	err := json.Unmarshal(data, &enneagram_data)
 	if err != nil {
 		log.Fatalf("Failed to unmarshal json, %s", err)
 	}
 
 	// Generate Enneagram Data
-	npc_object.Enneagram = CreateEnneagram(enneagram_data, enneagram_centers)
+	npc_object.Enneagram = generators.CreateEnneagram(enneagram_data, enneagram_centers)
 
 	// Generate CS and Personality Base Data
-	npc_object.MICE.Aspect, npc_object.MICE.Description, npc_object.MICE.Use = CreateMICE(mice_data)
-	npc_object.CS.Aspect, npc_object.CS.Data, npc_object.CS.Description, npc_object.CS.Use = CreateCSData(cs_data)
-	npc_object.OCEAN.Aspect, npc_object.OCEAN.Traits, npc_object.OCEAN.Description, npc_object.OCEAN.Use = CreateOCEANData(ocean_data, npc_object.CS.Data)
+	npc_object.MICE.Aspect, npc_object.MICE.Description, npc_object.MICE.Use = generators.CreateMICE(mice_data)
+	npc_object.CS.Aspect, npc_object.CS.Data, npc_object.CS.Description, npc_object.CS.Use = generators.CreateCSData(cs_data)
+	npc_object.OCEAN.Aspect, npc_object.OCEAN.Traits, npc_object.OCEAN.Description, npc_object.OCEAN.Use = generators.CreateOCEANData(ocean_data, npc_object.CS.Data)
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
 	log.Print("setting NPC Body Type values from Enum")
@@ -459,7 +225,8 @@ func CreateNPC(config *configuration.Config) NPCBase {
 
 	// Initial attempt at Text Generation
 	log.Print("start of text generation")
-	npc_object.OCEAN.Text = CreateOCEANText(npc_object)
+	OCEANTextData := generators.CreateOCEANText(npc_object.Name, npc_object.Pronouns, npc_object.OCEAN.Traits, npc_object.OCEAN.Aspect)
+	npc_object.OCEAN.Text = textgen.SimpleSentenceBuilder(OCEANTextData)
 
 	log.Print("NPC generation finished")
 	return npc_object

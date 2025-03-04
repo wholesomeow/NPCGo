@@ -73,12 +73,12 @@ func makeName(mchain *MarkovChain) string {
 }
 
 func checkQuality(mchain *MarkovChain, name string) bool {
+	// Rules for name formatting are here
+	log.Print("checking quality of name")
 	if len(name) <= 3 {
 		return false
 	}
 
-	// Rules for name formatting are here
-	log.Print("checking quality of name")
 	for val := range len(name) - 1 {
 		bigram := strings.ToLower(name[val : val+2])
 		if utilities.SliceContainsString(string(bigram[0]), mchain.vowels) || utilities.SliceContainsString(string(bigram[1]), mchain.vowels) {

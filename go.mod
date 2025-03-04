@@ -6,11 +6,19 @@ replace go/npcGen/npc => ../npc
 
 replace go/npcGen/npc/enums => ../npc/enums
 
+replace go/npcGen/npc/generators => ../npc/generators
+
 replace go/npcGen/database => ../database
 
 replace go/npcGen/utilities => ../utilities
 
 replace go/npcGen/configuration => ../configuration
+
+replace go/npcGen/text_gen => ../textgen
+
+replace go/npcGen/text_gen/text_types => ../textgen/text_types
+
+replace go/npcGen/text_gen/grammar => ../textgen/grammar
 
 require (
 	cloud.google.com/go v0.112.1 // indirect
@@ -69,6 +77,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/qmuntal/opc v0.7.12 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	go.opencensus.io v0.24.0 // indirect

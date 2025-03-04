@@ -81,6 +81,6 @@ func main() {
 	npc_object := npc.CreateNPC(&config)
 
 	fmt.Println("----- OUTPUT -----")
-	// fmt.Println(npc.DataToJSON(npc_object))
+	fmt.Println(npc.DataToJSON(npc_object))
 	fmt.Println(npc_object.OCEAN.Text)
 }

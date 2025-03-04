@@ -3,13 +3,14 @@ package npc
 import (
 	"encoding/json"
 	npc "go/npcGen/npc/enums"
+	"go/npcGen/npc/generators"
 )
 
 // TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
 type NPCBase struct {
 	UUID      int
 	Name      string
-	Enneagram Enneagram
+	Enneagram generators.Enneagram
 	OCEAN     struct {
 		Aspect      []float64
 		Traits      [][]string
