@@ -18,8 +18,6 @@ replace go/npcGen/text_gen => ../textgen
 
 replace go/npcGen/text_gen/text_types => ../textgen/text_types
 
-replace go/npcGen/text_gen/grammar => ../textgen/grammar
-
 require (
 	cloud.google.com/go v0.112.1 // indirect
 	cloud.google.com/go/compute v1.25.1 // indirect
