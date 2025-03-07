@@ -67,19 +67,7 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]stri
 	return aspect, traits, description, use
 }
 
-type OCEANText struct {
-	Name                  texttypes.NounType
-	SubjectivePronoun     texttypes.NounType
-	ObjectivePronoun      texttypes.NounType
-	PossesstivePronoun    texttypes.NounType
-	PositiveAuxiliaryVerb []texttypes.VerbType
-	NegativeAuxiliaryVerb []texttypes.VerbType
-	Traits                []texttypes.AdjectiveType
-	Attributes            []texttypes.AdverbType
-	Keywords              []texttypes.AdjectiveType
-}
-
-func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspect []float64) OCEANText {
+func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspect []float64) TextData {
 	log.Print("start of OCEAN Text Generation")
 
 	trait_name := []string{"open", "conscientious", "extraverted", "agreeable", "neurotic"}
@@ -116,7 +104,7 @@ func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspe
 	possessivePN.Noun = pronouns[2]
 
 	// Assign Words to text data struct
-	oceanTextData := OCEANText{}
+	oceanTextData := TextData{}
 	oceanTextData.Name = name
 	oceanTextData.SubjectivePronoun = subjectivePN
 	oceanTextData.ObjectivePronoun = objectivePN

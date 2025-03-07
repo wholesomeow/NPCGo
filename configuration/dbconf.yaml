@@ -8,7 +8,7 @@ server:
 database:
   db-name: "npcg"
   user: "postgres"
-  password: "ADD-IN-YOUR-PASSWORD-HERE"
+  password: "secret"
   sslmode: "disable"
   csv-path: "database/rawdata/csv"
   json-path: "database/rawdata/json"

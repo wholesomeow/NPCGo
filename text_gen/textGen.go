@@ -27,7 +27,7 @@ func TemporalConj() error {
 // Builds sentences with one main clause.
 // Simple sentences are in Subject, Verb, Object order.
 // Object can also be complements or adjunts.
-func SimpleSentenceBuilder(data generators.OCEANText) string {
+func SimpleSentenceBuilder(data generators.TextData) string {
 	// Build required Noun/Verb Phrases
 	name_phrase := texttypes.NounPhrase{}
 	subpn_phrase := texttypes.NounPhrase{}

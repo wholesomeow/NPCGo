@@ -75,6 +75,7 @@ func main() {
 		database.MigrateDB(&config, option)
 	} else {
 		log.Printf("reading in config mode option %s", mode)
+		log.Print("mode not implemented...")
 	}
 
 	// Create NPC
