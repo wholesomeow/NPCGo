@@ -173,9 +173,9 @@ func CreateNPC(config *configuration.Config) NPCBase {
 		cognitive_data := utilities.ReadCSV(path, true)
 		mice_data = cognitive_data[:4]
 		cs_data = cognitive_data[4:8]
-		rei_data = cognitive_data[8:13]
-		ocean_data = cognitive_data[13:18]
-		enneagram_centers = cognitive_data[18:]
+		rei_data = cognitive_data[8:12]
+		ocean_data = cognitive_data[12:17]
+		enneagram_centers = cognitive_data[17:]
 
 		// Read in Enneagram JSON file
 		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
@@ -197,22 +197,6 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.CS.Description = generators.CreateCSDesc(cs_data, npc_object.CS.Coords)
 	npc_object.CS.Use = generators.CreateCSUse()
 
-	// Generate OCEAN Base Data
-	npc_object.OCEAN.Aspect = generators.CreateOCEANAspect(ocean_data, npc_object.CS.Coords)
-	npc_object.OCEAN.Degree = generators.CreateOCEANDegree(ocean_data, npc_object.CS.Coords)
-	npc_object.OCEAN.Traits = generators.CreateOCEANTraits()
-	npc_object.OCEAN.Description = generators.CreateOCEANDesc()
-	npc_object.OCEAN.Use = generators.CreateOCEANUse()
-
-	// Generate MICE Base Data
-	mice_selection := rand.Intn(len(mice_data))
-	npc_object.MICE.Aspect = generators.CreateMICEAspect(mice_selection, mice_data, npc_object.CS.Coords)
-	npc_object.MICE.Degree = generators.CreateMICEDegree(mice_selection, mice_data, npc_object.CS.Coords)
-	// TODO(wholesomeow): Create the logic for this
-	npc_object.MICE.Traits = generators.CreateMICETraits(mice_selection, mice_data, npc_object.CS.Coords)
-	npc_object.MICE.Description = generators.CreateMICEDesc(mice_selection, mice_data, npc_object.CS.Coords)
-	npc_object.MICE.Use = generators.CreateMICEUse()
-
 	// Generate REI Base Data
 	npc_object.REI.Aspect = generators.CreateREIAspect(npc_object.CS.Coords)
 	npc_object.REI.Degree = generators.CreateREIDegree(npc_object.CS.Coords)
@@ -220,6 +204,13 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.REI.Traits = generators.CreateREITraits()
 	npc_object.REI.Description = generators.CreateREIDesc(rei_data, npc_object.CS.Coords)
 	npc_object.REI.Use = generators.CreateREIUse()
+
+	// Generate OCEAN Base Data
+	npc_object.OCEAN.Aspect = generators.CreateOCEANAspect(ocean_data, npc_object.CS.Coords)
+	npc_object.OCEAN.Degree = generators.CreateOCEANDegree(ocean_data, npc_object.CS.Coords)
+	npc_object.OCEAN.Traits = generators.CreateOCEANTraits()
+	npc_object.OCEAN.Description = generators.CreateOCEANDesc()
+	npc_object.OCEAN.Use = generators.CreateOCEANUse()
 
 	// Generate Enneagram Data
 	npc_object.Enneagram.ID = generators.SelectEnneagram()
@@ -243,6 +234,15 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.Enneagram.Overview = generators.CreateEnneaOverview(npc_object.Enneagram.ID, enneagram_data)
 	npc_object.Enneagram.Addictions = generators.CreateEnneaAddictions(npc_object.Enneagram.ID, enneagram_data)
 	npc_object.Enneagram.GrowthRecommendations = generators.CreateEnneaGrowth(npc_object.Enneagram.ID, enneagram_data)
+
+	// Generate MICE Base Data
+	mice_selection := rand.Intn(len(mice_data))
+	npc_object.MICE.Aspect = generators.CreateMICEAspect(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Degree = generators.CreateMICEDegree(mice_selection, mice_data, npc_object.CS.Coords)
+	// TODO(wholesomeow): Create the logic for this
+	npc_object.MICE.Traits = generators.CreateMICETraits(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Description = generators.CreateMICEDesc(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Use = generators.CreateMICEUse()
 
 	// ----- GENERATE PHYSICALITY DATA -----
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides

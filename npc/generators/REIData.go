@@ -31,7 +31,7 @@ func CreateREIDegree(cs_data [2]int) [2]float64 {
 	log.Print("generating Rational-Experiential Inventory Degree for NPC")
 	degree := [2]float64{}
 	degree[0] = math.Abs(float64(cs_data[0]))
-	degree[1] = math.Abs(float64(cs_data[0]))
+	degree[1] = math.Abs(float64(cs_data[1]))
 
 	return degree
 }

@@ -11,11 +11,11 @@ REI_Dimensions,Rational Ability,"-100, 0","information collecting skills."
 REI_Dimensions,Rational Engagement,"0, -100","action taking skills"
 REI_Dimensions,Experiential Ability,"100, 0","interpersonal communication skills"
 REI_Dimensions,Experiential Engagement,"0, 100","information analysis skills"
-OCEAN,Openness,"-100, -0","A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative."
-OCEAN,Conscientiousness,"100, 100","A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent."
-OCEAN,Extroversion,"-100, 100","A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle."
-OCEAN,Agreeableness,"100, 0","A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial."
-OCEAN,Neuroticism,"-0, -100","A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings."
+OCEAN,Openness,"-40, 100","A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative."
+OCEAN,Conscientiousness,"100, -40","A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent."
+OCEAN,Extroversion,"-40, 100","A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle."
+OCEAN,Agreeableness,"0, 0","A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial."
+OCEAN,Neuroticism,"-40, -60","A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings."
 Enneagram_Centers,Thinking,"5, 6, 7",Enneagram thinking centers
 Enneagram_Centers,Feeling,"2, 3, 4",Enneagram feeling centers
 Enneagram_Centers,Instinctive,"1, 8, 9",Enneagram instinctive centers

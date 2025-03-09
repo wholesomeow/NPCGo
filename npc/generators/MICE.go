@@ -50,7 +50,7 @@ func CreateMICEDegree(r_val int, mice_data [][]string, cs_data [2]int) float64 {
 func CreateMICETraits(r_val int, mice_data [][]string, cs_data [2]int) []string {
 	// TODO(wholesomeow): Figure out how I'm going to create a traits list to describe
 	// how someone could be convinced/manipulated
-	traits := []string{"willing to try new things", "think outside the box", "curious", "creative", "imaginative"}
+	traits := []string{}
 	return traits
 }
 
