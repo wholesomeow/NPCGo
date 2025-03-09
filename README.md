@@ -30,9 +30,7 @@ Along with their Job are things like Job Status and Societal Status to help give
 
 After that information is compiled, the personality data is compiled. This tool uses a few personality test frameworks to provide a sort of baseline that is grounded in reality. The primary framework being the [Enneagram Personality](https://www.enneagraminstitute.com/how-the-enneagram-system-works) framwork. It randomly selects one of the 9 personality architypes and then selects that types "Wing", along with a Blend percentage to create some nuance in the personality type created. For more information on why that framework was chosen, read the Medium article here. **Article coming soon**
 
-Once the NPC dataset is compiled, it is referenced against local databases and WordNets to greatly expand the descriptors available in the NPC dataset. After that referencing is completed, it is then pushed through the grammar-based rule sets to turn the collection of words into sentences, repeating the process growing more complex each time. After a set amount of iterations, the generation is QA checked internally and then displayed on screen. No need for AI.
-
-Nice and easy.
+Once the NPC dataset is compiled, it is referenced against local databases and WordNets to greatly expand the descriptors available in the NPC dataset. After that referencing is completed, it is then pushed through the grammar-based rule sets to turn the collection of words into sentences, repeating the process growing more complex each time. After a set amount of iterations, the generation is QA checked internally and then displayed on screen. No need for AI. For more information on how this all works, read the Medium article here. **Article coming soon**
 
 # Install
 
