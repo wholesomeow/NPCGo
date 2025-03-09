@@ -160,6 +160,7 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	//Create Personality Data Containers
 	mice_data := [][]string{}
 	cs_data := [][]string{}
+	rei_data := [][]string{}
 	ocean_data := [][]string{}
 	enneagram_centers := [][]string{}
 	var enneagram_data generators.EnneagramStruct
@@ -172,8 +173,9 @@ func CreateNPC(config *configuration.Config) NPCBase {
 		cognitive_data := utilities.ReadCSV(path, true)
 		mice_data = cognitive_data[:4]
 		cs_data = cognitive_data[4:8]
-		ocean_data = cognitive_data[8:13]
-		enneagram_centers = cognitive_data[13:]
+		rei_data = cognitive_data[8:13]
+		ocean_data = cognitive_data[13:18]
+		enneagram_centers = cognitive_data[18:]
 
 		// Read in Enneagram JSON file
 		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
@@ -212,7 +214,12 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.MICE.Use = generators.CreateMICEUse()
 
 	// Generate REI Base Data
-	// TODO(wholesomeow): This ^
+	npc_object.REI.Aspect = generators.CreateREIAspect(npc_object.CS.Coords)
+	npc_object.REI.Degree = generators.CreateREIDegree(npc_object.CS.Coords)
+	// TODO(wholesomeow): Create the logic for this
+	npc_object.REI.Traits = generators.CreateREITraits()
+	npc_object.REI.Description = generators.CreateREIDesc(rei_data, npc_object.CS.Coords)
+	npc_object.REI.Use = generators.CreateREIUse()
 
 	// Generate Enneagram Data
 	npc_object.Enneagram.ID = generators.SelectEnneagram()

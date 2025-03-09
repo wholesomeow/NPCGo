@@ -35,7 +35,10 @@ type NPCBase struct {
 	}
 	REI struct {
 		Aspect      string
-		Description string
+		Degree      [2]float64
+		Traits      []string
+		Text        string
+		Description []string
 		Use         string
 	}
 	Enneagram struct {
