@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -126,8 +127,18 @@ func SliceContainsString(str string, slc []string) bool {
 	return false
 }
 
-// TODO(wholesomeow): Implement RandomRange function that uses generics and optional parameters to return random value in a range
-//                    This function -> r_val := rand.Intn(len(npc.Pronouns)) + 1
+// Returns random value within a range. Wrapper for rand.Intn() function.
+func RandomRange(min int, max int) int {
+	return rand.Intn((max - min + 1)) + min
+}
+
+func RemapInt(value float64, minInput float64, maxInput float64, minOutput float64, maxOutput float64) float64 {
+	var part_1 float64
+	var part_2 float64
+	part_1 = (value - minInput) / (maxInput - minInput)
+	part_2 = (maxOutput - minOutput) + minOutput
+	return part_1 * part_2
+}
 
 func ImperialToMetric(inches int, lbs int) (float64, float64) {
 	cm := float64(inches) * 2.54

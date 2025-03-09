@@ -24,39 +24,24 @@ type EnneagramStruct struct {
 	} `json:"enneagramData"`
 }
 
-type Enneagram struct {
-	ID                    int
-	Archetype             string
-	Center                string
-	DominantEmotion       string
-	Keywords              []string
-	Description           string
-	Fear                  string
-	Desire                string
-	Wings                 []int
-	LODLevel              int
-	CurrentLOD            string
-	LevelOfDevelopment    []string
-	KeyMotivations        string
-	Overview              string
-	Addictions            string
-	GrowthRecommendations []string
+func SelectEnneagram() int {
+	log.Print("selecting NPC Enneagram")
+	return rand.Intn(8) + 1
 }
 
-func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
-	log.Print("selecting NPC Enneagram")
-	var enneagram Enneagram
-	r_enneagram := rand.Intn(8) + 1
-	enneagram.ID = r_enneagram
+func CreateEnneaArch(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Archetype from selection: %d", id)
+	return data.EnneagramData[id].Archetype
+}
 
-	// TODO(wholesomeow): Change this from random to normal distribution
-	r_health := rand.Intn(8) + 1
-	enneagram.LODLevel = r_health
-
+func CreateEnneaCenter(id int, centers [][]string) string {
+	log.Printf("populating Enneagram Centers from selection: %d", id)
 	// Find center from correlated Enneagram selection
+	var center string
 	for _, value := range centers {
 		var num_centers []int
 		split := strings.Split(string(value[2]), ",")
+
 		for _, val := range split {
 			num, err := strconv.Atoi(strings.TrimSpace(val))
 			if err != nil {
@@ -64,40 +49,92 @@ func CreateEnneagram(data EnneagramStruct, centers [][]string) Enneagram {
 			}
 			num_centers = append(num_centers, num)
 		}
+
 		for idx, v := range num_centers {
-			if r_enneagram == v {
-				enneagram.Center = centers[idx][1]
+			if id == v {
+				return centers[idx][1]
 			}
 		}
 	}
 
+	return center
+}
+
+func CreateEnneaEmote(id int, center string) string {
+	log.Printf("populating Enneagram Dominant Emotion from selection: %d", id)
 	// Set Dominant Emotion
-	switch enneagram.Center {
+	var emotion string
+	switch center {
 	case "Thinking":
-		enneagram.DominantEmotion = "Fear"
+		emotion = "Fear"
 	case "Feeling":
-		enneagram.DominantEmotion = "Shame"
+		emotion = "Shame"
 	case "Instinctive":
-		enneagram.DominantEmotion = "Anger"
+		emotion = "Anger"
 	default:
-		enneagram.DominantEmotion = "Default"
+		emotion = "Default"
 	}
 
-	// Get data from selected Enneagram
-	selection := data.EnneagramData[r_enneagram]
+	return emotion
+}
 
-	enneagram.Archetype = selection.Archetype
-	enneagram.Keywords = selection.Keywords
-	enneagram.Description = selection.Description
-	enneagram.Fear = selection.Fear
-	enneagram.Desire = selection.Desire
-	enneagram.Wings = selection.Wings
-	enneagram.CurrentLOD = selection.LevelOfDevelopment[r_health]
-	enneagram.LevelOfDevelopment = selection.LevelOfDevelopment
-	enneagram.KeyMotivations = selection.KeyMotivations
-	enneagram.Overview = selection.Overview
-	enneagram.Addictions = selection.Addictions
-	enneagram.GrowthRecommendations = selection.GrowthRecommendations
+func CreateEnneaKeywords(id int, data EnneagramStruct) []string {
+	log.Printf("populating Enneagram Keywords from selection: %d", id)
+	return data.EnneagramData[id].Keywords
+}
 
-	return enneagram
+func CreateEnneaDesc(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Description from selection: %d", id)
+	return data.EnneagramData[id].Description
+}
+
+func CreateEnneaFear(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Fear from selection: %d", id)
+	return data.EnneagramData[id].Fear
+}
+
+func CreateEnneaDesire(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Desire from selection: %d", id)
+	return data.EnneagramData[id].Desire
+}
+
+func CreateEnneaWings(id int, data EnneagramStruct) []int {
+	log.Printf("populating Enneagram Wings from selection: %d", id)
+	return data.EnneagramData[id].Wings
+}
+
+func CreateEnneaLODLevel() int {
+	log.Print("selecting Enneagram Level of Health")
+	// TODO(wholesomeow): Change this from random to normal distribution
+	return rand.Intn(8) + 1
+}
+
+func CreateEnneaCLOD(id int, level int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Current Level of Health from selection: %d", level)
+	return data.EnneagramData[id].LevelOfDevelopment[level]
+}
+
+func CreateEnneaLODS(id int, data EnneagramStruct) []string {
+	log.Print("populating Enneagram Level of Health list")
+	return data.EnneagramData[id].LevelOfDevelopment
+}
+
+func CreateEnneaMotive(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Key Motivation from selection: %d", id)
+	return data.EnneagramData[id].KeyMotivations
+}
+
+func CreateEnneaOverview(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Overview from selection: %d", id)
+	return data.EnneagramData[id].Overview
+}
+
+func CreateEnneaAddictions(id int, data EnneagramStruct) string {
+	log.Printf("populating Enneagram Addictions from selection: %d", id)
+	return data.EnneagramData[id].Addictions
+}
+
+func CreateEnneaGrowth(id int, data EnneagramStruct) []string {
+	log.Printf("populating Enneagram Growth Recommendations from selection: %d", id)
+	return data.EnneagramData[id].GrowthRecommendations
 }

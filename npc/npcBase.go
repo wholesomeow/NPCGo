@@ -3,16 +3,15 @@ package npc
 import (
 	"encoding/json"
 	npc "go/npcGen/npc/enums"
-	"go/npcGen/npc/generators"
 )
 
-// TODO(wholesomeow): Implement UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
+// TODO(wholesomeow): Implement UUID
 type NPCBase struct {
-	UUID      int
-	Name      string
-	Enneagram generators.Enneagram
-	OCEAN     struct {
-		Aspect      []float64
+	UUID  int
+	Name  string
+	OCEAN struct {
+		Aspect      []string
+		Degree      []float64
 		Traits      [][]string
 		Text        string
 		Description []string
@@ -20,12 +19,17 @@ type NPCBase struct {
 	}
 	MICE struct {
 		Aspect      string
+		Degree      float64
+		Traits      []string
+		Text        string
 		Description string
 		Use         string
 	}
 	CS struct {
 		Aspect      string
-		Data        [2]int
+		Traits      []string
+		Text        string
+		Coords      [2]int
 		Description string
 		Use         string
 	}
@@ -33,6 +37,24 @@ type NPCBase struct {
 		Aspect      string
 		Description string
 		Use         string
+	}
+	Enneagram struct {
+		ID                    int
+		Archetype             string
+		Center                string
+		DominantEmotion       string
+		Keywords              []string
+		Description           string
+		Fear                  string
+		Desire                string
+		Wings                 []int
+		LODLevel              int
+		CurrentLOD            string
+		LevelOfDevelopment    []string
+		KeyMotivations        string
+		Overview              string
+		Addictions            string
+		GrowthRecommendations []string
 	}
 
 	// v1.1
@@ -62,7 +84,9 @@ type NPCBase struct {
 		Name        string
 		Description string
 	}
-	Pronouns      []string
+	Pronouns []string
+	// v2.1
+	// Physical Description
 	NPCAppearance struct {
 		Height_Ft  int
 		Height_In  int
@@ -75,9 +99,6 @@ type NPCBase struct {
 	// Social Role
 	// Communication Matrix
 	// Social Circle
-
-	// v2.1
-	// Physical Description
 
 	// v2.2
 	// Rumors Known

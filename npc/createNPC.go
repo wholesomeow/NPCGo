@@ -10,6 +10,7 @@ import (
 	"go/npcGen/utilities"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -156,44 +157,100 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	var npc_object NPCBase
 	npc_object.Name = CreateName(config)
 
-	// Read in the CS Data csv file
-	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[5])
-	cognitive_data := utilities.ReadCSV(path, true)
-	mice_data := cognitive_data[:4]
-	cs_data := cognitive_data[4:8]
-	ocean_data := cognitive_data[8:13]
-	enneagram_centers := cognitive_data[13:]
-
-	// Read in Enneagram JSON file
-	path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
-	data := utilities.ReadJSON(path)
+	//Create Personality Data Containers
+	mice_data := [][]string{}
+	cs_data := [][]string{}
+	ocean_data := [][]string{}
+	enneagram_centers := [][]string{}
 	var enneagram_data generators.EnneagramStruct
-	err := json.Unmarshal(data, &enneagram_data)
-	if err != nil {
-		log.Fatalf("Failed to unmarshal json, %s", err)
+
+	mode := strings.ToLower(config.Server.Mode)
+	if mode == "dev" {
+		log.Print("read in all required NPC data from files")
+		// Read in the CS Data csv file
+		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[5])
+		cognitive_data := utilities.ReadCSV(path, true)
+		mice_data = cognitive_data[:4]
+		cs_data = cognitive_data[4:8]
+		ocean_data = cognitive_data[8:13]
+		enneagram_centers = cognitive_data[13:]
+
+		// Read in Enneagram JSON file
+		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
+		data := utilities.ReadJSON(path)
+		err := json.Unmarshal(data, &enneagram_data)
+		if err != nil {
+			log.Fatalf("Failed to unmarshal json, %s", err)
+		}
+	} else {
+		log.Print("establishing connection to database")
 	}
 
+	// ----- GENERATE PERSONALITY DATA -----
+	// Generate CS Base Data
+	npc_object.CS.Coords = generators.CreateCSCoords(cs_data)
+	npc_object.CS.Aspect = generators.CreateCSAspect(cs_data, npc_object.CS.Coords)
+	// TODO(wholesomeow): Create the logic for this
+	npc_object.CS.Traits = generators.CreateCSTraits(cs_data, npc_object.CS.Coords)
+	npc_object.CS.Description = generators.CreateCSDesc(cs_data, npc_object.CS.Coords)
+	npc_object.CS.Use = generators.CreateCSUse()
+
+	// Generate OCEAN Base Data
+	npc_object.OCEAN.Aspect = generators.CreateOCEANAspect(ocean_data, npc_object.CS.Coords)
+	npc_object.OCEAN.Degree = generators.CreateOCEANDegree(ocean_data, npc_object.CS.Coords)
+	npc_object.OCEAN.Traits = generators.CreateOCEANTraits()
+	npc_object.OCEAN.Description = generators.CreateOCEANDesc()
+	npc_object.OCEAN.Use = generators.CreateOCEANUse()
+
+	// Generate MICE Base Data
+	mice_selection := rand.Intn(len(mice_data))
+	npc_object.MICE.Aspect = generators.CreateMICEAspect(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Degree = generators.CreateMICEDegree(mice_selection, mice_data, npc_object.CS.Coords)
+	// TODO(wholesomeow): Create the logic for this
+	npc_object.MICE.Traits = generators.CreateMICETraits(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Description = generators.CreateMICEDesc(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Use = generators.CreateMICEUse()
+
+	// Generate REI Base Data
+	// TODO(wholesomeow): This ^
+
 	// Generate Enneagram Data
-	npc_object.Enneagram = generators.CreateEnneagram(enneagram_data, enneagram_centers)
+	npc_object.Enneagram.ID = generators.SelectEnneagram()
+	npc_object.Enneagram.Archetype = generators.CreateEnneaArch(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Center = generators.CreateEnneaCenter(npc_object.Enneagram.ID, enneagram_centers)
+	npc_object.Enneagram.DominantEmotion = generators.CreateEnneaEmote(npc_object.Enneagram.ID,
+		npc_object.Enneagram.Center,
+	)
+	npc_object.Enneagram.Keywords = generators.CreateEnneaKeywords(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Description = generators.CreateEnneaDesc(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Fear = generators.CreateEnneaFear(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Desire = generators.CreateEnneaDesire(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Wings = generators.CreateEnneaWings(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.LODLevel = generators.CreateEnneaLODLevel()
+	npc_object.Enneagram.CurrentLOD = generators.CreateEnneaCLOD(npc_object.Enneagram.ID,
+		npc_object.Enneagram.LODLevel,
+		enneagram_data,
+	)
+	npc_object.Enneagram.LevelOfDevelopment = generators.CreateEnneaLODS(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.KeyMotivations = generators.CreateEnneaMotive(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Overview = generators.CreateEnneaOverview(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.Addictions = generators.CreateEnneaAddictions(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.GrowthRecommendations = generators.CreateEnneaGrowth(npc_object.Enneagram.ID, enneagram_data)
 
-	// Generate CS and Personality Base Data
-	npc_object.MICE.Aspect, npc_object.MICE.Description, npc_object.MICE.Use = generators.CreateMICE(mice_data)
-	npc_object.CS.Aspect, npc_object.CS.Data, npc_object.CS.Description, npc_object.CS.Use = generators.CreateCSData(cs_data)
-	npc_object.OCEAN.Aspect, npc_object.OCEAN.Traits, npc_object.OCEAN.Description, npc_object.OCEAN.Use = generators.CreateOCEANData(ocean_data, npc_object.CS.Data)
-
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	// ----- GENERATE PHYSICALITY DATA -----
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
 	log.Print("setting NPC Body Type values from Enum")
 	npc_object.NPCEnums.NPCType = 0 // Set to DEFAULT on init
 	npc_object.NPCType.Name = npc.NPCStateToString(npc_object.NPCEnums.NPCType)
 	npc_object.NPCType.Description = npc.GetNPCStateDescription(npc_object.NPCEnums.NPCType)
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	ft, inch, lbs, inches := MakeSizeImperial()
 	cm, kg := MakeSizeMetric(inches, lbs)
 	npc_object.NPCEnums.BodyType = CreateBodyType(cm, kg)
 	npc_object.BodyType.Name = npc.BodStateToString(npc_object.NPCEnums.BodyType)
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Sex values from Enum")
 	npc_object.NPCEnums.SexType = CreateSexType()
 	npc_object.Sex.Name = npc.SexStateToString(npc_object.NPCEnums.SexType)
@@ -206,7 +263,7 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	log.Print("setting NPC Pronoun values from Enum")
 	npc_object.Pronouns = CreatePronouns(npc_object.NPCEnums.GenderType)
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Sexual Orientation values from Enum")
 	npc_object.NPCEnums.OrientationType = CreateOrientationType()
 	npc_object.SexualOrientation.Name = npc.OriStateToString(npc_object.NPCEnums.OrientationType)
@@ -223,9 +280,13 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.NPCAppearance.Height_Cm = cm
 	npc_object.NPCAppearance.Weight_Kg = kg
 
-	// Initial attempt at Text Generation
+	// ----- GENERATE TEXT -----
 	log.Print("start of text generation")
-	OCEANTextData := generators.CreateOCEANText(npc_object.Name, npc_object.Pronouns, npc_object.OCEAN.Traits, npc_object.OCEAN.Aspect)
+	OCEANTextData := generators.CreateOCEANText(npc_object.Name,
+		npc_object.Pronouns,
+		npc_object.OCEAN.Traits,
+		npc_object.OCEAN.Degree,
+	)
 	npc_object.OCEAN.Text = textgen.SimpleSentenceBuilder(OCEANTextData)
 
 	log.Print("NPC generation finished")

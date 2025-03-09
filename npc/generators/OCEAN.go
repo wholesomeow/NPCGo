@@ -2,23 +2,28 @@ package generators
 
 import (
 	texttypes "go/npcGen/text_gen/text_types"
+	"go/npcGen/utilities"
 	"log"
 	"math"
 	"strconv"
 	"strings"
 )
 
-func remapOCEAN(value float64, minInput float64, maxInput float64, minOutput float64, maxOutput float64) float64 {
-	var part_1 float64
-	var part_2 float64
-	part_1 = (value - minInput) / (maxInput - minInput)
-	part_2 = (maxOutput - minOutput) + minOutput
-	return part_1 * part_2
+func CreateOCEANAspect(ocean_data [][]string, cs_data [2]int) []string {
+	log.Print("generating OCEAN Aspect for NPC")
+
+	aspect := []string{}
+
+	for _, val := range ocean_data {
+		aspect = append(aspect, val[1])
+	}
+
+	return aspect
 }
 
-func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]string, []string, string) {
-	log.Print("generating OCEAN values for NPC")
-	aspect := []float64{}
+func CreateOCEANDegree(ocean_data [][]string, cs_data [2]int) []float64 {
+	log.Print("generating OCEAN Degree values for NPC")
+	degree := []float64{}
 
 	for _, val := range ocean_data {
 		ocean_cast := []float64{}
@@ -44,10 +49,15 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]stri
 		y2 := float64(cs_data[1])
 
 		out := math.Sqrt(math.Pow(x2-x1, 2) + math.Pow(y2-y1, 2))
-		remapped_out := remapOCEAN(out, -250, 250, -100, 100)
-		aspect = append(aspect, remapped_out)
+		remapped_out := utilities.RemapInt(out, -250, 250, -100, 100)
+		degree = append(degree, remapped_out)
 	}
 
+	return degree
+}
+
+func CreateOCEANTraits() [][]string {
+	log.Print("generating OCEAN Traits for NPC")
 	traits := [][]string{}
 	traits = append(traits, []string{"willing to try new things", "think outside the box", "curious", "creative", "imaginative"})
 	traits = append(traits, []string{"organized", "thoughtful", "goal-orientated", "disciplined", "persistent"})
@@ -55,6 +65,11 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]stri
 	traits = append(traits, []string{"kind", "altruistic", "trusting", "cooperative", "prosocial"})
 	traits = append(traits, []string{"anxious", "guilty", "angry", "sullen", "depressed"})
 
+	return traits
+}
+
+func CreateOCEANDesc() []string {
+	log.Print("populating OCEAN Aspect Descriptions for NPC")
 	description := []string{}
 	description = append(description, "A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative.")
 	description = append(description, "A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent.")
@@ -62,9 +77,12 @@ func CreateOCEANData(ocean_data [][]string, cs_data [2]int) ([]float64, [][]stri
 	description = append(description, "A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial.")
 	description = append(description, "A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings.")
 
-	use := "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
+	return description
+}
 
-	return aspect, traits, description, use
+func CreateOCEANUse() string {
+	log.Print("populating OCEAN Use for NPC")
+	return "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
 }
 
 func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspect []float64) TextData {

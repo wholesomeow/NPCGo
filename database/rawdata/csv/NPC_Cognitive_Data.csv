@@ -1,12 +1,12 @@
 Category,Name,Data,Description
-MICE,Money,"0, 24","for financial compensation, with the amount depending on risk and desperation."
-MICE,Ideology,"25, 49","for advancement with a cause they believe in, or against a cause they despise."
-MICE,Coercion,"50, 74",by aggressive or violent means - typically physical/emotional bullying or blackmail.
-MICE,Ego,"75, 99",to inflate or validate their ego - either by undermining opponents or by highlighting their success.
-CS_Dimensions,Versatile,"0, 24",is both a rational and intuitive person.
-CS_Dimensions,Analytical,"25, 49","is a rational person, but not very intuitive."
-CS_Dimensions,Indifferent,"50, 74","is neither a very rational person, nor very intuitive."
-CS_Dimensions,Intuitive,"75, 99","is a intuitive person, but not very rational."
+MICE,Money,"-100, 0","for financial compensation, with the amount depending on risk and desperation."
+MICE,Ideology,"100, 0","for advancement with a cause they believe in, or against a cause they despise."
+MICE,Coercion,"0, -100",by aggressive or violent means - typically physical/emotional bullying or blackmail.
+MICE,Ego,"0, 100",to inflate or validate their ego - either by undermining opponents or by highlighting their success.
+CS_Dimensions,Versatile,"-100, 100",is both a rational and intuitive person.
+CS_Dimensions,Analytical,"-100, 100","is a rational person, but not very intuitive."
+CS_Dimensions,Indifferent,"-100, 100","is neither a very rational person, nor very intuitive."
+CS_Dimensions,Intuitive,"-100, 100","is a intuitive person, but not very rational."
 OCEAN,Openness,"-100, -0","A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative."
 OCEAN,Conscientiousness,"100, 100","A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent."
 OCEAN,Extroversion,"-100, 100","A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle."
