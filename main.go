@@ -10,49 +10,6 @@ import (
 	"strings"
 )
 
-func dbPreFlight(config *configuration.Config) {
-	log.Print("starting database pre-flight checks")
-
-	// Check all required files in database/rawdata exist
-	// TODO(wholesomeow): This sucks lol
-	csv_path := config.Database.CSVPath
-	json_path := config.Database.JSONPath
-	var required_path string
-	log.Print("Check for required files")
-	for _, file := range config.Database.RequiredFiles {
-		split := strings.Split(file, ".")
-		suffix := split[len(split)-1]
-		if suffix == "csv" {
-			required_path = fmt.Sprintf("%s/%s", csv_path, file)
-		} else if suffix == "json" {
-			required_path = fmt.Sprintf("%s/%s", json_path, file)
-		}
-		utilities.CheckFilePath(required_path, true)
-	}
-
-	// Check all optional files in database/rawdata exist
-	optional_found := []bool{}
-	var optional_path string
-	log.Print("Check for optional files")
-	for _, file := range config.Database.OptionalFiles {
-		split := strings.Split(file, ".")
-		suffix := split[len(split)-1]
-		if suffix == "csv" {
-			optional_path = fmt.Sprintf("%s/%s", csv_path, file)
-		} else if suffix == "json" {
-			optional_path = fmt.Sprintf("%s/%s", json_path, file)
-		}
-		found := utilities.CheckFilePath(optional_path, false)
-		optional_found = append(optional_found, found)
-	}
-
-	// Build Optional data if files don't exist
-	// TODO(wholesomeow): Add the rest of the optional files data processing - csv and json
-	if !optional_found[0] {
-		database.BuildNGramFromData(config)
-	}
-}
-
 func main() {
 	// Read in Database Config file
 	var config configuration.Config
@@ -61,7 +18,10 @@ func main() {
 	utilities.ReadConfig(conf_path, &config)
 
 	// Run all Pre-Flight checks
-	dbPreFlight(&config)
+	err := database.DBPreFlight(&config)
+	if err != nil {
+		log.Fatalf("failure in DBPreFlight: %s ", err)
+	}
 
 	// Initialize database per server mode selection
 	mode := strings.ToLower(config.Server.Mode)
@@ -69,8 +29,12 @@ func main() {
 	switch mode {
 	case "dev-db":
 		// Create and populate Database if not already done
-		database.ConectDatabase(&config)
-		database.MigrateDB(&config, "UP")
+		// conn, _ := database.ConectDatabase(&config)
+		// database.MigrateDB(&config, conn, "UP")
+		err := database.InitDB(&config)
+		if err != nil {
+			log.Fatal("failed to init database")
+		}
 	case "dev-csv":
 		log.Print("Skipping database initialization")
 	default:
@@ -78,7 +42,10 @@ func main() {
 	}
 
 	// Create NPC
-	npc_object := npc.CreateNPC(&config)
+	npc_object, err := npc.CreateNPC(&config)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("----- OUTPUT -----")
 	fmt.Println(npc.DataToJSON(npc_object))

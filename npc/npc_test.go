@@ -29,7 +29,10 @@ func TestNPCName(t *testing.T) {
 	log.Printf("database conf file at path %s", conf_path)
 	utilities.ReadConfig(conf_path, &config)
 
-	test_npc := CreateNPC(&config)
+	test_npc, err := CreateNPC(&config)
+	if err != nil {
+		panic(err)
+	}
 
 	nameField := reflect.ValueOf(test_npc).FieldByName("Name")
 	if nameField.Kind() != reflect.String {

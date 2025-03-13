@@ -9,9 +9,16 @@ import (
 	"time"
 )
 
-func BuildNGramFromData(config *configuration.Config) {
-	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[0])
-	pre_name_data := utilities.ReadCSV(path, false)
+func BuildNGramFromData(config *configuration.Config, file FoundData) error {
+	path := fmt.Sprintf(
+		"%s/%s",
+		config.Database.CSVPath,
+		file.Filename,
+	)
+	pre_name_data, err := utilities.ReadCSV(path, file.Header)
+	if err != nil {
+		return nil
+	}
 	var collected_strings strings.Builder
 
 	// Dump the csv data into a single slice
@@ -65,7 +72,11 @@ func BuildNGramFromData(config *configuration.Config) {
 	elapsed_format := end_format.Sub(start_format)
 	log.Printf("formatting completed... elapsed time: %s", time.Duration.String(elapsed_format))
 
-	write_path := config.Database.CSVPath
-	write_name := config.Database.OptionalFiles[0]
-	utilities.WriteCSV(write_path, write_name, output)
+	utilities.WriteCSV(
+		config.Database.CSVPath,
+		file.Filename,
+		output,
+	)
+
+	return nil
 }

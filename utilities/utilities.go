@@ -15,12 +15,14 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func ReadCSV(path string, header bool) [][]string {
+func ReadCSV(path string, header bool) ([][]string, error) {
+	var nil_data [][]string
+
 	// Open CSV File
 	log.Printf("reading %s file", path)
 	f, err := os.OpenFile(path, os.O_RDONLY, 0)
 	if err != nil {
-		log.Printf("error opening CSV: %s", err)
+		return nil_data, err
 	}
 	defer f.Close()
 
@@ -33,10 +35,10 @@ func ReadCSV(path string, header bool) [][]string {
 		data = data[1:]
 	}
 	if err != nil {
-		log.Printf("error reading CSV: %s", err)
+		return data, err
 	}
 
-	return data
+	return data, nil
 }
 
 func WriteCSV(path string, filename string, data [][]string) {
@@ -60,19 +62,32 @@ func WriteCSV(path string, filename string, data [][]string) {
 	}
 }
 
-func ReadJSON(path string) []byte {
+func ReadJSON(path string) ([]byte, error) {
+	var nil_data []byte
+
 	// Open JSON File
 	log.Printf("reading %s file", path)
 	f, err := os.Open(path)
 	if err != nil {
-		log.Printf("error opening JSON: %s", err)
+		return nil_data, err
 	}
 	defer f.Close()
 
 	// Read JSON File
-	byte_value, _ := io.ReadAll(f)
+	byte_value, err := io.ReadAll(f)
+	if err != nil {
+		return nil_data, err
+	}
 
-	return byte_value
+	return byte_value, nil
+}
+
+func JSONToSlice(data []byte) ([][]string, error) {
+	output := [][]string{}
+
+	// LEFT OFF HERE
+
+	return output, nil
 }
 
 func ReadConfig(path string, config *configuration.Config) error {

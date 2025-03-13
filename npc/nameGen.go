@@ -19,11 +19,19 @@ type MarkovChain struct {
 
 // TODO(wholesomeow): Use RogueBasin link to create more advanced Markov Chain
 // LINK: http://www.roguebasin.com/index.php?title=Names_from_a_high_order_Markov_Process_and_a_simplified_Katz_back-off_scheme
-func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int) {
-	//Get data from some place here, if no data then error
-	path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.OptionalFiles[0])
-	n_grams := utilities.ReadCSV(path, false)
+func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int) error {
+	n_grams := [][]string{}
 	compilation := map[string][]string{}
+
+	//Get data from some place here, if no data then error
+	if config.Server.Mode == "dev-csv" {
+		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, "Fantasy_Names_NGrams.csv")
+		var err error
+		n_grams, err = utilities.ReadCSV(path, false)
+		if err != nil {
+			return err
+		}
+	}
 
 	// Split n_gram values into key and value slices
 	for _, val := range n_grams {
@@ -43,6 +51,8 @@ func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int)
 	mc.attempts = max_attempts
 	mc.vowels = vowles
 	mc.accepted_bigrams = accepted_bigrams
+
+	return nil
 }
 
 func getStartPoint(mchain *MarkovChain) (string, string) {

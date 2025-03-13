@@ -55,15 +55,18 @@ EOF
 VAR_OUTPUT=$(sudo du -cha --max-depth=1 /var | grep -E "M|G" | tail -n 1)
 VAR_SIZE=$(echo "$VAR_OUTPUT" | awk '{print $1}' | sed 's/[[:alpha:]]//g')
 VAR_SIZE_FLOAT=$(echo "$VAR_SIZE" | awk '{printf "%.2f", $1}')
+VAR_THREASHOLD=12.0
 
 echo "Directory /var current size: $VAR_SIZE_FLOAT"
-if (( $(echo "$VAR_SIZE_FLOAT > 12.0" | bc -l) )); then
+if (( $(echo "$VAR_SIZE_FLOAT > $VAR_THREASHOLD" | bc -l) )); then
   echo "Directory /var getting too large... running docker prune"
   docker system prune -a -f
 fi
 
 echo "Cleaning workspace"
 # sudo chmod -r $USER:$USER postgres-data
+
+# Will probably end up commenting this part out
 sudo rm -rf postgres-data
 
 echo "Starting new build"

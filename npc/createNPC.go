@@ -152,7 +152,7 @@ func CreateOrientationType() npc.OrientationType {
 }
 
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
-func CreateNPC(config *configuration.Config) NPCBase {
+func CreateNPC(config *configuration.Config) (NPCBase, error) {
 	log.Print("start of NPC creation")
 	var npc_object NPCBase
 	npc_object.Name = CreateName(config)
@@ -169,8 +169,12 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	if mode == "dev" {
 		log.Print("read in all required NPC data from files")
 		// Read in the CS Data csv file
-		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, config.Database.RequiredFiles[5])
-		cognitive_data := utilities.ReadCSV(path, true)
+		// TODO(wholesomeow): I don't like the hardcoded file name here, need to fix
+		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, "NPC_Cognitive_Data.csv")
+		cognitive_data, err := utilities.ReadCSV(path, true)
+		if err != nil {
+			return npc_object, err
+		}
 		mice_data = cognitive_data[:4]
 		cs_data = cognitive_data[4:8]
 		rei_data = cognitive_data[8:12]
@@ -178,11 +182,15 @@ func CreateNPC(config *configuration.Config) NPCBase {
 		enneagram_centers = cognitive_data[17:]
 
 		// Read in Enneagram JSON file
-		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, config.Database.RequiredFiles[6])
-		data := utilities.ReadJSON(path)
-		err := json.Unmarshal(data, &enneagram_data)
+		// TODO(wholesomeow): I don't like the hardcoded file name here, need to fix
+		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, "enneagramData.json")
+		data, err := utilities.ReadJSON(path)
 		if err != nil {
-			log.Fatalf("Failed to unmarshal json, %s", err)
+			log.Fatalf("Failed to read json, %s", err)
+		}
+		err = json.Unmarshal(data, &enneagram_data)
+		if err != nil {
+			return npc_object, err
 		}
 	} else {
 		log.Print("establishing connection to database")
@@ -297,5 +305,5 @@ func CreateNPC(config *configuration.Config) NPCBase {
 	npc_object.OCEAN.Text = textgen.SimpleSentenceBuilder(OCEANTextData)
 
 	log.Print("NPC generation finished")
-	return npc_object
+	return npc_object, nil
 }
