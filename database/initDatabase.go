@@ -75,10 +75,12 @@ func transferData(config *configuration.Config, conn *pgx.Conn, data [][]string,
 
 	// TODO(wholesomeow): Prep schema here with strings.ToUpper()
 
+	// NOTE(wholesomeow): CopyFromRows takes in an [][]interface, so need to convert data
 	for _, record := range data {
 		row := make([]interface{}, len(record))
 		for i, val := range record {
-			row[i] = val // Consider type conversions here if necessary
+			// TODO(wholesomeow): Implement type conversion here
+			row[i] = val
 		}
 		tx_data = append(tx_data, row)
 	}
