@@ -1,0 +1,53 @@
+services:
+  npcg-app:
+    build:
+      context: .
+    container_name: npcg-app
+    env_file:
+      - ./.env
+    environment:
+      PORT: 5432
+      LOG_LEVEL: ${LOG_LEVEL}
+      POSTGRES_HOST: postgres # Service name of the Postgres container
+      POSTGRES_PORT: 5432 # Internal port that Postgres is listening on
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - npcg-network
+
+  postgres:
+    image: postgres:10.5
+    restart: always
+    container_name: npcg-postgres
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: [ CMD-SHELL, "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432" # External port 5454 mapped to internal 5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - npcg-network
+
+volumes:
+  postgres-data:
+
+
+networks:
+  npcg-network:

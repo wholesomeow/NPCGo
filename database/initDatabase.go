@@ -17,12 +17,18 @@ import (
 
 func ConectDatabase(config *configuration.Config) {
 	// Connect to database
+	log.Printf("connecting to database on %s as %s on port %d",
+		config.Database.Hostname,
+		config.Database.Username,
+		config.Database.Port,
+	)
+
 	connStr := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		config.Database.Username,
 		config.Database.Password,
-		config.Server.Host,
-		config.Server.Port,
+		config.Database.Hostname,
+		config.Database.Port,
 		config.Database.DBName,
 		config.Database.SSLMode,
 	)
@@ -51,8 +57,8 @@ func MigrateDB(config *configuration.Config, arg string) {
 		"postgres://%s:%s@%s:%d/%s?sslmode=%s&search_path=public",
 		config.Database.Username,
 		config.Database.Password,
-		config.Server.Host,
-		config.Server.Port,
+		config.Database.Hostname,
+		config.Database.Port,
 		config.Database.DBName,
 		config.Database.SSLMode,
 	)

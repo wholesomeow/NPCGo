@@ -7,7 +7,6 @@ import (
 	"go/npcGen/npc"
 	"go/npcGen/utilities"
 	"log"
-	"os"
 	"strings"
 )
 
@@ -57,25 +56,25 @@ func dbPreFlight(config *configuration.Config) {
 func main() {
 	// Read in Database Config file
 	var config configuration.Config
-	conf_path := "configuration/dbconf.yaml"
+	conf_path := "configuration/dbconf.yml"
 	log.Printf("database conf file at path %s", conf_path)
 	utilities.ReadConfig(conf_path, &config)
 
 	// Run all Pre-Flight checks
 	dbPreFlight(&config)
 
-	// If SKIP, then skip all database portions and build datafiles normally
+	// Initialize database per server mode selection
 	mode := strings.ToLower(config.Server.Mode)
-	if mode != "dev" {
+	log.Printf("reading in config mode option %s", mode)
+	switch mode {
+	case "dev-db":
 		// Create and populate Database if not already done
 		database.ConectDatabase(&config)
-		// TODO(wholesomeow): Figure out why program is exiting after migrations complete
-		arg := os.Args[1]
-		option := strings.ToUpper(arg)
-		database.MigrateDB(&config, option)
-	} else {
-		log.Printf("reading in config mode option %s", mode)
-		log.Print("mode not implemented...")
+		database.MigrateDB(&config, "UP")
+	case "dev-csv":
+		log.Print("Skipping database initialization")
+	default:
+		log.Fatalf("no mode matching %s. Please check configurations/dcbonf.yaml", mode)
 	}
 
 	// Create NPC

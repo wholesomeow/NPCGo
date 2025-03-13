@@ -1,0 +1,30 @@
+# Server Configurations
+server:
+  host: localhost
+  port: 8000
+  mode: dev-db
+  loglevel: info
+  network: npcg-network
+
+# Database Configurations
+database:
+  dbname: npcg
+  hostname: npcg-postgres
+  user: postgres
+  password: secret
+  port: 5432
+  sslmode: disable
+  csvpath: database/rawdata/csv
+  jsonpath: database/rawdata/json
+  migrationpath: file://database/migrations
+  # DO NOT ALTER THE ORDER OF THE NAMES
+  reqfiles:
+    - Fantasy_Names.csv
+    - Genders.csv
+    - NPC_Job_List_Fantasy.csv
+    - Races_5e.csv
+    - Sexual_Orientations.csv
+    - NPC_Cognitive_Data.csv
+    - enneagramData.json
+  optionalfiles:
+    - Fantasy_Names_NGrams.csv
