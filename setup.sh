@@ -67,7 +67,7 @@ echo "Cleaning workspace"
 # sudo chmod -r $USER:$USER postgres-data
 
 # Will probably end up commenting this part out
-sudo rm -rf postgres-data
+# sudo rm -rf postgres-data
 
 echo "Starting new build"
 docker compose up --build

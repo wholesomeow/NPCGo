@@ -54,9 +54,6 @@ func ConectDatabase(config *configuration.Config) (*pgx.Conn, error) {
 		config.Database.Username,
 	)
 
-	// Close connection to database
-	defer conn.Close(context.Background())
-
 	return conn, nil
 }
 
@@ -69,14 +66,20 @@ func transferData(config *configuration.Config, conn *pgx.Conn, data [][]string,
 	log.Print("starting transaction")
 	tx, err := conn.Begin(context.Background())
 	if err != nil {
-		return err
+		return fmt.Errorf("conn.Begin failed... error: %s", err)
 	}
 	defer tx.Rollback(context.Background())
 
 	// TODO(wholesomeow): Prep schema here with strings.ToUpper()
 
 	// NOTE(wholesomeow): CopyFromRows takes in an [][]interface, so need to convert data
-	for _, record := range data {
+	log.Printf("converting data from file %s to interface", file.Filename)
+	for idx, record := range data {
+		log.Printf("writing row %d of %d from file %s",
+			idx,
+			len(record),
+			file.Filename,
+		)
 		row := make([]interface{}, len(record))
 		for i, val := range record {
 			// TODO(wholesomeow): Implement type conversion here
@@ -102,6 +105,9 @@ func transferData(config *configuration.Config, conn *pgx.Conn, data [][]string,
 	if err != nil {
 		return err
 	}
+
+	// Close connection to database
+	defer conn.Close(context.Background())
 
 	log.Printf(
 		"successfully imported %d rows into %s: ",
@@ -146,10 +152,24 @@ func readRawData(config *configuration.Config, count int) ([][]string, error) {
 	return output, nil
 }
 
-func CreateTable(config *configuration.Config) error {
+func CreateTable(config *configuration.Config, table_name string) error {
 	// Connect to database
+	conn, err := ConectDatabase(config)
+	if err != nil {
+		return err
+	}
 
 	// Create tables from table names
+	migration_path := config.Database.MigrationPath
+	table_path := fmt.Sprintf(
+		"%s/create_table_%s.sql",
+		migration_path,
+		table_name,
+	)
+	_, err = conn.Exec(context.Background(), table_path)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -158,7 +178,25 @@ func InitDB(config *configuration.Config) error {
 	// Connect to database
 	conn, err := ConectDatabase(config)
 	if err != nil {
-		return err
+		return fmt.Errorf("func ConnectDatabase error: %s", err)
+	}
+
+	// Create tables if they don't exist
+	for _, file := range config.Database.Files {
+		var n int64
+		query := fmt.Sprintf(
+			"select 1 from information_schema.tables where table_name=%s",
+			file.Tablename,
+		)
+		err := conn.QueryRow(context.Background(), query, "ID").Scan(&n)
+		if err == pgx.ErrNoRows {
+			err := CreateTable(config, file.Filename)
+			if err != nil {
+				return fmt.Errorf("func CreateTable error: %s", err)
+			}
+		} else if err != nil {
+			return err
+		}
 	}
 
 	// Commit file raw data to table
@@ -168,12 +206,12 @@ func InitDB(config *configuration.Config) error {
 			idx,
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("func readRawData error: %s", err)
 		}
 
 		err = transferData(config, conn, data, idx)
 		if err != nil {
-			return err
+			return fmt.Errorf("func transferData error: %s", err)
 		}
 	}
 

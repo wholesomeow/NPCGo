@@ -16,7 +16,7 @@ database:
   sslmode: disable
   csvpath: database/rawdata/csv
   jsonpath: database/rawdata/json
-  migrationpath: file://database/migrations
+  migrationpath: file://database/sql/migrations
   files:
     - filename: Fantasy_Names.csv
       required: true
@@ -24,6 +24,7 @@ database:
       tablename: names_fantasy
       schema: 
         - ID
+        - Names
     - filename: Genders.csv
       required: true
       header: true

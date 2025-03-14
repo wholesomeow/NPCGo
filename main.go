@@ -28,12 +28,9 @@ func main() {
 	log.Printf("reading in config mode option %s", mode)
 	switch mode {
 	case "dev-db":
-		// Create and populate Database if not already done
-		// conn, _ := database.ConectDatabase(&config)
-		// database.MigrateDB(&config, conn, "UP")
 		err := database.InitDB(&config)
 		if err != nil {
-			log.Fatal("failed to init database")
+			log.Fatalf("failed to init database... error: %s", err)
 		}
 	case "dev-csv":
 		log.Print("Skipping database initialization")
