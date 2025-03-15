@@ -1,7 +1,18 @@
 package configuration
 
-// NOTE(wholesomeow): Used https://zhwt.github.io/yaml-to-go/ to auto-convert lol
+import (
+	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+
+	"gopkg.in/yaml.v2"
+)
+
 type Config struct {
+	// NOTE(wholesomeow): Used https://zhwt.github.io/yaml-to-go/ to auto-convert lol
 	Server struct {
 		Host     string `yaml:"host"`
 		Port     int    `yaml:"port"`
@@ -29,4 +40,29 @@ type Config struct {
 	} `yaml:"database"`
 }
 
-// NOTE(wholesomeow): Use https://mholt.github.io/json-to-go/ to auto-convert too lol
+var instance *Config
+var once sync.Once
+
+// Returns the singleton instance of the configuration file
+func ReadConfig(path string) (*Config, error) {
+	f, err := os.OpenFile(path, os.O_RDONLY, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	// Parse file based on file extention
+	// TODO(wholesomeow): Implement Environment variables
+	switch ext := strings.ToLower(filepath.Ext(path)); ext {
+	case ".yaml", ".yml":
+		// Open YAML files
+		log.Printf("reading %s file", path)
+		yaml_decoder := yaml.NewDecoder(f)
+		once.Do(func() {
+			yaml_decoder.Decode(instance)
+		})
+		return instance, nil
+	default:
+		return instance, fmt.Errorf("file format '%s' not supported by parser", ext)
+	}
+}

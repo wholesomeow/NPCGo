@@ -3,16 +3,12 @@ package utilities
 import (
 	"encoding/csv"
 	"fmt"
-	"go/npcGen/configuration"
 	"io"
 	"log"
 	"math"
 	"math/rand"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 func ReadCSV(path string, header bool) ([][]string, error) {
@@ -88,30 +84,6 @@ func JSONToSlice(data []byte) ([][]string, error) {
 	// LEFT OFF HERE
 
 	return output, nil
-}
-
-func ReadConfig(path string, config *configuration.Config) error {
-	f, err := os.OpenFile(path, os.O_RDONLY, 0)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-
-	// Parse file based on file extention
-	// TODO(wholesomeow): Implement Environment variables and JSON
-	switch ext := strings.ToLower(filepath.Ext(path)); ext {
-	case ".yaml", ".yml":
-		yaml_decoder := yaml.NewDecoder(f)
-		err := yaml_decoder.Decode(config)
-		if err != nil {
-			// TODO(wholesomeow): Figure out better logging/error handling for known things like this
-			log.Fatal(err)
-		}
-	default:
-		return fmt.Errorf("file format '%s' not supported by parser", ext)
-	}
-
-	return nil
 }
 
 func CheckFilePath(path string, required bool) bool {

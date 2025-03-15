@@ -18,8 +18,6 @@ func TestNPCType(t *testing.T) {
 }
 
 func TestNPCName(t *testing.T) {
-	var config configuration.Config
-
 	// Conf path hardcoded for testing purposes
 	err := utilities.ChangeWorkingDir("..")
 	if err != nil {
@@ -27,9 +25,12 @@ func TestNPCName(t *testing.T) {
 	}
 	conf_path := "configuration/dbconf.yml"
 	log.Printf("database conf file at path %s", conf_path)
-	utilities.ReadConfig(conf_path, &config)
+	config, err := configuration.ReadConfig("configurations/dcbonf.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	test_npc, err := CreateNPC(&config)
+	test_npc, err := CreateNPC(config)
 	if err != nil {
 		panic(err)
 	}

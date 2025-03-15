@@ -5,20 +5,19 @@ import (
 	"go/npcGen/configuration"
 	"go/npcGen/database"
 	"go/npcGen/npc"
-	"go/npcGen/utilities"
 	"log"
 	"strings"
 )
 
 func main() {
 	// Read in Database Config file
-	var config configuration.Config
-	conf_path := "configuration/dbconf.yml"
-	log.Printf("database conf file at path %s", conf_path)
-	utilities.ReadConfig(conf_path, &config)
+	config, err := configuration.ReadConfig("configurations/dcbonf.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Run all Pre-Flight checks
-	err := database.DBPreFlight(&config)
+	err = database.DBPreFlight(config)
 	if err != nil {
 		log.Fatalf("failure in DBPreFlight: %s ", err)
 	}
@@ -28,7 +27,7 @@ func main() {
 	log.Printf("reading in config mode option %s", mode)
 	switch mode {
 	case "dev-db":
-		err := database.InitDB(&config)
+		err := database.InitDB(config)
 		if err != nil {
 			log.Fatalf("failed to init database... error: %s", err)
 		}
@@ -39,7 +38,7 @@ func main() {
 	}
 
 	// Create NPC
-	npc_object, err := npc.CreateNPC(&config)
+	npc_object, err := npc.CreateNPC(config)
 	if err != nil {
 		log.Fatal(err)
 	}
