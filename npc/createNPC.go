@@ -166,7 +166,7 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 	var enneagram_data generators.EnneagramStruct
 
 	mode := strings.ToLower(config.Server.Mode)
-	if mode == "dev" {
+	if mode == "dev-csv" {
 		log.Print("read in all required NPC data from files")
 		// Read in the CS Data csv file
 		// TODO(wholesomeow): I don't like the hardcoded file name here, need to fix
@@ -198,7 +198,7 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 
 	// ----- GENERATE PERSONALITY DATA -----
 	// Generate CS Base Data
-	npc_object.CS.Coords = generators.CreateCSCoords(cs_data)
+	npc_object.CS.Coords = generators.CreateCSCoords()
 	npc_object.CS.Aspect = generators.CreateCSAspect(cs_data, npc_object.CS.Coords)
 	// TODO(wholesomeow): Create the logic for this
 	npc_object.CS.Traits = generators.CreateCSTraits(cs_data, npc_object.CS.Coords)

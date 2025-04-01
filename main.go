@@ -6,12 +6,11 @@ import (
 	"go/npcGen/database"
 	"go/npcGen/npc"
 	"log"
-	"strings"
 )
 
 func main() {
 	// Read in Database Config file
-	config, err := configuration.ReadConfig("configurations/dcbonf.yaml")
+	config, err := configuration.ReadConfig("configuration/dbconf.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,21 +21,6 @@ func main() {
 		log.Fatalf("failure in DBPreFlight: %s ", err)
 	}
 
-	// Initialize database per server mode selection
-	mode := strings.ToLower(config.Server.Mode)
-	log.Printf("reading in config mode option %s", mode)
-	switch mode {
-	case "dev-db":
-		err := database.InitDB(config)
-		if err != nil {
-			log.Fatalf("failed to init database... error: %s", err)
-		}
-	case "dev-csv":
-		log.Print("Skipping database initialization")
-	default:
-		log.Fatalf("no mode matching %s. Please check configurations/dcbonf.yaml", mode)
-	}
-
 	// Create NPC
 	npc_object, err := npc.CreateNPC(config)
 	if err != nil {
@@ -44,6 +28,6 @@ func main() {
 	}
 
 	fmt.Println("----- OUTPUT -----")
-	fmt.Println(npc.DataToJSON(npc_object))
+	fmt.Println(npc_object.DataToJSON())
 	// fmt.Println(npc_object.OCEAN.Text)
 }

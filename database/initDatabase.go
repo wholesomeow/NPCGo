@@ -8,7 +8,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/golang-migrate/migrate/v4"
 	"github.com/jackc/pgx/v4"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -150,108 +149,4 @@ func readRawData(config *configuration.Config, count int) ([][]string, error) {
 	}
 
 	return output, nil
-}
-
-func CreateTable(config *configuration.Config, table_name string) error {
-	// Connect to database
-	conn, err := ConectDatabase(config)
-	if err != nil {
-		return err
-	}
-
-	// Create tables from table names
-	migration_path := config.Database.MigrationPath
-	table_path := fmt.Sprintf(
-		"%s/create_table_%s.sql",
-		migration_path,
-		table_name,
-	)
-	_, err = conn.Exec(context.Background(), table_path)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func InitDB(config *configuration.Config) error {
-	log.Print("begin database content init")
-	// Connect to database
-	conn, err := ConectDatabase(config)
-	if err != nil {
-		return fmt.Errorf("func ConnectDatabase error: %s", err)
-	}
-
-	// Create tables if they don't exist
-	for _, file := range config.Database.Files {
-		var n int64
-		query := fmt.Sprintf(
-			"select 1 from information_schema.tables where table_name=%s",
-			file.Tablename,
-		)
-		err := conn.QueryRow(context.Background(), query, "ID").Scan(&n)
-		if err == pgx.ErrNoRows {
-			err := CreateTable(config, file.Filename)
-			if err != nil {
-				return fmt.Errorf("func CreateTable error: %s", err)
-			}
-		} else if err != nil {
-			return err
-		}
-	}
-
-	// Commit file raw data to table
-	for idx := range config.Database.Files {
-		data, err := readRawData(
-			config,
-			idx,
-		)
-		if err != nil {
-			return fmt.Errorf("func readRawData error: %s", err)
-		}
-
-		err = transferData(config, conn, data, idx)
-		if err != nil {
-			return fmt.Errorf("func transferData error: %s", err)
-		}
-	}
-
-	return nil
-}
-
-func MigrateDB(config *configuration.Config, conn *pgx.Conn, arg string) error {
-	// Read config and start migration
-	// TODO(wholesomeow): Research search_path settings
-	connStr := fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=%s&search_path=public",
-		config.Database.Username,
-		config.Database.Password,
-		config.Database.Hostname,
-		config.Database.Port,
-		config.Database.DBName,
-		config.Database.SSLMode,
-	)
-	migration_path := config.Database.MigrationPath
-	m, err := migrate.New(migration_path, connStr)
-
-	// TODO(wholesomeow): Better error handling here
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	switch arg {
-	case "UP":
-		log.Printf("begining migration '%s' in database %s for user %s",
-			arg, config.Database.DBName, config.Database.Username)
-		if err := m.Up(); err != nil {
-			log.Fatal(err)
-		}
-	case "DOWN":
-		if err := m.Down(); err != nil {
-			log.Fatal(err)
-		}
-	default:
-		log.Fatal("no known argument provided")
-	}
-
-	return nil
 }

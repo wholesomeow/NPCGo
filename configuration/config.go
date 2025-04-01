@@ -51,11 +51,16 @@ func ReadConfig(path string) (*Config, error) {
 	}
 	defer f.Close()
 
+	// Initialize the instance if not already initialized
+	if instance == nil {
+		instance = &Config{}
+	}
+
 	// Parse file based on file extention
 	// TODO(wholesomeow): Implement Environment variables
 	switch ext := strings.ToLower(filepath.Ext(path)); ext {
 	case ".yaml", ".yml":
-		// Open YAML files
+		// Open YAML files and decode the YAML into the singleton instance
 		log.Printf("reading %s file", path)
 		yaml_decoder := yaml.NewDecoder(f)
 		once.Do(func() {

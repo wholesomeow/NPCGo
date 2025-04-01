@@ -108,16 +108,12 @@ type NPCBase struct {
 	// Jobs Known
 }
 
-func GetAllNPCData(npc NPCBase) NPCBase {
-	return npc
-}
-
-func DataToJSON(npc NPCBase) string {
+func (npc *NPCBase) DataToJSON() string {
 	result, _ := json.MarshalIndent(npc, "", "  ")
 
 	return string(result)
 }
 
-func GetName(npc NPCBase) string {
+func (npc *NPCBase) GetName() string {
 	return npc.Name
 }

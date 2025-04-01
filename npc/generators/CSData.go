@@ -27,7 +27,7 @@ func CreateCSAspect(cs_data [][]string, cs_coords [2]int) string {
 	return selection[1]
 }
 
-func CreateCSCoords(cs_data [][]string) [2]int {
+func CreateCSCoords() [2]int {
 	log.Print("generating Cognitive Science Coordiantes for NPC")
 	var cs_coords = [2]int{0, 0}
 

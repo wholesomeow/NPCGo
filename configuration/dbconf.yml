@@ -39,7 +39,7 @@ database:
     - filename: NPC_Job_List_Fantasy.csv
       required: true
       header: true
-      tablename: job_list_fantasy
+      tablename: jobs_fantasy
       schema: 
         - ID
         - Category

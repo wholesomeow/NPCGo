@@ -35,6 +35,11 @@ case $1 in
 esac
 
 echo "Variables read from config file. Writing to .env"
+CONTAINER_NAMES=(
+  npcg-pg
+  npcg-app
+  npcg-pg-migrate
+  )
 
 # Write config file variables to .env file for docker-compose
 cat > .env << EOF
@@ -47,6 +52,9 @@ POSTGRES_DB=${DB_NAME}
 POSTGRES_USER=${DB_USER}
 POSTGRES_PASSWORD=${DB_PW}
 POSTGRES_HOST=${DB_HOST}
+POSTGRES_CONTAINER_NAME=${CONTAINER_NAMES[0]}
+APP_CONTAINER_NAME=${CONTAINER_NAMES[1]}
+MIGRATION_CONTAINER_NAME=${CONTAINER_NAMES[2]}
 EOF
 
 # echo "Cleaning containers"
@@ -63,7 +71,18 @@ if (( $(echo "$VAR_SIZE_FLOAT > $VAR_THREASHOLD" | bc -l) )); then
   docker system prune -a -f
 fi
 
-echo "Cleaning workspace"
+echo "Checking for existing running containers"
+for NAME in ${CONTAINER_NAMES[@]}; do
+    if docker ps -a --filter "name=$NAME" --format "{{.Names}}" | grep -w "$NAME" > /dev/null; then
+        echo "Container '$NAME' exists. Removing it..."
+        docker stop "$NAME" > /dev/null
+        docker rm "$NAME" > /dev/null
+    else
+        echo "Container '$NAME' does not exist."
+    fi
+done
+
+# echo "Cleaning workspace"
 # sudo chmod -r $USER:$USER postgres-data
 
 # Will probably end up commenting this part out

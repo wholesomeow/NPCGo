@@ -25,7 +25,7 @@ func TestNPCName(t *testing.T) {
 	}
 	conf_path := "configuration/dbconf.yml"
 	log.Printf("database conf file at path %s", conf_path)
-	config, err := configuration.ReadConfig("configurations/dcbonf.yaml")
+	config, err := configuration.ReadConfig("configuration/dbconf.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
