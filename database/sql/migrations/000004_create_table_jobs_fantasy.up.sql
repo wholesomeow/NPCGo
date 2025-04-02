@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS jobs_fantasy(
     can_own BOOL NOT NULL,
     min_status_name VARCHAR(128) NOT NULL,
     max_status_name VARCHAR(128) NOT NULL,
-    min_status_level INT(128) NOT NULL,
-    max_status_level INT(128) NOT NULL
+    min_status_level INT NOT NULL,
+    max_status_level INT NOT NULL
 );
