@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS races_5e(
     id serial PRIMARY KEY,
-    race VARCHAR(128) UNIQUE NOT NULL,
-    subrace VARCHAR(256) UNIQUE NOT NULL,
+    race VARCHAR(128) NOT NULL,
+    subrace VARCHAR(256) NOT NULL,
     adult_age_min INT NOT NULL,
     adult_age_max INT NOT NULL,
     covering VARCHAR(128) NOT NULL,
@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS races_5e(
     intelligence INT NOT NULL,
     wisdom INT NOT NULL,
     charisma INT NOT NULL,
-    extra VARCHAR(256) NOT NULL
+    extra VARCHAR(256)
 );

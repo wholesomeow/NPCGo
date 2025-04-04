@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS ngram_fantasy (
-    NGram_ID SERIAL PRIMARY KEY,
-    NGram_VAL VARCHAR(1) UNIQUE NOT NULL,
-    NGram_POS TEXT NOT NULL
+    id SERIAL PRIMARY KEY,
+    ngram_value VARCHAR(1) UNIQUE NOT NULL,
+    ngram_posibility TEXT NOT NULL
 );
