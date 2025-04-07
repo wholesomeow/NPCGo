@@ -1,12 +1,16 @@
 package npc
 
 import (
+	"context"
 	"fmt"
 	"go/npcGen/configuration"
+	"go/npcGen/database"
 	"go/npcGen/utilities"
 	"log"
 	"math/rand"
 	"strings"
+
+	"github.com/jackc/pgx/v4"
 )
 
 type MarkovChain struct {
@@ -19,7 +23,7 @@ type MarkovChain struct {
 
 // TODO(wholesomeow): Use RogueBasin link to create more advanced Markov Chain
 // LINK: http://www.roguebasin.com/index.php?title=Names_from_a_high_order_Markov_Process_and_a_simplified_Katz_back-off_scheme
-func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int) error {
+func (mc *MarkovChain) BuildNGram(config *configuration.Config, max_attempts int) error {
 	n_grams := [][]string{}
 	compilation := map[string][]string{}
 
@@ -31,13 +35,32 @@ func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int)
 		if err != nil {
 			return err
 		}
+	} else {
+		log.Print("starting NGram data collection")
+		// Create DB Object
+		var db *pgx.Conn
+		var err error
+		db, err = database.ConnectDatabase(config)
+		if err != nil {
+			return err
+		}
+
+		defer db.Close(context.Background())
+
+		// Query for required data to generate NPC
+		err = db.QueryRow(context.Background(), "SELECT * FROM ngram_fantasy").Scan(&n_grams)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Split n_gram values into key and value slices
-	for _, val := range n_grams {
-		mc.keys = append(mc.keys, val[0])
-		options := strings.Split(val[1], ",")
-		compilation[val[0]] = options
+	for idx, val := range n_grams {
+		if idx != 0 {
+			mc.keys = append(mc.keys, val[0])
+			options := strings.Split(val[1], ",")
+			compilation[val[0]] = options
+		}
 	}
 
 	mc.n_gram = compilation
@@ -55,7 +78,7 @@ func buildNGram(mc *MarkovChain, config *configuration.Config, max_attempts int)
 	return nil
 }
 
-func getStartPoint(mchain *MarkovChain) (string, string) {
+func (mchain *MarkovChain) GetStartPoint() (string, string) {
 	keys := mchain.keys
 	result := mchain.keys[rand.Intn(len(keys))]
 	start_gram := result
@@ -63,10 +86,10 @@ func getStartPoint(mchain *MarkovChain) (string, string) {
 	return result, start_gram
 }
 
-func makeName(mchain *MarkovChain) string {
+func (mchain *MarkovChain) MakeName() string {
 	// TODO(wholesomeow): Implement better error checking and handling here
 	log.Print("start of name creation")
-	result, current_gram := getStartPoint(mchain)
+	result, current_gram := mchain.GetStartPoint()
 
 	for idx := range mchain.attempts {
 		possibility := mchain.n_gram[current_gram]
@@ -82,7 +105,7 @@ func makeName(mchain *MarkovChain) string {
 	return result
 }
 
-func checkQuality(mchain *MarkovChain, name string) bool {
+func (mchain *MarkovChain) CheckQuality(name string) bool {
 	// Rules for name formatting are here
 	log.Print("checking quality of name")
 	if len(name) <= 3 {

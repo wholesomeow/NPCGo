@@ -1,9 +1,11 @@
 package npc
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"go/npcGen/configuration"
+	"go/npcGen/database"
 	npc "go/npcGen/npc/enums"
 	"go/npcGen/npc/generators"
 	textgen "go/npcGen/text_gen"
@@ -12,22 +14,28 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/jackc/pgx/v4"
 )
 
 // --------------------------------------------------- CREATE NPC NAME BEGIN ---------------------------------------------------
-func CreateName(config *configuration.Config) string {
+func (npc *NPCBase) CreateName(config *configuration.Config) (string, error) {
 	var mchain MarkovChain
 	var name string
 	max_attempts := 6
 
-	buildNGram(&mchain, config, max_attempts)
+	log.Print("starting ngram build")
+	err := mchain.BuildNGram(config, max_attempts)
+	if err != nil {
+		return name, err
+	}
 
 	log.Print("starting name creation")
 	start_proc := time.Now()
 	for count := range max_attempts {
 		log.Printf("name creation attempt %d", count)
-		name = makeName(&mchain)
-		if checkQuality(&mchain, name) {
+		name = mchain.MakeName()
+		if mchain.CheckQuality(name) {
 			break
 		}
 		log.Printf("name %s doesn't meet quality check... moving on to next attempt", name)
@@ -36,7 +44,7 @@ func CreateName(config *configuration.Config) string {
 	elapsed_proc := end_proc.Sub(start_proc)
 	log.Printf("name creation completed... elapsed time: %s", time.Duration.String(elapsed_proc))
 
-	return name
+	return name, nil
 }
 
 // --------------------------------------------------- CREATE NPC BODY BEGIN ---------------------------------------------------
@@ -154,16 +162,25 @@ func CreateOrientationType() npc.OrientationType {
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
 func CreateNPC(config *configuration.Config) (NPCBase, error) {
 	log.Print("start of NPC creation")
+	var err error
 	var npc_object NPCBase
-	npc_object.Name = CreateName(config)
 
-	//Create Personality Data Containers
+	// Create NPC Name
+	npc_object.Name, err = npc_object.CreateName(config)
+	if err != nil {
+		return npc_object, err
+	}
+
+	// Create Personality Data Containers
 	mice_data := [][]string{}
 	cs_data := [][]string{}
 	rei_data := [][]string{}
 	ocean_data := [][]string{}
 	enneagram_centers := [][]string{}
 	var enneagram_data generators.EnneagramStruct
+
+	// Create DB Object
+	var db *pgx.Conn
 
 	mode := strings.ToLower(config.Server.Mode)
 	if mode == "dev-csv" {
@@ -193,7 +210,31 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 			return npc_object, err
 		}
 	} else {
-		log.Print("establishing connection to database")
+		var err error
+		db, err = database.ConnectDatabase(config)
+		if err != nil {
+			return npc_object, err
+		}
+
+		defer db.Close(context.Background())
+
+		// Query for required data to generate NPC
+		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='MICE'").Scan(&mice_data)
+		if err != nil {
+			return npc_object, err
+		}
+		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'").Scan(&cs_data)
+		if err != nil {
+			return npc_object, err
+		}
+		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'").Scan(&rei_data)
+		if err != nil {
+			return npc_object, err
+		}
+		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'").Scan(&ocean_data)
+		if err != nil {
+			return npc_object, err
+		}
 	}
 
 	// ----- GENERATE PERSONALITY DATA -----
