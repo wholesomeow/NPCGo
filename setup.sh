@@ -35,7 +35,8 @@ CONTAINER_NAMES=(
   )
 
 # Setting MIGRATION_PATH here because I don't want to try and split "file://" from the path in the dbconf.yml
-MIGRATION_PATH=./database/sql/migrations/
+MIGRATION_PATH=./database/sql/migrations
+RAWDATA_PATH=./database/rawdata
 
 echo "Setting DB connection string"
 DB_CONNECTION_STRING=postgres://${DB_USER}:${DB_PW}@${CONTAINER_NAMES[0]}:${DB_PORT}/${DB_NAME}?sslmode=disable
@@ -55,6 +56,7 @@ POSTGRES_CONTAINER_NAME=${CONTAINER_NAMES[0]}
 APP_CONTAINER_NAME=${CONTAINER_NAMES[1]}
 MIGRATION_CONTAINER_NAME=${CONTAINER_NAMES[2]}
 MIGRATION_PATH=${MIGRATION_PATH}
+RAWDATA_PATH=${RAWDATA_PATH}
 DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
 EOF
 
@@ -82,7 +84,11 @@ for NAME in ${CONTAINER_NAMES[@]}; do
 done
 
 # Check if the database needs to be rolled back to a previous version first
-if [[ "$2" == "dirty" ]]; then
+if [[ "$2" == "dirty" && -n $3 ]]; then
+  if [ -z $3 ]; then
+    echo "Must provide version to force DB back to"
+    exit 1
+  fi
   echo "--- Database marked as 'DIRTY' - Starting Rollback Attempt ---"
   echo "Starting ${CONTAINER_NAMES[0]}"
   docker network create npcg-network > /dev/null
@@ -111,6 +117,8 @@ if [[ "$2" == "dirty" ]]; then
     -database ${DB_CONNECTION_STRING} \
     version || exit 1
 
+  # docker run --rm -v ${RAWDATA_PATH}:/rawdata alpine ls /rawdata/csv/
+
   echo "Attempting roll back"
   docker run --rm \
     --network npcg-network \
@@ -118,7 +126,7 @@ if [[ "$2" == "dirty" ]]; then
     migrate/migrate \
     -path=/migrations \
     -database ${DB_CONNECTION_STRING} \
-    down 1 || exit 1
+    force $3 || exit 1
 
   echo "Stopping ${CONTAINER_NAMES[0]}"
   docker stop ${CONTAINER_NAMES[0]}

@@ -21,6 +21,7 @@ func DBPreFlight(config *configuration.Config) error {
 	json_path := config.Database.JSONPath
 	found := []FoundData{}
 	var path string
+
 	log.Print("Check for required files")
 	for _, file := range config.Database.Files {
 		split := strings.Split(file.Filename, ".")

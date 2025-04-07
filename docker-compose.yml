@@ -42,6 +42,7 @@ services:
       - "5432:5432" # External port 5454 mapped to internal 5432
     volumes:
       - ./pg-data:/var/lib/postgresql/data
+      - ${RAWDATA_PATH}:/rawdata
     networks:
       - npcg-network
 
@@ -55,6 +56,7 @@ services:
       - npcg-network
     volumes:
       - ${MIGRATION_PATH}:/migrations
+      - ${RAWDATA_PATH}:/rawdata
     command: [ "-path", "/migrations/", "-database", "${DB_CONNECTION_STRING}", "up" ]
 
 volumes:
