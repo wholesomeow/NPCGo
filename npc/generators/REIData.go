@@ -44,16 +44,16 @@ func CreateREITraits() []string {
 
 func CreateREIDesc(rei_data [][]string, cs_data [2]int) []string {
 	log.Print("populating Rational-Experiential Inventory Description for NPC")
-	description := []string{rei_data[0][3], rei_data[1][3]}
+	description := []string{rei_data[0][2], rei_data[1][2]}
 
 	// Determine X first
 	if cs_data[0] <= 0 {
-		description[0] = rei_data[2][3]
+		description[0] = rei_data[2][2]
 	}
 
 	// Then Y
 	if cs_data[1] <= 0 {
-		description[1] = rei_data[3][3]
+		description[1] = rei_data[3][2]
 	}
 
 	return description

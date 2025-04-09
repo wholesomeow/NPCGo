@@ -28,7 +28,7 @@ func CreateOCEANDegree(ocean_data [][]string, cs_data [2]int) []float64 {
 	for _, val := range ocean_data {
 		ocean_cast := []float64{}
 		// X Coord cast first
-		split := strings.Split(string(val[2]), ",")
+		split := strings.Split(string(val[1]), ",")
 		x, err := strconv.Atoi(strings.TrimSpace(split[0]))
 		if err != nil {
 			log.Fatalf("Error converting string to integer: %s", err)

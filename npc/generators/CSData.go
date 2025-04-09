@@ -47,7 +47,7 @@ func CreateCSDesc(cs_data [][]string, cs_coords [2]int) string {
 	log.Print("populating Cognitive Science Description for NPC")
 	idx := coordsToSelection(cs_coords)
 	selection := cs_data[idx]
-	return selection[3]
+	return selection[2]
 }
 
 func CreateCSUse() string {

@@ -44,20 +44,20 @@ type NPCBase struct {
 	Enneagram struct {
 		ID                    int
 		Archetype             string
-		Center                string
-		DominantEmotion       string
 		Keywords              []string
 		Description           string
+		Center                string
+		DominantEmotion       string
 		Fear                  string
 		Desire                string
-		Wings                 []int
+		Wings                 [2]int
 		LODLevel              int
 		CurrentLOD            string
-		LevelOfDevelopment    []string
+		LevelOfDevelopment    [9]string
 		KeyMotivations        string
 		Overview              string
 		Addictions            string
-		GrowthRecommendations []string
+		GrowthRecommendations [5]string
 	}
 
 	// v1.1

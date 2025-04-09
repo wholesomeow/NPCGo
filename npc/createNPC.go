@@ -2,7 +2,6 @@ package npc
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"go/npcGen/configuration"
 	"go/npcGen/database"
@@ -12,7 +11,6 @@ import (
 	"go/npcGen/utilities"
 	"log"
 	"math/rand"
-	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -176,166 +174,175 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 	cs_data := [][]string{}
 	rei_data := [][]string{}
 	ocean_data := [][]string{}
-	enneagram_centers := [][]string{}
-	var enneagram_data generators.EnneagramStruct
 
 	// Create DB Object
 	var db *pgx.Conn
-
-	mode := strings.ToLower(config.Server.Mode)
-	if mode == "dev-csv" {
-		log.Print("read in all required NPC data from files")
-		// Read in the CS Data csv file
-		// TODO(wholesomeow): I don't like the hardcoded file name here, need to fix
-		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, "NPC_Cognitive_Data.csv")
-		cognitive_data, err := utilities.ReadCSV(path, true)
-		if err != nil {
-			return npc_object, err
-		}
-		mice_data = cognitive_data[:4]
-		cs_data = cognitive_data[4:8]
-		rei_data = cognitive_data[8:12]
-		ocean_data = cognitive_data[12:17]
-		enneagram_centers = cognitive_data[17:]
-
-		// Read in Enneagram JSON file
-		// TODO(wholesomeow): I don't like the hardcoded file name here, need to fix
-		path = fmt.Sprintf("%s/%s", config.Database.JSONPath, "enneagramData.json")
-		data, err := utilities.ReadJSON(path)
-		if err != nil {
-			log.Fatalf("Failed to read json, %s", err)
-		}
-		err = json.Unmarshal(data, &enneagram_data)
-		if err != nil {
-			return npc_object, err
-		}
-	} else {
-		var err error
-		db, err = database.ConnectDatabase(config)
-		if err != nil {
-			return npc_object, err
-		}
-
-		defer db.Close(context.Background())
-
-		// Query for required data to generate NPC
-		var rows pgx.Rows
-		log.Print("querying db for MICE data")
-		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='MICE'")
-		if err != nil {
-			return npc_object, err
-		}
-		defer rows.Close()
-
-		// Iterate through query result
-		log.Print("marshalling MICE query data to slice")
-		for rows.Next() {
-			var id int
-			var category string
-			var name string
-			var values string
-			var description string
-			var tmp []string
-
-			err := rows.Scan(&id, &category, &name, &values, &description)
-			if err != nil {
-				return npc_object, err
-			}
-
-			tmp = append(tmp, name)
-			tmp = append(tmp, values)
-			tmp = append(tmp, description)
-
-			mice_data = append(mice_data, tmp)
-		}
-
-		log.Print("querying db for CS data")
-		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'")
-		if err != nil {
-			return npc_object, err
-		}
-		defer rows.Close()
-
-		// Iterate through query result
-		log.Print("marshalling CS query data to slice")
-		for rows.Next() {
-			var id int
-			var category string
-			var name string
-			var values string
-			var description string
-			var tmp []string
-
-			err := rows.Scan(&id, &category, &name, &values, &description)
-			if err != nil {
-				return npc_object, err
-			}
-
-			tmp = append(tmp, name)
-			tmp = append(tmp, values)
-			tmp = append(tmp, description)
-
-			cs_data = append(cs_data, tmp)
-		}
-
-		log.Print("querying db for REI data")
-		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'")
-		if err != nil {
-			return npc_object, err
-		}
-		defer rows.Close()
-
-		// Iterate through query result
-		log.Print("marshalling REI query data to slice")
-		for rows.Next() {
-			var id int
-			var category string
-			var name string
-			var values string
-			var description string
-			var tmp []string
-
-			err := rows.Scan(&id, &category, &name, &values, &description)
-			if err != nil {
-				return npc_object, err
-			}
-
-			tmp = append(tmp, name)
-			tmp = append(tmp, values)
-			tmp = append(tmp, description)
-
-			rei_data = append(rei_data, tmp)
-		}
-
-		log.Print("querying db for OCEAN data")
-		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'")
-		if err != nil {
-			return npc_object, err
-		}
-		defer rows.Close()
-
-		// Iterate through query result
-		log.Print("marshalling OCEAN query data to slice")
-		for rows.Next() {
-			var id int
-			var category string
-			var name string
-			var values string
-			var description string
-			var tmp []string
-
-			err := rows.Scan(&id, &category, &name, &values, &description)
-			if err != nil {
-				return npc_object, err
-			}
-
-			tmp = append(tmp, name)
-			tmp = append(tmp, values)
-			tmp = append(tmp, description)
-
-			ocean_data = append(ocean_data, tmp)
-		}
+	db, err = database.ConnectDatabase(config)
+	if err != nil {
+		return npc_object, err
 	}
+
+	defer db.Close(context.Background())
+
+	// Query for required data to generate NPC
+	var rows pgx.Rows
+	log.Print("querying db for MICE data")
+	rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='MICE'")
+	if err != nil {
+		return npc_object, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling MICE query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return npc_object, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		mice_data = append(mice_data, tmp)
+	}
+
+	log.Print("querying db for CS data")
+	rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'")
+	if err != nil {
+		return npc_object, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling CS query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return npc_object, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		cs_data = append(cs_data, tmp)
+	}
+
+	log.Print("querying db for REI data")
+	rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'")
+	if err != nil {
+		return npc_object, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling REI query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return npc_object, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		rei_data = append(rei_data, tmp)
+	}
+
+	log.Print("querying db for OCEAN data")
+	rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'")
+	if err != nil {
+		return npc_object, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling OCEAN query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return npc_object, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		ocean_data = append(ocean_data, tmp)
+	}
+
+	// Create preprocess enneagram variables
+	var enn_keywords string
+	var enn_LOD [9]string
+
+	// Select Enneagram here to cut down on data queried
+	log.Print("querying db for Enneagram data")
+	var enneagram_id = generators.SelectEnneagram()
+	enneagram_query := fmt.Sprintf("SELECT * FROM enneagram WHERE id='%d'", enneagram_id)
+	err = db.QueryRow(context.Background(), enneagram_query).Scan(
+		&npc_object.Enneagram.ID,
+		&npc_object.Enneagram.Archetype,
+		&enn_keywords,
+		&npc_object.Enneagram.Description,
+		&npc_object.Enneagram.Center,
+		&npc_object.Enneagram.DominantEmotion,
+		&npc_object.Enneagram.Fear,
+		&npc_object.Enneagram.Desire,
+		&npc_object.Enneagram.Wings[0],
+		&npc_object.Enneagram.Wings[1],
+		&enn_LOD[0],
+		&enn_LOD[1],
+		&enn_LOD[2],
+		&enn_LOD[3],
+		&enn_LOD[4],
+		&enn_LOD[5],
+		&enn_LOD[6],
+		&enn_LOD[7],
+		&enn_LOD[8],
+		&npc_object.Enneagram.KeyMotivations,
+		&npc_object.Enneagram.Overview,
+		&npc_object.Enneagram.Addictions,
+		&npc_object.Enneagram.GrowthRecommendations[0],
+		&npc_object.Enneagram.GrowthRecommendations[1],
+		&npc_object.Enneagram.GrowthRecommendations[2],
+		&npc_object.Enneagram.GrowthRecommendations[3],
+		&npc_object.Enneagram.GrowthRecommendations[4],
+	)
+	if err != nil {
+		return npc_object, err
+	}
+	defer rows.Close()
 
 	// ----- GENERATE PERSONALITY DATA -----
 	// Generate CS Base Data
@@ -362,31 +369,13 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 	npc_object.OCEAN.Use = generators.CreateOCEANUse()
 
 	// Generate Enneagram Data
-	npc_object.Enneagram.ID = generators.SelectEnneagram()
-	npc_object.Enneagram.Archetype = generators.CreateEnneaArch(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Center = generators.CreateEnneaCenter(npc_object.Enneagram.ID, enneagram_centers)
-	npc_object.Enneagram.DominantEmotion = generators.CreateEnneaEmote(npc_object.Enneagram.ID,
-		npc_object.Enneagram.Center,
-	)
-	npc_object.Enneagram.Keywords = generators.CreateEnneaKeywords(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Description = generators.CreateEnneaDesc(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Fear = generators.CreateEnneaFear(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Desire = generators.CreateEnneaDesire(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Wings = generators.CreateEnneaWings(npc_object.Enneagram.ID, enneagram_data)
 	npc_object.Enneagram.LODLevel = generators.CreateEnneaLODLevel()
-	npc_object.Enneagram.CurrentLOD = generators.CreateEnneaCLOD(npc_object.Enneagram.ID,
-		npc_object.Enneagram.LODLevel,
-		enneagram_data,
-	)
-	npc_object.Enneagram.LevelOfDevelopment = generators.CreateEnneaLODS(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.KeyMotivations = generators.CreateEnneaMotive(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Overview = generators.CreateEnneaOverview(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.Addictions = generators.CreateEnneaAddictions(npc_object.Enneagram.ID, enneagram_data)
-	npc_object.Enneagram.GrowthRecommendations = generators.CreateEnneaGrowth(npc_object.Enneagram.ID, enneagram_data)
+	npc_object.Enneagram.CurrentLOD = generators.CreateEnneaCLOD(&enn_LOD, npc_object.Enneagram.LODLevel)
+	npc_object.Enneagram.LevelOfDevelopment = enn_LOD
 
 	// Generate MICE Base Data
 	mice_selection := rand.Intn(len(mice_data))
-	npc_object.MICE.Aspect = generators.CreateMICEAspect(mice_selection, mice_data, npc_object.CS.Coords)
+	npc_object.MICE.Aspect = generators.CreateMICEAspect(mice_selection, mice_data)
 	npc_object.MICE.Degree = generators.CreateMICEDegree(mice_selection, mice_data, npc_object.CS.Coords)
 	// TODO(wholesomeow): Create the logic for this
 	npc_object.MICE.Traits = generators.CreateMICETraits(mice_selection, mice_data, npc_object.CS.Coords)
