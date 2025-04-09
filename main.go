@@ -27,6 +27,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// fmt.Print("testing")
+
 	fmt.Println("----- OUTPUT -----")
 	fmt.Println(npc_object.DataToJSON())
 	// fmt.Println(npc_object.OCEAN.Text)

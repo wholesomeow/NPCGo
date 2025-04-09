@@ -219,21 +219,121 @@ func CreateNPC(config *configuration.Config) (NPCBase, error) {
 		defer db.Close(context.Background())
 
 		// Query for required data to generate NPC
-		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='MICE'").Scan(&mice_data)
+		var rows pgx.Rows
+		log.Print("querying db for MICE data")
+		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='MICE'")
 		if err != nil {
 			return npc_object, err
 		}
-		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'").Scan(&cs_data)
+		defer rows.Close()
+
+		// Iterate through query result
+		log.Print("marshalling MICE query data to slice")
+		for rows.Next() {
+			var id int
+			var category string
+			var name string
+			var values string
+			var description string
+			var tmp []string
+
+			err := rows.Scan(&id, &category, &name, &values, &description)
+			if err != nil {
+				return npc_object, err
+			}
+
+			tmp = append(tmp, name)
+			tmp = append(tmp, values)
+			tmp = append(tmp, description)
+
+			mice_data = append(mice_data, tmp)
+		}
+
+		log.Print("querying db for CS data")
+		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'")
 		if err != nil {
 			return npc_object, err
 		}
-		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'").Scan(&rei_data)
+		defer rows.Close()
+
+		// Iterate through query result
+		log.Print("marshalling CS query data to slice")
+		for rows.Next() {
+			var id int
+			var category string
+			var name string
+			var values string
+			var description string
+			var tmp []string
+
+			err := rows.Scan(&id, &category, &name, &values, &description)
+			if err != nil {
+				return npc_object, err
+			}
+
+			tmp = append(tmp, name)
+			tmp = append(tmp, values)
+			tmp = append(tmp, description)
+
+			cs_data = append(cs_data, tmp)
+		}
+
+		log.Print("querying db for REI data")
+		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'")
 		if err != nil {
 			return npc_object, err
 		}
-		err = db.QueryRow(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'").Scan(&ocean_data)
+		defer rows.Close()
+
+		// Iterate through query result
+		log.Print("marshalling REI query data to slice")
+		for rows.Next() {
+			var id int
+			var category string
+			var name string
+			var values string
+			var description string
+			var tmp []string
+
+			err := rows.Scan(&id, &category, &name, &values, &description)
+			if err != nil {
+				return npc_object, err
+			}
+
+			tmp = append(tmp, name)
+			tmp = append(tmp, values)
+			tmp = append(tmp, description)
+
+			rei_data = append(rei_data, tmp)
+		}
+
+		log.Print("querying db for OCEAN data")
+		rows, err = db.Query(context.Background(), "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'")
 		if err != nil {
 			return npc_object, err
+		}
+		defer rows.Close()
+
+		// Iterate through query result
+		log.Print("marshalling OCEAN query data to slice")
+		for rows.Next() {
+			var id int
+			var category string
+			var name string
+			var values string
+			var description string
+			var tmp []string
+
+			err := rows.Scan(&id, &category, &name, &values, &description)
+			if err != nil {
+				return npc_object, err
+			}
+
+			tmp = append(tmp, name)
+			tmp = append(tmp, values)
+			tmp = append(tmp, description)
+
+			ocean_data = append(ocean_data, tmp)
 		}
 	}
 

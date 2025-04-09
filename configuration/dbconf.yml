@@ -9,7 +9,7 @@ server:
 # Database Configurations
 database:
   dbname: npcg
-  hostname: npcg-postgres
+  hostname: npcg-pg
   user: postgres
   password: secret
   port: 5432

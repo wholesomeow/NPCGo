@@ -48,9 +48,32 @@ func (mc *MarkovChain) BuildNGram(config *configuration.Config, max_attempts int
 		defer db.Close(context.Background())
 
 		// Query for required data to generate NPC
-		err = db.QueryRow(context.Background(), "SELECT * FROM ngram_fantasy").Scan(&n_grams)
+		var rows pgx.Rows
+		log.Print("querying db for ngram data")
+		rows, err = db.Query(context.Background(), "SELECT * FROM ngram_fantasy")
 		if err != nil {
 			return err
+		}
+
+		defer rows.Close()
+
+		// Iterate through query result
+		log.Print("marshalling query data to slice")
+		for rows.Next() {
+			var ngram_id int
+			var ngram_value string
+			var ngram_posibility string
+			var tmp_gram []string
+
+			err := rows.Scan(&ngram_id, &ngram_value, &ngram_posibility)
+			if err != nil {
+				return err
+			}
+
+			tmp_gram = append(tmp_gram, ngram_value)
+			tmp_gram = append(tmp_gram, ngram_posibility)
+
+			n_grams = append(n_grams, tmp_gram)
 		}
 	}
 
@@ -106,12 +129,12 @@ func (mchain *MarkovChain) MakeName() string {
 }
 
 func (mchain *MarkovChain) CheckQuality(name string) bool {
-	// Rules for name formatting are here
-	log.Print("checking quality of name")
+	log.Printf("checking quality of name: %s", name)
 	if len(name) <= 3 {
 		return false
 	}
 
+	// Rules for name formatting are here
 	for val := range len(name) - 1 {
 		bigram := strings.ToLower(name[val : val+2])
 		if utilities.SliceContainsString(string(bigram[0]), mchain.vowels) || utilities.SliceContainsString(string(bigram[1]), mchain.vowels) {

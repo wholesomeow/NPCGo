@@ -3,7 +3,7 @@
 # Check arguments
 if [ -z $1 ]; then
   echo "Must provide mode as argument"
-  echo "Options are: dev or prod"
+  echo "Options are: dev, build, or prod"
   exit 1
 fi
 
@@ -40,6 +40,23 @@ RAWDATA_PATH=./database/rawdata
 
 echo "Setting DB connection string"
 DB_CONNECTION_STRING=postgres://${DB_USER}:${DB_PW}@${CONTAINER_NAMES[0]}:${DB_PORT}/${DB_NAME}?sslmode=disable
+
+# Determine mode
+case $1 in
+  dev )
+    ENV="development"
+    ;;
+  build )
+    ENV="development"
+    ;;
+  prod )
+    ENV="production"
+    ;;
+  * )
+    echo "Unknown environment: $1"
+    exit 1
+    ;;
+esac
 
 # Write config file variables to .env file for docker-compose
 cat > .env << EOF
@@ -117,8 +134,6 @@ if [[ "$2" == "dirty" && -n $3 ]]; then
     -database ${DB_CONNECTION_STRING} \
     version || exit 1
 
-  # docker run --rm -v ${RAWDATA_PATH}:/rawdata alpine ls /rawdata/csv/
-
   echo "Attempting roll back"
   docker run --rm \
     --network npcg-network \
@@ -135,19 +150,20 @@ if [[ "$2" == "dirty" && -n $3 ]]; then
   echo "--- Rollback Attempt Completed ---"
 fi
 
-# Determine mode
+# Determine docker compose command
+echo "Starting up containers"
 case $1 in
   dev )
-    ENV="development"
+    docker compose up --no-recreate
+    ;;
+  build )
+    docker compose up --build
     ;;
   prod )
-    ENV="production"
+    docker compose up --build
     ;;
   * )
-    echo "Unknown environment: $1"
+    echo "Unknown environment: $1 failed to trigger docker compose command"
     exit 1
     ;;
 esac
-
-echo "Starting up containers"
-docker compose up --no-recreate
