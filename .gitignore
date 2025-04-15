@@ -25,4 +25,14 @@ go.work.sum
 .env
 
 # Custom ignore files
-go/npcGen/configuration/dbconf.yaml
+__debug_bin*
+tmp/
+data/raw/jsonl/
+# data/rawdata/jsonl/*.jsonl
+
+# # Docker files
+# .dockerignore
+
+# Files/Folders from build process
+pg-data/
+build/

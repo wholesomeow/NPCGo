@@ -6,3 +6,6 @@ bin/
 
 # Sensitive configuration
 *.env
+
+# Volumes
+pg-data/

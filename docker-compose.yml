@@ -60,7 +60,7 @@ services:
       - npcg-network
     volumes:
       - ${MIGRATION_PATH}:/migrations
-      - ${RAWDATA_PATH}:/rawdata
+      - ${RAWDATA_PATH}:/raw
     command: [ "-path", "/migrations/", "-database", "${DB_CONNECTION_STRING}", "up" ]
 
 volumes:

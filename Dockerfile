@@ -1,23 +1,22 @@
-# Use Go 1.23 bookworm as base image
-FROM golang:1.23-bookworm AS base
+# Use Go 1.24 bookworm as base image
+FROM golang:1.24-bookworm AS base
 
 # Development Stage
 # -----------------------------------------------------------------------------
 # Create development image from base image
 FROM base AS development
 
-# Move to working directory /build
+# Move to working directory /app
 WORKDIR /app
 
 # Install air CLI for auto-reloading
 RUN go install github.com/air-verse/air@latest
 
-# Copy the go.mod and go.sum files to the /build directory
+# Copy the go.mod and go.sum files to the /app directory
 COPY go.mod go.sum ./
 
 # Install dependencies
-RUN go mod download &&\
-    go mod verify
+RUN go mod download && go mod verify
 
 # Start air
 CMD [ "air" ]
@@ -34,8 +33,7 @@ WORKDIR /build
 COPY go.mod go.sum ./
 
 # Install dependencies
-RUN go mod download &&\
-    go mod verify
+RUN go mod download && go mod verify
 
 # Copy the entire source code into the container
 COPY . .
