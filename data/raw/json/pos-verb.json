@@ -1,0 +1,115 @@
+{
+  "etymology_number": 1,
+  "forms": [
+    {
+      "form": "swops",
+      "tags": [
+        "present",
+        "singular",
+        "third-person"
+      ]
+    },
+    {
+      "form": "swopping",
+      "tags": [
+        "participle",
+        "present"
+      ]
+    },
+    {
+      "form": "swopped",
+      "tags": [
+        "participle",
+        "past"
+      ]
+    },
+    {
+      "form": "swopped",
+      "tags": [
+        "past"
+      ]
+    }
+  ],
+  "head_templates": [
+    {
+      "args": {},
+      "expansion": "swop (third-person singular simple present swops, present participle swopping, simple past and past participle swopped)",
+      "name": "en-verb"
+    }
+  ],
+  "lang": "English",
+  "lang_code": "en",
+  "pos": "verb",
+  "senses": [
+    {
+      "alt_of": [
+        {
+          "word": "swap"
+        }
+      ],
+      "categories": [
+        {
+          "_dis": "35 30 35",
+          "kind": "other",
+          "name": "English blends",
+          "parents": [],
+          "source": "w+disamb"
+        },
+        {
+          "_dis": "42 16 42",
+          "kind": "other",
+          "name": "English entries with incorrect language header",
+          "parents": [
+            "Entries with incorrect language header",
+            "Entry maintenance"
+          ],
+          "source": "w+disamb"
+        }
+      ],
+      "examples": [
+        {
+          "ref": "1951, Geoffrey Chaucer, translated by Nevill Coghill, The Canterbury Tales: Translated into Modern English (Penguin Classics), Penguin Books, published 1977, page 315",
+          "text": "'We make a pair, by God and by St James! / But, brother, what do you say to swopping names?'",
+          "type": "quotation"
+        }
+      ],
+      "glosses": [
+        "Alternative spelling of swap"
+      ],
+      "id": "en-swop-en-verb-oYeaP9TI",
+      "links": [
+        [
+          "swap",
+          "swap#English"
+        ]
+      ],
+      "tags": [
+        "alt-of",
+        "alternative"
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "ipa": "/swɑp/",
+      "tags": [
+        "General-American"
+      ]
+    },
+    {
+      "ipa": "/swɒp/",
+      "tags": [
+        "Received-Pronunciation"
+      ]
+    },
+    {
+      "rhymes": "-ɒp"
+    },
+    {
+      "audio": "LL-Q1860 (eng)-Vealhurl-swop.wav",
+      "mp3_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/14/LL-Q1860_%28eng%29-Vealhurl-swop.wav/LL-Q1860_%28eng%29-Vealhurl-swop.wav.mp3",
+      "ogg_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/14/LL-Q1860_%28eng%29-Vealhurl-swop.wav/LL-Q1860_%28eng%29-Vealhurl-swop.wav.ogg"
+    }
+  ],
+  "word": "swop"
+}

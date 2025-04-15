@@ -1,0 +1,132 @@
+{
+  "etymology_templates": [
+    {
+      "args": {
+        "1": "Abies",
+        "2": "genus"
+      },
+      "expansion": "Abies",
+      "name": "taxfmt"
+    },
+    {
+      "args": {
+        "1": "en",
+        "2": "",
+        "3": "ite"
+      },
+      "expansion": "+ -ite",
+      "name": "suffix"
+    }
+  ],
+  "etymology_text": "From Abies and + -ite.",
+  "head_templates": [
+    {
+      "args": {
+        "1": "-"
+      },
+      "expansion": "abietite (uncountable)",
+      "name": "en-noun"
+    }
+  ],
+  "lang": "English",
+  "lang_code": "en",
+  "pos": "noun",
+  "senses": [
+    {
+      "categories": [
+        {
+          "kind": "other",
+          "name": "English entries with incorrect language header",
+          "parents": [
+            "Entries with incorrect language header",
+            "Entry maintenance"
+          ],
+          "source": "w"
+        },
+        {
+          "kind": "other",
+          "name": "English entries with topic categories using raw markup",
+          "parents": [
+            "Entries with topic categories using raw markup",
+            "Entry maintenance"
+          ],
+          "source": "w"
+        },
+        {
+          "kind": "other",
+          "name": "English terms suffixed with -ite",
+          "parents": [],
+          "source": "w"
+        },
+        {
+          "kind": "lifeform",
+          "langcode": "en",
+          "name": "Conifers",
+          "orig": "en:Conifers",
+          "parents": [
+            "Gymnosperms",
+            "Shrubs",
+            "Trees",
+            "Plants",
+            "Lifeforms",
+            "All topics",
+            "Life",
+            "Fundamental",
+            "Nature"
+          ],
+          "source": "w"
+        },
+        {
+          "kind": "topical",
+          "langcode": "en",
+          "name": "Organic compounds",
+          "orig": "en:Organic compounds",
+          "parents": [
+            "Matter",
+            "Chemistry",
+            "Nature",
+            "Sciences",
+            "All topics",
+            "Fundamental"
+          ],
+          "source": "w"
+        }
+      ],
+      "glosses": [
+        "A substance resembling mannite, found in the needles of the common silver fir of Europe (Abies alba)."
+      ],
+      "id": "en-abietite-en-noun-GGAeARsE",
+      "links": [
+        [
+          "organic chemistry",
+          "organic chemistry"
+        ],
+        [
+          "mannite",
+          "mannite"
+        ],
+        [
+          "silver fir",
+          "silver fir"
+        ],
+        [
+          "Abies alba",
+          "Abies alba#Translingual"
+        ]
+      ],
+      "raw_glosses": [
+        "(organic chemistry) A substance resembling mannite, found in the needles of the common silver fir of Europe (Abies alba)."
+      ],
+      "tags": [
+        "uncountable"
+      ],
+      "topics": [
+        "chemistry",
+        "natural-sciences",
+        "organic-chemistry",
+        "physical-sciences"
+      ]
+    }
+  ],
+  "word": "abietite"
+}

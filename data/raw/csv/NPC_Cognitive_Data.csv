@@ -1,0 +1,21 @@
+id,category,data_name,data_values,data_description
+10000,MICE,Money,"-100, 0","for financial compensation, with the amount depending on risk and desperation."
+10001,MICE,Ideology,"100, 0","for advancement with a cause they believe in, or against a cause they despise."
+10002,MICE,Coercion,"0, -100",by aggressive or violent means - typically physical/emotional bullying or blackmail.
+10003,MICE,Ego,"0, 100",to inflate or validate their ego - either by undermining opponents or by highlighting their success.
+10004,CS_Dimensions,Versatile,"-100, 100",is both a rational and intuitive person.
+10005,CS_Dimensions,Analytical,"-100, 100","is a rational person, but not very intuitive."
+10006,CS_Dimensions,Indifferent,"-100, 100","is neither a very rational person, nor very intuitive."
+10007,CS_Dimensions,Intuitive,"-100, 100","is a intuitive person, but not very rational."
+10008,REI_Dimensions,Rational Ability,"-100, 0","information collecting skills."
+10009,REI_Dimensions,Rational Engagement,"0, -100","action taking skills"
+10010,REI_Dimensions,Experiential Ability,"100, 0","interpersonal communication skills"
+10011,REI_Dimensions,Experiential Engagement,"0, 100","information analysis skills"
+10012,OCEAN,Openness,"-40, 100","A person's willingness to try new things and think outside the box. These people are curious, creative, and imaginative."
+10013,OCEAN,Conscientiousness,"100, -40","A person's level of organization, thoughtfulness, and goal-orientation. These people are more disciplined and persistent."
+10014,OCEAN,Extroversion,"-40, 100","A person's level of sociability, assertiveness, and energy. These people are more likely to be talkative, outgoing, and have a wide social circle."
+10015,OCEAN,Agreeableness,"0, 0","A person's level of kindness, altruism, and trust. These people are more cooperative and prosocial."
+10016,OCEAN,Neuroticism,"-40, -60","A person's tendency to experience negative emotions like anxiety, guilt, anger, and depression. These people are more likely to experience these feelings."
+10017,Enneagram_Centers,Thinking,"5, 6, 7",Enneagram thinking centers
+10018,Enneagram_Centers,Feeling,"2, 3, 4",Enneagram feeling centers
+10019,Enneagram_Centers,Instinctive,"1, 8, 9",Enneagram instinctive centers
