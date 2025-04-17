@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	config "go/npcGen/configs"
-	rawdataproc "go/npcGen/internal/rawdataProcessing/jsonlProcessing"
 	utilities "go/npcGen/internal/utilities"
+	npcgen "go/npcGen/pkg/npcGen"
 	"log"
 	"time"
 )
@@ -22,25 +22,18 @@ func main() {
 		log.Fatalf("failure in DBPreFlight: %v", err)
 	}
 
-	// Process JSONL Files
+	// Create NPC
 	start_proc := time.Now()
-	log.Print("starting JSON processing")
-	err = rawdataproc.ProcessJSONL("database/rawdata/jsonl/pos-adj.jsonl")
+	npc_object, err := npcgen.CreateNPC(config)
 	if err != nil {
-		log.Fatalf("failure in JSONL data processing: %v", err)
+		log.Fatal(err)
 	}
 	end_proc := time.Now()
 	elapsed_proc := end_proc.Sub(start_proc)
-	log.Printf("processing completed... elapsed time: %s", time.Duration.String(elapsed_proc))
-
-	// Create NPC
-	// npc_object, err := npc.CreateNPC(config)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	fmt.Println("----- OUTPUT -----")
 
-	// fmt.Println(npc_object.DataToJSON())
+	fmt.Println(npc_object.DataToJSON())
 	// fmt.Println(npc_object.OCEAN.Text)
+	log.Printf("npc created... elapsed time: %s", time.Duration.String(elapsed_proc))
 }
