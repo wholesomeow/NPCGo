@@ -40,7 +40,7 @@ COPY . .
 
 # Build the application
 # Turn off CGO to ensure static binaries
-RUN CGO_ENABLED=0 go build -o npcg .
+RUN CGO_ENABLED=0 go build -o npcg ./pkg/cmd/npcGen/npcGen.go
 
 # Production Stage
 # -----------------------------------------------------------------------------

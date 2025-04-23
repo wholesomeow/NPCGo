@@ -2,9 +2,10 @@ package utilities
 
 import (
 	"fmt"
-	config "go/npcGen/configs"
 	"log"
 	"strings"
+
+	config "github.com/wholesomeow/npcGo/configs"
 )
 
 type FoundData struct {

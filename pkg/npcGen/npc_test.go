@@ -1,11 +1,12 @@
 package npcgen
 
 import (
-	config "go/npcGen/configs"
-	utilities "go/npcGen/internal/utilities"
 	"log"
 	"reflect"
 	"testing"
+
+	config "github.com/wholesomeow/npcGo/configs"
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
 // TestNPCCreate calls npc.CreateNPC checking for a valid return value

@@ -3,12 +3,13 @@ package npcgen
 import (
 	"context"
 	"fmt"
-	config "go/npcGen/configs"
-	"go/npcGen/internal/utilities"
-	namegen "go/npcGen/pkg/nameGen"
-	textgen "go/npcGen/pkg/textGen"
 	"log"
 	"math/rand"
+
+	config "github.com/wholesomeow/npcGo/configs"
+	"github.com/wholesomeow/npcGo/internal/utilities"
+	namegen "github.com/wholesomeow/npcGo/pkg/nameGen"
+	textgen "github.com/wholesomeow/npcGo/pkg/textGen"
 
 	"github.com/jackc/pgx/v4"
 )
@@ -163,6 +164,7 @@ func getOCEANData(db *pgx.Conn, q_str string) ([][]string, error) {
 }
 
 // --------------------------------------------------- CREATE NPC MAIN BEGIN ---------------------------------------------------
+
 func CreateNPC(config *config.Config) (NPCBase, error) {
 	log.Print("start of NPC creation")
 	npc_object := NPCBase{}

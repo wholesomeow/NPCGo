@@ -1,9 +1,10 @@
 package main
 
 import (
-	rawdataproc "go/npcGen/internal/rawdataProcessing"
 	"log"
 	"time"
+
+	rawdataproc "github.com/wholesomeow/npcGo/internal/rawdataProcessing"
 )
 
 func main() {

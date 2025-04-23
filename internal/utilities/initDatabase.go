@@ -3,8 +3,9 @@ package utilities
 import (
 	"context"
 	"fmt"
-	config "go/npcGen/configs"
 	"log"
+
+	config "github.com/wholesomeow/npcGo/configs"
 
 	"github.com/jackc/pgx/v4"
 

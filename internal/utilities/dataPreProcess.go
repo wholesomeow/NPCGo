@@ -2,10 +2,11 @@ package utilities
 
 import (
 	"fmt"
-	config "go/npcGen/configs"
 	"log"
 	"strings"
 	"time"
+
+	config "github.com/wholesomeow/npcGo/configs"
 )
 
 func BuildNGramFromData(config *config.Config, file FoundData) error {

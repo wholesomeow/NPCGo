@@ -1,4 +1,4 @@
-module go/npcGen
+module github.com/wholesomeow/npcGo
 
 go 1.22.5
 

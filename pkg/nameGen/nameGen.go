@@ -3,11 +3,12 @@ package namegen
 import (
 	"context"
 	"fmt"
-	config "go/npcGen/configs"
-	utilities "go/npcGen/internal/utilities"
 	"log"
 	"math/rand"
 	"strings"
+
+	config "github.com/wholesomeow/npcGo/configs"
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 
 	"github.com/jackc/pgx/v4"
 )

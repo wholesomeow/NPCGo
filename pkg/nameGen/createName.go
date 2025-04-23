@@ -1,9 +1,10 @@
 package namegen
 
 import (
-	config "go/npcGen/configs"
 	"log"
 	"time"
+
+	config "github.com/wholesomeow/npcGo/configs"
 )
 
 func CreateName(config *config.Config) (string, error) {

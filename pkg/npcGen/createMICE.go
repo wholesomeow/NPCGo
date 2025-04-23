@@ -1,11 +1,12 @@
 package npcgen
 
 import (
-	utilities "go/npcGen/internal/utilities"
 	"log"
 	"math"
 	"strconv"
 	"strings"
+
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
 func (npc_object *NPCBase) CreateMICEData(r_val int, mice_data [][]string) {

@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS sex_orientations_npc;

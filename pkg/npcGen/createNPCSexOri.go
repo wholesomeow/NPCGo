@@ -1,9 +1,10 @@
 package npcgen
 
 import (
-	"go/npcGen/pkg/npcGen/enums"
 	"log"
 	"math/rand"
+
+	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
 func (npc_object *NPCBase) CreateOrientationType() {

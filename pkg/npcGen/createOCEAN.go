@@ -1,12 +1,13 @@
 package npcgen
 
 import (
-	utilities "go/npcGen/internal/utilities"
-	texttypes "go/npcGen/pkg/textGen/textTypes"
 	"log"
 	"math"
 	"strconv"
 	"strings"
+
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
+	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
 )
 
 func (npc_object *NPCBase) CreateOCEANData(ocean_data [][]string) {

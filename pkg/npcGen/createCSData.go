@@ -1,8 +1,9 @@
 package npcgen
 
 import (
-	utilities "go/npcGen/internal/utilities"
 	"log"
+
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
 func coordsToSelection(cs_coords [2]int) int {

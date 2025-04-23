@@ -2,7 +2,8 @@ package npcgen
 
 import (
 	"encoding/json"
-	"go/npcGen/pkg/npcGen/enums"
+
+	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
 // A NPCBase is the base struct for the NPC Object created by the application
@@ -109,12 +110,8 @@ type NPCBase struct {
 	// Jobs Known
 }
 
-func (npc *NPCBase) DataToJSON() string {
-	result, _ := json.MarshalIndent(npc, "", "  ")
+func (npc_object *NPCBase) DataToJSON() string {
+	result, _ := json.MarshalIndent(npc_object, "", "  ")
 
 	return string(result)
-}
-
-func (npc *NPCBase) GetName() string {
-	return npc.Name
 }

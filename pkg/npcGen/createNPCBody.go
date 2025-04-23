@@ -1,10 +1,11 @@
 package npcgen
 
 import (
-	"go/npcGen/internal/utilities"
-	"go/npcGen/pkg/npcGen/enums"
 	"log"
 	"math/rand"
+
+	"github.com/wholesomeow/npcGo/internal/utilities"
+	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
 func makeBMI(BMI float64) int {

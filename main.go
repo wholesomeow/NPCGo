@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	config "go/npcGen/configs"
-	utilities "go/npcGen/internal/utilities"
-	npcgen "go/npcGen/pkg/npcGen"
 	"log"
 	"time"
+
+	config "github.com/wholesomeow/npcGo/configs"
+	npcgen "github.com/wholesomeow/npcGo/pkg/npcGen"
 )
 
 func main() {
@@ -14,12 +14,6 @@ func main() {
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	// Run all Pre-Flight checks
-	err = utilities.DBPreFlight(config)
-	if err != nil {
-		log.Fatalf("failure in DBPreFlight: %v", err)
 	}
 
 	// Create NPC

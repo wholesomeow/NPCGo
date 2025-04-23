@@ -1,8 +1,9 @@
 package textgen
 
 import (
-	texttypes "go/npcGen/pkg/textGen/textTypes"
 	"strings"
+
+	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
 )
 
 // Takes sentence fragments and conjugates them together using Coordinating
