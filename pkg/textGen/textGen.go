@@ -6,6 +6,9 @@ import (
 	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
 )
 
+// NOTE(wholesomeow): I saw someone use a FIFO Linked List to read a rule set into memory
+// when evaluating logic against a set of rules... Might be something to implement here?
+
 // Takes sentence fragments and conjugates them together using Coordinating
 // conjunction words like "and" and "but"
 func CoordConj() error {
