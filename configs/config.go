@@ -1,11 +1,8 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 	"sync"
 
 	"gopkg.in/yaml.v2"
@@ -40,8 +37,10 @@ type Config struct {
 	} `yaml:"database"`
 }
 
-var instance *Config
-var once sync.Once
+var (
+	instance *Config
+	once     sync.Once
+)
 
 // Returns the singleton instance of the configuration file
 func ReadConfig(path string) (*Config, error) {
@@ -51,23 +50,12 @@ func ReadConfig(path string) (*Config, error) {
 	}
 	defer f.Close()
 
-	// Initialize the instance if not already initialized
-	if instance == nil {
+	// Open files and decode into the singleton instance
+	log.Printf("reading %s file", path)
+	yaml_decoder := yaml.NewDecoder(f)
+	once.Do(func() {
 		instance = &Config{}
-	}
-
-	// Parse file based on file extention
-	// TODO(wholesomeow): Implement Environment variables
-	switch ext := strings.ToLower(filepath.Ext(path)); ext {
-	case ".yaml", ".yml":
-		// Open YAML files and decode the YAML into the singleton instance
-		log.Printf("reading %s file", path)
-		yaml_decoder := yaml.NewDecoder(f)
-		once.Do(func() {
-			yaml_decoder.Decode(instance)
-		})
-		return instance, nil
-	default:
-		return instance, fmt.Errorf("file format '%s' not supported by parser", ext)
-	}
+		yaml_decoder.Decode(instance)
+	})
+	return instance, nil
 }
