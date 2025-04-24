@@ -1,6 +1,8 @@
 package npcgen
 
 import (
+	"encoding/json"
+
 	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
@@ -105,4 +107,10 @@ type NPCBase struct {
 	// v2.2
 	// Rumors Known
 	// Jobs Known
+}
+
+func (npc_object *NPCBase) DataToJSON() string {
+	result, _ := json.MarshalIndent(npc_object, "", "  ")
+
+	return string(result)
 }
