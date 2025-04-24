@@ -109,8 +109,23 @@ type NPCBase struct {
 	// Jobs Known
 }
 
+// Returns all the data within the NPC Object as a JSON object
 func (npc_object *NPCBase) DataToJSON() string {
-	result, _ := json.MarshalIndent(npc_object, "", "  ")
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) NameToJSON() string {
+	result, _ := json.Marshal(npc_object.Name)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) CSToJSON() string {
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object.CS)
 
 	return string(result)
 }
