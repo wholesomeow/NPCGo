@@ -11,7 +11,7 @@ import (
 // as well as all the data needed to create some variations
 type NPCBase struct {
 	// TODO(wholesomeow): Implement UUID
-	UUID  int
+	UUID  string
 	Name  string
 	OCEAN struct {
 		Aspect      []string
