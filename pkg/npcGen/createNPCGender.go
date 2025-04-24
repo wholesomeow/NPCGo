@@ -7,12 +7,22 @@ import (
 	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
-func (npc_object *NPCBase) CreateGenderType() {
+func (npc_object *NPCBase) CreateGenderType() error {
+	var err error
+
+	log.Print("generating NPC type UUID")
+	npc_object.GenderType.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	log.Print("selecting NPC Gender")
 	gender_select := rand.Intn(len(enums.GenStateName)) + 1
 	npc_object.GenderType.Enum = enums.GenderType(gender_select)
 	npc_object.GenderType.Name = npc_object.GenderType.Enum.GenStateToString()
 	npc_object.GenderType.Description = npc_object.GenderType.Enum.GetGenderDescription()
+
+	return nil
 }
 
 // TODO(wholesomeow): Rework this to allow mixing pronouns

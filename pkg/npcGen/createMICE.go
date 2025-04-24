@@ -79,6 +79,12 @@ func (npc_object *NPCBase) CreateMICEData() error {
 	r_val := rand.Intn(len(mice_data))
 	cs_data := npc_object.CS.Coords
 
+	log.Print("generating MICE UUID")
+	npc_object.MICE.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	log.Print("setting MICE values for NPC")
 	selection := mice_data[r_val]
 	npc_object.MICE.Aspect = selection[1]

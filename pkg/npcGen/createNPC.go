@@ -43,15 +43,16 @@ func CreateNPC() (NPCBase, error) {
 	// ----- GENERATE PHYSICALITY DATA -----
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
 	log.Print("setting NPC Type values from Enum")
-	npc_object.NPCType.Enum = 0 // Set to DEFAULT on init
-	npc_object.NPCType.Name = npc_object.NPCType.Enum.NPCStateToString()
-	npc_object.NPCType.Description = npc_object.NPCType.Enum.GetNPCStateDescription()
+	npc_object.CreateNPCType()
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Body Type values from Enum")
 	npc_object.MakeSizeImperial()
 	npc_object.MakeSizeMetric()
-	npc_object.CreateBodyType()
+	err = npc_object.CreateBodyType()
+	if err != nil {
+		return npc_object, err
+	}
 
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Sex values from Enum")

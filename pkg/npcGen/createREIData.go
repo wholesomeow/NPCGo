@@ -78,6 +78,12 @@ func (npc_object *NPCBase) CreateREIData() error {
 
 	cs_data := npc_object.CS.Coords
 
+	log.Print("generating Rational-Experiential Inventory UUID")
+	npc_object.REI.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	log.Print("generating Rational-Experiential Inventory Aspect for NPC")
 	aspect_slice := []string{"Rational Ability", "Rational Engagement"}
 

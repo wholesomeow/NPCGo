@@ -86,6 +86,12 @@ func (npc_object *NPCBase) CreateCSData() error {
 		return err
 	}
 
+	log.Print("generating Cognitive Science UUID")
+	npc_object.CS.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	log.Print("generating Cognitive Science Aspect for NPC")
 	idx := coordsToSelection(npc_object.CS.Coords)
 	selection := cs_data[idx]

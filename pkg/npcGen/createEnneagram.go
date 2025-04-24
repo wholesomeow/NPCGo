@@ -127,6 +127,14 @@ func CreateEnneaCLOD(LOD_list *[9]string, LODLevel int) string {
 // }
 
 func (npc_object *NPCBase) CreateEnneagram() error {
+	var err error
+
+	log.Print("generating NPC type UUID")
+	npc_object.Enneagram.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	// Read in Database Config file
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {

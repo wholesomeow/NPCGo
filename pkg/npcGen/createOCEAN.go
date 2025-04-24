@@ -77,6 +77,12 @@ func (npc_object *NPCBase) CreateOCEANData() error {
 
 	cs_data := npc_object.CS.Coords
 
+	log.Print("generating OCEAN UUID")
+	npc_object.OCEAN.UUID, err = CreateUUIDv4()
+	if err != nil {
+		return err
+	}
+
 	log.Print("generating OCEAN Aspect for NPC")
 	aspect := []string{}
 

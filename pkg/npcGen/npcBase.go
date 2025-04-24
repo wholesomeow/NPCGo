@@ -10,9 +10,11 @@ import (
 // and contains all of the data to display the NPC descriptions requested
 // as well as all the data needed to create some variations
 type NPCBase struct {
-	UUID  string
-	Name  string
-	OCEAN struct {
+	UUID     string
+	Name     string
+	Pronouns []string
+	OCEAN    struct {
+		UUID        string
 		Aspect      []string
 		Degree      []float64
 		Traits      [][]string
@@ -21,6 +23,7 @@ type NPCBase struct {
 		Use         string
 	}
 	MICE struct {
+		UUID        string
 		Aspect      string
 		Degree      float64
 		Traits      []string
@@ -29,6 +32,7 @@ type NPCBase struct {
 		Use         string
 	}
 	CS struct {
+		UUID        string
 		Aspect      string
 		Traits      []string
 		Text        string
@@ -37,6 +41,7 @@ type NPCBase struct {
 		Use         string
 	}
 	REI struct {
+		UUID        string
 		Aspect      []string
 		Degree      [2]float64
 		Traits      []string
@@ -45,6 +50,7 @@ type NPCBase struct {
 		Use         string
 	}
 	Enneagram struct {
+		UUID                  string
 		ID                    int
 		Archetype             string
 		Keywords              []string
@@ -66,29 +72,34 @@ type NPCBase struct {
 	// v1.1
 	// Race - Will need to be its own struct
 	NPCType struct {
+		UUID        string
 		Name        string
 		Description string
 		Enum        enums.NPCType
 	}
 	BodyType struct {
+		UUID string
 		Name string
 		Enum enums.BodyType
 	}
 	SexType struct {
+		UUID string
 		Name string
 		Enum enums.SexType
 	}
 	GenderType struct {
+		UUID        string
 		Name        string
 		Description string
 		Enum        enums.GenderType
 	}
 	SexualOrientationType struct {
+		UUID        string
 		Name        string
 		Description string
 		Enum        enums.OrientationType
 	}
-	Pronouns []string
+
 	// v2.1
 	// Physical Description
 	NPCAppearance struct {
