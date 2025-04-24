@@ -2,7 +2,6 @@ package namegen
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math/rand"
 	"strings"
@@ -27,54 +26,44 @@ func (mc *MarkovChain) BuildNGram(config *config.Config, max_attempts int) error
 	n_grams := [][]string{}
 	compilation := map[string][]string{}
 
-	//Get data from some place here, if no data then error
-	if config.Server.Mode == "dev-csv" {
-		path := fmt.Sprintf("%s/%s", config.Database.CSVPath, "Fantasy_Names_NGrams.csv")
-		var err error
-		n_grams, err = utilities.ReadCSV(path, false)
+	log.Print("starting NGram data collection")
+	// Create DB Object
+	var db *pgx.Conn
+	var err error
+	db, err = utilities.ConnectDatabase(config)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close(context.Background())
+
+	// Query for required data to generate NPC
+	var rows pgx.Rows
+	log.Print("querying db for ngram data")
+	rows, err = db.Query(context.Background(), "SELECT * FROM ngram_fantasy")
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling query data to slice")
+	for rows.Next() {
+		var ngram_id int
+		var ngram_value string
+		var ngram_posibility string
+		var tmp_gram []string
+
+		err := rows.Scan(&ngram_id, &ngram_value, &ngram_posibility)
 		if err != nil {
 			return err
 		}
-	} else {
-		log.Print("starting NGram data collection")
-		// Create DB Object
-		var db *pgx.Conn
-		var err error
-		db, err = utilities.ConnectDatabase(config)
-		if err != nil {
-			return err
-		}
 
-		defer db.Close(context.Background())
+		tmp_gram = append(tmp_gram, ngram_value)
+		tmp_gram = append(tmp_gram, ngram_posibility)
 
-		// Query for required data to generate NPC
-		var rows pgx.Rows
-		log.Print("querying db for ngram data")
-		rows, err = db.Query(context.Background(), "SELECT * FROM ngram_fantasy")
-		if err != nil {
-			return err
-		}
-
-		defer rows.Close()
-
-		// Iterate through query result
-		log.Print("marshalling query data to slice")
-		for rows.Next() {
-			var ngram_id int
-			var ngram_value string
-			var ngram_posibility string
-			var tmp_gram []string
-
-			err := rows.Scan(&ngram_id, &ngram_value, &ngram_posibility)
-			if err != nil {
-				return err
-			}
-
-			tmp_gram = append(tmp_gram, ngram_value)
-			tmp_gram = append(tmp_gram, ngram_posibility)
-
-			n_grams = append(n_grams, tmp_gram)
-		}
+		n_grams = append(n_grams, tmp_gram)
 	}
 
 	// Split n_gram values into key and value slices

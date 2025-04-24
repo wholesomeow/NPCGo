@@ -7,13 +7,20 @@ import (
 	config "github.com/wholesomeow/npcGo/configs"
 )
 
-func CreateName(config *config.Config) (string, error) {
+func CreateName() (string, error) {
 	var mchain MarkovChain
 	var name string
 	max_attempts := 6
 
+	// Read in Database Config file
+	config, err := config.ReadConfig("configs/dbconf.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// This queries the database for the precompiled n-gram data
 	log.Print("starting ngram build")
-	err := mchain.BuildNGram(config, max_attempts)
+	err = mchain.BuildNGram(config, max_attempts)
 	if err != nil {
 		return name, err
 	}
