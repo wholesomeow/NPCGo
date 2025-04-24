@@ -1,16 +1,80 @@
 package npcgen
 
 import (
+	"context"
 	"log"
 	"math"
 	"strconv"
 	"strings"
 
+	"github.com/jackc/pgx/v4"
+	config "github.com/wholesomeow/npcGo/configs"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
 )
 
-func (npc_object *NPCBase) CreateOCEANData(ocean_data [][]string) {
+func getOCEANData(db *pgx.Conn, q_str string) ([][]string, error) {
+	data := [][]string{}
+
+	// Query for required data to generate NPC
+	log.Print("querying db for OCEAN data")
+	rows, err := db.Query(context.Background(), q_str)
+	if err != nil {
+		return data, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling OCEAN query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return data, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		data = append(data, tmp)
+	}
+	defer rows.Close()
+
+	return data, err
+}
+
+func (npc_object *NPCBase) CreateOCEANData() error {
+	// Read in Database Config file
+	config, err := config.ReadConfig("configs/dbconf.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create DB Object
+	var db *pgx.Conn
+	db, err = utilities.ConnectDatabase(config)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close(context.Background())
+
+	// Create Personality Data Query
+	ocean_query := "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'"
+
+	// Create Personality Data Container
+	ocean_data, err := getOCEANData(db, ocean_query)
+	if err != nil {
+		return err
+	}
+
 	cs_data := npc_object.CS.Coords
 
 	log.Print("generating OCEAN Aspect for NPC")
@@ -72,6 +136,8 @@ func (npc_object *NPCBase) CreateOCEANData(ocean_data [][]string) {
 
 	log.Print("populating OCEAN Use for NPC")
 	npc_object.OCEAN.Use = "used to broadly describe and analyze a person's personality by identifying five key dimensions of their behavior"
+
+	return nil
 }
 
 func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspect []float64) texttypes.TextData {

@@ -1,26 +1,15 @@
 package npcgen
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"math/rand"
-)
 
-// type EnneagramStruct struct {
-// 	EnneagramData []struct {
-// 		ID                    int      `json:"typeID"`
-// 		Archetype             string   `json:"archetype"`
-// 		Keywords              []string `json:"keyWords"`
-// 		Description           string   `json:"briefDesc"`
-// 		Fear                  string   `json:"basicFear"`
-// 		Desire                string   `json:"basicDesire"`
-// 		Wings                 []int    `json:"wings"`
-// 		LevelOfDevelopment    []string `json:"levelOfDevelopment"`
-// 		KeyMotivations        string   `json:"keyMotivations"`
-// 		Overview              string   `json:"overview"`
-// 		Addictions            string   `json:"addictions"`
-// 		GrowthRecommendations []string `json:"growthRecommendations"`
-// 	} `json:"enneagramData"`
-// }
+	"github.com/jackc/pgx/v4"
+	config "github.com/wholesomeow/npcGo/configs"
+	utilities "github.com/wholesomeow/npcGo/internal/utilities"
+)
 
 func SelectEnneagram() int {
 	log.Print("selecting NPC Enneagram")
@@ -136,3 +125,70 @@ func CreateEnneaCLOD(LOD_list *[9]string, LODLevel int) string {
 // 	log.Printf("populating Enneagram Growth Recommendations from selection: %d", id)
 // 	return data.EnneagramData[id].GrowthRecommendations
 // }
+
+func (npc_object *NPCBase) CreateEnneagram() error {
+	// Read in Database Config file
+	config, err := config.ReadConfig("configs/dbconf.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create DB Object
+	var db *pgx.Conn
+	db, err = utilities.ConnectDatabase(config)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close(context.Background())
+
+	// Create preprocess enneagram variables
+	var enn_keywords string
+	var enn_LOD [9]string
+
+	// Select Enneagram here to cut down on data queried
+	log.Print("selecting Enneagram number")
+	var enneagram_id = SelectEnneagram()
+
+	log.Print("querying db for Enneagram data")
+	enneagram_query := fmt.Sprintf("SELECT * FROM enneagram WHERE id='%d'", enneagram_id)
+	err = db.QueryRow(context.Background(), enneagram_query).Scan(
+		&npc_object.Enneagram.ID,
+		&npc_object.Enneagram.Archetype,
+		&enn_keywords,
+		&npc_object.Enneagram.Description,
+		&npc_object.Enneagram.Center,
+		&npc_object.Enneagram.DominantEmotion,
+		&npc_object.Enneagram.Fear,
+		&npc_object.Enneagram.Desire,
+		&npc_object.Enneagram.Wings[0],
+		&npc_object.Enneagram.Wings[1],
+		&enn_LOD[0],
+		&enn_LOD[1],
+		&enn_LOD[2],
+		&enn_LOD[3],
+		&enn_LOD[4],
+		&enn_LOD[5],
+		&enn_LOD[6],
+		&enn_LOD[7],
+		&enn_LOD[8],
+		&npc_object.Enneagram.KeyMotivations,
+		&npc_object.Enneagram.Overview,
+		&npc_object.Enneagram.Addictions,
+		&npc_object.Enneagram.GrowthRecommendations[0],
+		&npc_object.Enneagram.GrowthRecommendations[1],
+		&npc_object.Enneagram.GrowthRecommendations[2],
+		&npc_object.Enneagram.GrowthRecommendations[3],
+		&npc_object.Enneagram.GrowthRecommendations[4],
+	)
+	if err != nil {
+		return err
+	}
+
+	// Populate the remaining fields
+	npc_object.Enneagram.LODLevel = CreateEnneaLODLevel()
+	npc_object.Enneagram.CurrentLOD = CreateEnneaCLOD(&enn_LOD, npc_object.Enneagram.LODLevel)
+	npc_object.Enneagram.LevelOfDevelopment = enn_LOD
+
+	return nil
+}

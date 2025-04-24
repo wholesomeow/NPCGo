@@ -1,15 +1,82 @@
 package npcgen
 
 import (
+	"context"
 	"log"
 	"math"
+	"math/rand"
 	"strconv"
 	"strings"
 
+	"github.com/jackc/pgx/v4"
+	config "github.com/wholesomeow/npcGo/configs"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
-func (npc_object *NPCBase) CreateMICEData(r_val int, mice_data [][]string) {
+func getMICEData(db *pgx.Conn, q_str string) ([][]string, error) {
+	data := [][]string{}
+
+	// Query for required data to generate NPC
+	var rows pgx.Rows
+	log.Print("querying db for MICE data")
+	rows, err := db.Query(context.Background(), q_str)
+	if err != nil {
+		return data, err
+	}
+	defer rows.Close()
+
+	// Iterate through query result
+	log.Print("marshalling MICE query data to slice")
+	for rows.Next() {
+		var id int
+		var category string
+		var name string
+		var values string
+		var description string
+		var tmp []string
+
+		err := rows.Scan(&id, &category, &name, &values, &description)
+		if err != nil {
+			return data, err
+		}
+
+		tmp = append(tmp, name)
+		tmp = append(tmp, values)
+		tmp = append(tmp, description)
+
+		data = append(data, tmp)
+	}
+	defer rows.Close()
+
+	return data, nil
+}
+
+func (npc_object *NPCBase) CreateMICEData() error {
+	// Read in Database Config file
+	config, err := config.ReadConfig("configs/dbconf.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create DB Object
+	var db *pgx.Conn
+	db, err = utilities.ConnectDatabase(config)
+	if err != nil {
+		return err
+	}
+
+	defer db.Close(context.Background())
+
+	// Create Personality Data Query
+	mice_query := "SELECT * FROM cognitive_data_npc WHERE category='MICE'"
+
+	// Create Personality Data Container
+	mice_data, err := getMICEData(db, mice_query)
+	if err != nil {
+		return err
+	}
+
+	r_val := rand.Intn(len(mice_data))
 	cs_data := npc_object.CS.Coords
 
 	log.Print("setting MICE values for NPC")
@@ -55,4 +122,6 @@ func (npc_object *NPCBase) CreateMICEData(r_val int, mice_data [][]string) {
 
 	log.Print("setting MICE Usage")
 	npc_object.MICE.Use = "used to list the primary reasons why someone would become a spy, insider threat, or collaborate with a hostile organization"
+
+	return nil
 }
