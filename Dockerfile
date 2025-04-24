@@ -18,6 +18,9 @@ COPY go.mod go.sum ./
 # Install dependencies
 RUN go mod download && go mod verify
 
+# Document the port that may need to be published
+EXPOSE 8080
+
 # Start air
 CMD [ "air" ]
 
@@ -40,7 +43,7 @@ COPY . .
 
 # Build the application
 # Turn off CGO to ensure static binaries
-RUN CGO_ENABLED=0 go build -o npcg ./pkg/cmd/npcGen/npcGen.go
+RUN CGO_ENABLED=0 go build -o npcg .
 
 # Production Stage
 # -----------------------------------------------------------------------------
@@ -54,7 +57,7 @@ WORKDIR /prod
 COPY --from=build /build/npcg ./
 
 # Document the port that may need to be published
-EXPOSE 8000
+EXPOSE 8080
 
 # Start the application
 CMD ["/prod/npcg"]
