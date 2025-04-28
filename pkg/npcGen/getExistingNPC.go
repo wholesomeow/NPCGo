@@ -31,14 +31,6 @@ func GetExistingNPC(uuid string) (NPCBase, error) {
 	// Create NPC Data Query
 	npc_query := fmt.Sprintf("SELECT * FROM generated_npcs WHERE id='%s'", uuid)
 
-	// LEFT OFF: 
-	// 1. Need to create several migration files to create new tables for each
-	// section of the NPC object that has a UUID and then link those tables together.
-	// 2. Then, I need to query the UUIDs from the generated_npcs table into variables
-	// 3. Then, query the data for those fields with those sub UUIDs
-	// 4. I should probably also remove the method attribute from each of the create
-	// functions and just pass in the NPC object as a parameter like before...
-
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data")
 	err = db.QueryRow(context.Background(), npc_query).Scan(
