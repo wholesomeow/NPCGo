@@ -1,0 +1,4 @@
+-- COPY generator.names_fantasy(id, name_fantasy)
+-- FROM '/rawdata/csv/Fantasy_Names.csv'
+-- DELIMITER ','
+-- CSV HEADER;
