@@ -2,6 +2,7 @@ package npcgen
 
 import (
 	"context"
+	"errors"
 	"log"
 	"math"
 
@@ -77,6 +78,11 @@ func CreateREIData(npc_object *NPCBase) error {
 	}
 
 	cs_data := npc_object.CS.Coords
+
+	// Validate npc_object has CS Coordinates
+	if len(cs_data) <= 0 {
+		return errors.New("npc_object has no CS Coordinates")
+	}
 
 	log.Print("generating Rational-Experiential Inventory UUID")
 	npc_object.REI.UUID, err = CreateUUIDv4()

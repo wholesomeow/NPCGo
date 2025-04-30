@@ -10,19 +10,19 @@ import (
 )
 
 func APICreateOCEAN(context *gin.Context) {
-	// Create new CS
+	// Create empty NPC object and populate with CS Coordinates
 	new_npc := npcgen.NPCBase{}
+	new_npc.CS.Coords, _ = GetCSCoordinates(context)
+
+	// Create new OCEAN Data
 	err := npcgen.CreateOCEANData(&new_npc)
 	if err != nil {
 		msg := fmt.Sprintf("NPC OCEAN generation failed: %s", err)
-		status := http.StatusInternalServerError
-		context.JSON(status, Response{
-			Status:    http.StatusText(status),
-			Message:   msg,
-			Timestamp: time.Now(),
-		})
+		status, response := Response500(msg)
+		context.JSON(status, response)
 	}
 
+	// Return new data
 	context.JSON(http.StatusOK, Response{
 		Status:    http.StatusText(http.StatusOK),
 		Message:   "NPC OCEAN generated successfully",

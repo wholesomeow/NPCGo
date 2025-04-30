@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS cognitive_data_npc;

@@ -10,17 +10,16 @@ import (
 )
 
 func APICreateREI(context *gin.Context) {
-	// Create new RE
+	// Create empty NPC object and populate with CS Coordinates
 	new_npc := npcgen.NPCBase{}
+	new_npc.CS.Coords, _ = GetCSCoordinates(context)
+
+	// Create new REI
 	err := npcgen.CreateREIData(&new_npc)
 	if err != nil {
 		msg := fmt.Sprintf("NPC REI generation failed: %s", err)
-		status := http.StatusInternalServerError
-		context.JSON(status, Response{
-			Status:    http.StatusText(status),
-			Message:   msg,
-			Timestamp: time.Now(),
-		})
+		status, response := Response500(msg)
+		context.JSON(status, response)
 	}
 
 	context.JSON(http.StatusOK, Response{

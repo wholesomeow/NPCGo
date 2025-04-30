@@ -101,7 +101,10 @@ func CreateNPC() (NPCBase, error) {
 		npc_object.OCEAN.Traits,
 		npc_object.OCEAN.Degree,
 	)
-	npc_object.OCEAN.Text = textgen.SimpleSentenceBuilder(OCEANTextData)
+	npc_object.OCEAN.Text, err = textgen.SimpleSentenceBuilder(OCEANTextData)
+	if err != nil {
+		return npc_object, err
+	}
 
 	log.Print("NPC generation finished")
 	return npc_object, nil

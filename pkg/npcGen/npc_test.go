@@ -1,12 +1,8 @@
 package npcgen
 
 import (
-	"log"
 	"reflect"
 	"testing"
-
-	config "github.com/wholesomeow/npcGo/configs"
-	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
 // TestNPCCreate calls npc.CreateNPC checking for a valid return value
@@ -19,20 +15,7 @@ func TestNPCType(t *testing.T) {
 }
 
 func TestNPCName(t *testing.T) {
-	// Conf path hardcoded for testing purposes
-	err := utilities.ChangeWorkingDir("..")
-	if err != nil {
-		panic(err)
-	}
-	conf_path := "configs/dbconf.yml"
-	log.Printf("database conf file at path %s", conf_path)
-	config, err := config.ReadConfig("configs/dbconf.yml")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	test_npc := NPCBase{}
-	test_npc, err = CreateNPC(config)
+	test_npc, err := CreateNPC()
 	if err != nil {
 		panic(err)
 	}

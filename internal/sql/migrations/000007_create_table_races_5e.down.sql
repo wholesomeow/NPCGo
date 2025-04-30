@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS races_5e;

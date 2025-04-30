@@ -30,7 +30,7 @@ func TemporalConj() error {
 // Builds sentences with one main clause.
 // Simple sentences are in Subject, Verb, Object order.
 // Object can also be complements or adjunts.
-func SimpleSentenceBuilder(data texttypes.TextData) string {
+func SimpleSentenceBuilder(data texttypes.TextData) (string, error) {
 	// Build required Noun/Verb Phrases
 	name_phrase := texttypes.NounPhrase{}
 	subpn_phrase := texttypes.NounPhrase{}
@@ -110,7 +110,7 @@ func SimpleSentenceBuilder(data texttypes.TextData) string {
 
 	text := strings.Join(text_slice, "\n")
 
-	return text
+	return text, nil
 }
 
 // Builds compound sentences from two or more main clauses, joined by a coordinating conjuction

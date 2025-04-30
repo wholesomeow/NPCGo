@@ -2,6 +2,7 @@ package npcgen
 
 import (
 	"context"
+	"errors"
 	"log"
 	"math"
 	"math/rand"
@@ -78,6 +79,11 @@ func CreateMICEData(npc_object *NPCBase) error {
 
 	r_val := rand.Intn(len(mice_data))
 	cs_data := npc_object.CS.Coords
+
+	// Validate npc_object has CS Coordinates
+	if len(cs_data) <= 0 {
+		return errors.New("npc_object has no CS Coordinates")
+	}
 
 	log.Print("generating MICE UUID")
 	npc_object.MICE.UUID, err = CreateUUIDv4()

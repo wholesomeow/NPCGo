@@ -10,17 +10,16 @@ import (
 )
 
 func APICreateMICE(context *gin.Context) {
-	// Create new MICE
+	// Create empty NPC object and populate with CS Coordinates
 	new_npc := npcgen.NPCBase{}
+	new_npc.CS.Coords, _ = GetCSCoordinates(context)
+
+	// Create new MICE
 	err := npcgen.CreateMICEData(&new_npc)
 	if err != nil {
 		msg := fmt.Sprintf("NPC MICE generation failed: %s", err)
-		status := http.StatusInternalServerError
-		context.JSON(status, Response{
-			Status:    http.StatusText(status),
-			Message:   msg,
-			Timestamp: time.Now(),
-		})
+		status, response := Response500(msg)
+		context.JSON(status, response)
 	}
 
 	context.JSON(http.StatusOK, Response{
