@@ -7,7 +7,7 @@ import (
 	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
-func (npc_object *NPCBase) CreateOrientationType() error {
+func CreateOrientationType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC Sexual Orientation UUID")

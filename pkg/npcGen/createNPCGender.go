@@ -1,13 +1,14 @@
 package npcgen
 
 import (
+	"errors"
 	"log"
 	"math/rand"
 
 	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
-func (npc_object *NPCBase) CreateGenderType() error {
+func CreateGenderType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC type UUID")
@@ -27,7 +28,7 @@ func (npc_object *NPCBase) CreateGenderType() error {
 
 // TODO(wholesomeow): Rework this to allow mixing pronouns
 // TODO(wholesomeow): Rework this to be more clear with case to pronoun mapping
-func (npc_object *NPCBase) CreatePronouns() {
+func CreatePronouns(npc_object *NPCBase) error {
 	log.Print("selecting NPC Pronouns")
 	// TODO(wholesomeow): Rework better random selection
 	r_val := rand.Intn(len(enums.Pronouns)) + 1
@@ -48,5 +49,9 @@ func (npc_object *NPCBase) CreatePronouns() {
 		npc_object.Pronouns = enums.Pronouns[enums.Masc_Pronouns]
 	case 8:
 		npc_object.Pronouns = enums.Pronouns[enums.Femme_Pronouns]
+	default:
+		return errors.New("failed to select pronoun from GenderType.Enum")
 	}
+
+	return nil
 }

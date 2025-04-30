@@ -2,7 +2,7 @@ package npcgen
 
 import "log"
 
-func (npc_object *NPCBase) CreateNPCType() error {
+func CreateNPCType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC type UUID")

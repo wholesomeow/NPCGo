@@ -7,7 +7,7 @@ import (
 	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
 )
 
-func (npc_object *NPCBase) CreateSexType() error {
+func CreateSexType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC Sex UUID")

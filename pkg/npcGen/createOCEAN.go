@@ -50,7 +50,7 @@ func getOCEANData(db *pgx.Conn, q_str string) ([][]string, error) {
 	return data, err
 }
 
-func (npc_object *NPCBase) CreateOCEANData() error {
+func CreateOCEANData(npc_object *NPCBase) error {
 	// Read in Database Config file
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {
@@ -67,7 +67,7 @@ func (npc_object *NPCBase) CreateOCEANData() error {
 	defer db.Close(context.Background())
 
 	// Create Personality Data Query
-	ocean_query := "SELECT * FROM cognitive_data_npc WHERE category='OCEAN'"
+	ocean_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='OCEAN'"
 
 	// Create Personality Data Container
 	ocean_data, err := getOCEANData(db, ocean_query)
@@ -146,7 +146,7 @@ func (npc_object *NPCBase) CreateOCEANData() error {
 	return nil
 }
 
-func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspect []float64) texttypes.TextData {
+func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, degree []float64) texttypes.TextData {
 	log.Print("start of OCEAN Text Generation")
 
 	trait_name := []string{"open", "conscientious", "extraverted", "agreeable", "neurotic"}
@@ -224,7 +224,8 @@ func CreateOCEANText(npc_name string, pronouns []string, traits [][]string, aspe
 				positive = true
 			}
 
-			if aspect[i] > k && aspect[i] < j {
+			log.Printf("Degree: %v", degree)
+			if degree[i] > k && degree[i] < j {
 				log.Printf("match found for OCEAN aspect: %s", trait_name[i])
 
 				trait.Adjective = trait_name[i]

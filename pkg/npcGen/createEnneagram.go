@@ -126,7 +126,7 @@ func CreateEnneaCLOD(LOD_list *[9]string, LODLevel int) string {
 // 	return data.EnneagramData[id].GrowthRecommendations
 // }
 
-func (npc_object *NPCBase) CreateEnneagram() error {
+func CreateEnneagram(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC type UUID")
@@ -159,7 +159,7 @@ func (npc_object *NPCBase) CreateEnneagram() error {
 	var enneagram_id = SelectEnneagram()
 
 	log.Print("querying db for Enneagram data")
-	enneagram_query := fmt.Sprintf("SELECT * FROM enneagram WHERE id='%d'", enneagram_id)
+	enneagram_query := fmt.Sprintf("SELECT * FROM generator.enneagram WHERE id='%d'", enneagram_id)
 	err = db.QueryRow(context.Background(), enneagram_query).Scan(
 		&npc_object.Enneagram.ID,
 		&npc_object.Enneagram.Archetype,

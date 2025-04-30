@@ -68,7 +68,7 @@ func (npc_object *NPCBase) MakeSizeMetric() {
 	npc_object.NPCAppearance.Weight_Kg = kg
 }
 
-func (npc_object *NPCBase) CreateBodyType() error {
+func CreateBodyType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC body UUID")
@@ -76,6 +76,10 @@ func (npc_object *NPCBase) CreateBodyType() error {
 	if err != nil {
 		return err
 	}
+
+	// Generating the measurements
+	npc_object.MakeSizeImperial()
+	npc_object.MakeSizeMetric()
 
 	log.Print("creating NPC body type")
 	meters := npc_object.NPCAppearance.Height_Cm / 100

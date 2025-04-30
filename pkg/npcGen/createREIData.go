@@ -51,7 +51,7 @@ func getREIData(db *pgx.Conn, q_str string) ([][]string, error) {
 // to *actually* determine Rationality vs Experiential attributes
 
 // TODO(wholesomeow): Figure out what I'm doing with this
-func (npc_object *NPCBase) CreateREIData() error {
+func CreateREIData(npc_object *NPCBase) error {
 	// Read in Database Config file
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {
@@ -68,7 +68,7 @@ func (npc_object *NPCBase) CreateREIData() error {
 	defer db.Close(context.Background())
 
 	// Create Personality Data Query
-	rei_query := "SELECT * FROM cognitive_data_npc WHERE category='REI_Dimensions'"
+	rei_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='REI_Dimensions'"
 
 	// Create Personality Data Container
 	rei_data, err := getREIData(db, rei_query)

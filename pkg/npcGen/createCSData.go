@@ -61,7 +61,7 @@ func coordsToSelection(cs_coords [2]int) int {
 	return selection
 }
 
-func (npc_object *NPCBase) CreateCSData() error {
+func CreateCSData(npc_object *NPCBase) error {
 	// Read in Database Config file
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {
@@ -78,7 +78,7 @@ func (npc_object *NPCBase) CreateCSData() error {
 	defer db.Close(context.Background())
 
 	// Create Personality Data Queries
-	cs_query := "SELECT * FROM cognitive_data_npc WHERE category='CS_Dimensions'"
+	cs_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='CS_Dimensions'"
 
 	// Create Personality Data Containers
 	cs_data, err := getCSData(db, cs_query)

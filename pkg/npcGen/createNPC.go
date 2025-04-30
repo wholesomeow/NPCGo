@@ -25,50 +25,74 @@ func CreateNPC() (NPCBase, error) {
 	}
 
 	// ----- GENERATE PERSONALITY DATA -----
-	// Generate CS Base Data
-	npc_object.CreateCSData()
-
-	// Generate REI Base Data
-	npc_object.CreateREIData()
-
-	// Generate OCEAN Base Data
-	npc_object.CreateOCEANData()
-
-	// Generate Enneagram Data
-	npc_object.CreateEnneagram()
-
-	// Generate MICE Base Data
-	npc_object.CreateMICEData()
-
-	// ----- GENERATE PHYSICALITY DATA -----
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
-	log.Print("setting NPC Type values from Enum")
-	npc_object.CreateNPCType()
-
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
-	log.Print("setting NPC Body Type values from Enum")
-	npc_object.MakeSizeImperial()
-	npc_object.MakeSizeMetric()
-	err = npc_object.CreateBodyType()
+	// Generate CS Base Data
+	err = CreateCSData(&npc_object)
 	if err != nil {
 		return npc_object, err
 	}
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
+	// Generate REI Base Data
+	err = CreateREIData(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
+	// Generate OCEAN Base Data
+	err = CreateOCEANData(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
+	// Generate Enneagram Data
+	err = CreateEnneagram(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
+	// Generate MICE Base Data
+	err = CreateMICEData(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
+	// ----- GENERATE PHYSICALITY DATA -----
+	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
+	log.Print("setting NPC Type values from Enum")
+	err = CreateNPCType(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
+	log.Print("setting NPC Body Type values from Enum")
+	err = CreateBodyType(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
+
 	log.Print("setting NPC Sex values from Enum")
-	npc_object.CreateSexType()
+	err = CreateSexType(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Gender values from Enum")
-	npc_object.CreateGenderType()
+	err = CreateGenderType(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Pronoun values from Enum")
-	npc_object.CreatePronouns()
+	err = CreatePronouns(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
 
-	// TODO(wholesomeow): Implement NPC options data for optional user-driven configurations overrides
 	log.Print("setting NPC Sexual Orientation values from Enum")
-	npc_object.CreateOrientationType()
+	err = CreateOrientationType(&npc_object)
+	if err != nil {
+		return npc_object, err
+	}
 
 	// ----- GENERATE TEXT -----
 	log.Print("start of text generation")

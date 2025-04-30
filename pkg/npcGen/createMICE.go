@@ -51,7 +51,7 @@ func getMICEData(db *pgx.Conn, q_str string) ([][]string, error) {
 	return data, nil
 }
 
-func (npc_object *NPCBase) CreateMICEData() error {
+func CreateMICEData(npc_object *NPCBase) error {
 	// Read in Database Config file
 	config, err := config.ReadConfig("configs/dbconf.yml")
 	if err != nil {
@@ -68,7 +68,7 @@ func (npc_object *NPCBase) CreateMICEData() error {
 	defer db.Close(context.Background())
 
 	// Create Personality Data Query
-	mice_query := "SELECT * FROM cognitive_data_npc WHERE category='MICE'"
+	mice_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='MICE'"
 
 	// Create Personality Data Container
 	mice_data, err := getMICEData(db, mice_query)
