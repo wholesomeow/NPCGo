@@ -161,3 +161,10 @@ func (npc_object *NPCBase) REIToJSON() string {
 
 	return string(result)
 }
+
+func (npc_object *NPCBase) EnneagramToJSON() string {
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object.Enneagram)
+
+	return string(result)
+}
