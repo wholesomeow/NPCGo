@@ -1,38 +1,33 @@
 package npcapi
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	namegen "github.com/wholesomeow/npcGo/pkg/nameGen"
-	npcgen "github.com/wholesomeow/npcGo/pkg/npcGen"
 )
 
 func APICreateName(context *gin.Context) {
-	start_proc := time.Now()
-	var (
-		err  error
-		uuid = context.Param("uuid")
-	)
-
-	// Populate a new NPC object by querying database for UUID
-	// and mapping returned data to new NPC object
-	new_npc, err := npcgen.GetExistingNPC(uuid)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Create new name
-	new_npc.Name, err = namegen.CreateName()
+	new_name, err := namegen.CreateName()
 	if err != nil {
-		log.Fatal(err)
+		msg := fmt.Sprintf("NPC name generation failed: %s", err)
+		status := http.StatusInternalServerError
+		context.JSON(status, Response{
+			Status:    http.StatusText(status),
+			Message:   msg,
+			Timestamp: time.Now(),
+		})
 	}
 
-	end_proc := time.Now()
-	elapsed_proc := end_proc.Sub(start_proc)
-	log.Printf("npc created... elapsed time: %s", time.Duration.String(elapsed_proc))
-
-	context.JSON(http.StatusOK, new_npc.NameToJSON())
+	context.JSON(http.StatusOK, Response{
+		Status:  http.StatusText(http.StatusOK),
+		Message: "NPC name generated successfully",
+		Data: map[string]string{
+			"npc_name": new_name,
+		},
+		Timestamp: time.Now(),
+	})
 }

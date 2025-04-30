@@ -1,7 +1,7 @@
 package npcapi
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,28 +10,23 @@ import (
 )
 
 func APICreateCS(context *gin.Context) {
-	start_proc := time.Now()
-	var (
-		err  error
-		uuid = context.Param("uuid")
-	)
-
-	// Populate a new NPC object by querying database for UUID
-	// and mapping returned data to new NPC object
-	new_npc, err := npcgen.GetExistingNPC(uuid)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Create new CS
-	new_npc.CreateCSData()
+	new_npc := npcgen.NPCBase{}
+	err := npcgen.CreateCSData(&new_npc)
 	if err != nil {
-		log.Fatal(err)
+		msg := fmt.Sprintf("NPC CS generation failed: %s", err)
+		status := http.StatusInternalServerError
+		context.JSON(status, Response{
+			Status:    http.StatusText(status),
+			Message:   msg,
+			Timestamp: time.Now(),
+		})
 	}
 
-	end_proc := time.Now()
-	elapsed_proc := end_proc.Sub(start_proc)
-	log.Printf("npc created... elapsed time: %s", time.Duration.String(elapsed_proc))
-
-	context.JSON(http.StatusOK, new_npc.CSToJSON())
+	context.JSON(http.StatusOK, Response{
+		Status:    http.StatusText(http.StatusOK),
+		Message:   "NPC CS generated successfully",
+		Data:      new_npc.CSToJSON(),
+		Timestamp: time.Now(),
+	})
 }
