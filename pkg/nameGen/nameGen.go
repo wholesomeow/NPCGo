@@ -40,7 +40,7 @@ func (mc *MarkovChain) BuildNGram(config *config.Config, max_attempts int) error
 	// Query for required data to generate NPC
 	var rows pgx.Rows
 	log.Print("querying db for ngram data")
-	rows, err = db.Query(context.Background(), "SELECT * FROM ngram_fantasy")
+	rows, err = db.Query(context.Background(), "SELECT * FROM generator.ngram_fantasy")
 	if err != nil {
 		return err
 	}
