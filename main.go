@@ -12,9 +12,9 @@ func main() {
 	router.Use(gin.Recovery())
 
 	npc_group := router.Group("/npc")
-	npc_group.GET("/createNPC", npcapi.APICreateNPC)
-	npc_group.GET("/createName/:uuid", npcapi.APICreateName)
-	npc_group.GET("/createCS/:uuid", npcapi.APICreateCS)
+	npc_group.GET("/createNPC/", npcapi.APICreateNPC)
+	npc_group.GET("/createName/", npcapi.APICreateName)
+	npc_group.GET("/createCS/", npcapi.APICreateCS)
 
 	router.Run("0.0.0.0:8080")
 }
