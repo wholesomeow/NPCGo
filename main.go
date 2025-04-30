@@ -15,6 +15,10 @@ func main() {
 	npc_group.GET("/createNPC/", npcapi.APICreateNPC)
 	npc_group.GET("/createName/", npcapi.APICreateName)
 	npc_group.GET("/createCS/", npcapi.APICreateCS)
+	npc_group.GET("/createOCEAN/", npcapi.APICreateOCEAN)
+	npc_group.GET("/createMICE/", npcapi.APICreateMICE)
+	npc_group.GET("/createREI/", npcapi.APICreateREI)
+	npc_group.GET("/createEnneagram/", npcapi.APICreateEnneagram)
 
 	router.Run("0.0.0.0:8080")
 }
