@@ -134,9 +134,30 @@ func (npc_object *NPCBase) NameToJSON() string {
 	return string(result)
 }
 
+func (npc_object *NPCBase) OCEANToJSON() string {
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object.OCEAN)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) MICEToJSON() string {
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object.MICE)
+
+	return string(result)
+}
+
 func (npc_object *NPCBase) CSToJSON() string {
 	// result, _ := json.MarshalIndent(npc_object, "", "  ")
 	result, _ := json.Marshal(npc_object.CS)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) REIToJSON() string {
+	// result, _ := json.MarshalIndent(npc_object, "", "  ")
+	result, _ := json.Marshal(npc_object.REI)
 
 	return string(result)
 }
