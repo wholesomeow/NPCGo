@@ -29,6 +29,7 @@ __debug_bin*
 tmp/
 data/raw/jsonl/
 # data/rawdata/jsonl/*.jsonl
+private-docs/
 
 # # Docker files
 # .dockerignore
