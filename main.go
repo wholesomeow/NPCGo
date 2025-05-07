@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	npcapi "github.com/wholesomeow/npcGo/pkg/npcGen/api"
 	npcapi_npc "github.com/wholesomeow/npcGo/pkg/npcGen/api/npc"
 	npcapi_reroll_enum "github.com/wholesomeow/npcGo/pkg/npcGen/api/reroll/enum"
 	npcapi_reroll_npc "github.com/wholesomeow/npcGo/pkg/npcGen/api/reroll/npc"
@@ -13,13 +14,15 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
+	router.NoRoute(npcapi.Response404)
+
 	// TODO(wholesomeow): User related endpoints
 
 	// TODO(wholesomeow): Admin realted endpoints? Maybe?
 
 	// Main NPC API group
 	npc_group := router.Group("/npc")
-	npc_group.GET("/generate", npcapi_npc.APICreateNPC)
+	npc_group.POST("/generate", npcapi_npc.APICreateNPC)
 
 	// TODO(wholesomeow): NPC info collection endpoints maybe?
 	// I'm not sure what exactly, maybe NPC save and load?

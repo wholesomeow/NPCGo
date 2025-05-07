@@ -3,6 +3,8 @@ package npcapi
 import (
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
@@ -11,6 +13,16 @@ type Response struct {
 	Data      interface{}
 	Error     interface{}
 	Timestamp time.Time
+}
+
+func Response404(context *gin.Context) {
+	status := http.StatusNotFound
+	response := Response{
+		Status:    http.StatusText(status),
+		Message:   "Page not found",
+		Timestamp: time.Now(),
+	}
+	context.JSON(status, response)
 }
 
 func Response500(msg string) (int, Response) {
