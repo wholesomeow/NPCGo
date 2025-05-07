@@ -100,7 +100,7 @@ type NPCBase struct {
 		Enum        enums.OrientationType
 	}
 
-	// v2.1
+	// v2.0
 	// Physical Description
 	NPCAppearance struct {
 		Height_Ft  int
@@ -110,12 +110,14 @@ type NPCBase struct {
 		Weight_Kg  float64
 	}
 
-	// v2.0
+	// v2.1
 	// Social Role
+
+	// v2.3
 	// Communication Matrix
 	// Social Circle
 
-	// v2.2
+	// v2.4
 	// Rumors Known
 	// Jobs Known
 }
@@ -165,6 +167,36 @@ func (npc_object *NPCBase) REIToJSON() string {
 func (npc_object *NPCBase) EnneagramToJSON() string {
 	// result, _ := json.MarshalIndent(npc_object, "", "  ")
 	result, _ := json.Marshal(npc_object.Enneagram)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) BodyToJSON() string {
+	result, _ := json.Marshal(npc_object.BodyType)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) TypeToJSON() string {
+	result, _ := json.Marshal(npc_object.NPCType)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) GenderToJSON() string {
+	result, _ := json.Marshal(npc_object.GenderType)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) OriToJSON() string {
+	result, _ := json.Marshal(npc_object.SexualOrientationType)
+
+	return string(result)
+}
+
+func (npc_object *NPCBase) SexToJSON() string {
+	result, _ := json.Marshal(npc_object.SexType)
 
 	return string(result)
 }
