@@ -162,6 +162,11 @@ func RandomRange(min int, max int) int {
 	return rand.Intn((max - min + 1)) + min
 }
 
+// Returns random value within a range. Wrapper for rand.Float64() function.
+func RandomRange64(min float64, max float64) float64 {
+	return min + rand.Float64()*(max-min)
+}
+
 func RemapInt(value float64, minInput float64, maxInput float64, minOutput float64, maxOutput float64) float64 {
 	var part_1 float64
 	var part_2 float64

@@ -15,7 +15,7 @@ func TestNPCType(t *testing.T) {
 }
 
 func TestNPCName(t *testing.T) {
-	test_npc, err := CreateNPC()
+	test_npc, err := CreateNPC(1)
 	if err != nil {
 		panic(err)
 	}

@@ -12,7 +12,7 @@ import (
 
 func APICreateName(context *gin.Context) {
 	// Create new name
-	new_name, err := namegen.CreateName()
+	new_name, err := namegen.CreateName(1)
 	if err != nil {
 		msg := fmt.Sprintf("NPC name generation failed: %s", err)
 		status, response := npcapi.Response500(msg)

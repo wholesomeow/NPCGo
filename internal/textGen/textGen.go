@@ -114,5 +114,9 @@ func SimpleSentenceBuilder(data texttypes.TextData) (string, error) {
 }
 
 // Builds compound sentences from two or more main clauses, joined by a coordinating conjuction
+// Two or more independent clauses joined by coordinating conjunctions (FANBOYS: for, and, nor, but, or, yet, so):
+// “The cat eats fish, and the dog barks loudly.”
 
 // Builds complex sentences from one main clause and one or more subordinate clauses, introduced by a subordinating conjunction
+// Complex sentences have multiple valid placements for subordinate clauses: start, middle, or end.
+// “Because it was hungry, the cat ate fish.” or “The cat, because it was hungry, ate fish.”

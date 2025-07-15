@@ -22,14 +22,19 @@ type MarkovChain struct {
 
 // TODO(wholesomeow): Use RogueBasin link to create more advanced Markov Chain
 // LINK: http://www.roguebasin.com/index.php?title=Names_from_a_high_order_Markov_Process_and_a_simplified_Katz_back-off_scheme
-func (mc *MarkovChain) BuildNGram(config *config.Config, max_attempts int) error {
+func (mc *MarkovChain) BuildNGram(max_attempts int) error {
 	n_grams := [][]string{}
 	compilation := map[string][]string{}
 
 	log.Print("starting NGram data collection")
+	// Read in Database Config file
+	config, err := config.ReadConfig("configs/dbconf.yml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Create DB Object
 	var db *pgx.Conn
-	var err error
 	db, err = utilities.ConnectDatabase(config)
 	if err != nil {
 		return err

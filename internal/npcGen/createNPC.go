@@ -7,7 +7,7 @@ import (
 	textgen "github.com/wholesomeow/npcGo/pkg/textGen"
 )
 
-func CreateNPC() (NPCBase, error) {
+func CreateNPC(name_version int) (NPCBase, error) {
 	log.Print("start of NPC creation")
 	npc_object := NPCBase{}
 	var err error
@@ -19,7 +19,7 @@ func CreateNPC() (NPCBase, error) {
 	}
 
 	// Create NPC Name
-	npc_object.Name, err = namegen.CreateName()
+	npc_object.Name, err = namegen.CreateName(name_version)
 	if err != nil {
 		return npc_object, err
 	}
