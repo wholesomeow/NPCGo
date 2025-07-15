@@ -10,8 +10,8 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
+	texttypes "github.com/wholesomeow/npcGo/internal/textGen/textTypes"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
-	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
 )
 
 func getOCEANData(db *pgx.Conn, q_str string) ([][]string, error) {

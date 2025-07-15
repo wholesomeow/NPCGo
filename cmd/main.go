@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	npcapi "github.com/wholesomeow/npcGo/pkg/npcGen/api"
-	npcapi_npc "github.com/wholesomeow/npcGo/pkg/npcGen/api/npc"
-	npcapi_reroll_enum "github.com/wholesomeow/npcGo/pkg/npcGen/api/reroll/enum"
-	npcapi_reroll_npc "github.com/wholesomeow/npcGo/pkg/npcGen/api/reroll/npc"
+	npcapi "github.com/wholesomeow/npcGo/internal/api"
+	npcapi_npc "github.com/wholesomeow/npcGo/internal/api/npc"
+	npcapi_reroll_enum "github.com/wholesomeow/npcGo/internal/api/reroll/enum"
+	npcapi_reroll_npc "github.com/wholesomeow/npcGo/internal/api/reroll/npc"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package npcgen
 import (
 	"encoding/json"
 
-	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
+	"github.com/wholesomeow/npcGo/internal/npcGen/enums"
 )
 
 // A NPCBase is the base struct for the NPC Object created by the application

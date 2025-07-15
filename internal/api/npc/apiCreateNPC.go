@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	npcgen "github.com/wholesomeow/npcGo/pkg/npcGen"
-	npcapi "github.com/wholesomeow/npcGo/pkg/npcGen/api"
+	npcapi "github.com/wholesomeow/npcGo/internal/api"
+	npcgen "github.com/wholesomeow/npcGo/internal/npcGen"
 )
 
 func APICreateNPC(context *gin.Context) {

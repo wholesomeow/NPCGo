@@ -3,8 +3,8 @@ package npcgen
 import (
 	"log"
 
-	namegen "github.com/wholesomeow/npcGo/pkg/nameGen"
-	textgen "github.com/wholesomeow/npcGo/pkg/textGen"
+	namegen "github.com/wholesomeow/npcGo/internal/nameGen"
+	textgen "github.com/wholesomeow/npcGo/internal/textGen"
 )
 
 func CreateNPC(name_version int) (NPCBase, error) {

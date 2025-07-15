@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	namegen "github.com/wholesomeow/npcGo/pkg/nameGen"
-	npcapi "github.com/wholesomeow/npcGo/pkg/npcGen/api"
+	npcapi "github.com/wholesomeow/npcGo/internal/api"
+	namegen "github.com/wholesomeow/npcGo/internal/nameGen"
 )
 
 func APICreateName(context *gin.Context) {

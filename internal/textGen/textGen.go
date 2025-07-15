@@ -3,7 +3,7 @@ package textgen
 import (
 	"strings"
 
-	texttypes "github.com/wholesomeow/npcGo/pkg/textGen/textTypes"
+	texttypes "github.com/wholesomeow/npcGo/internal/textGen/textTypes"
 )
 
 // NOTE(wholesomeow): I saw someone use a FIFO Linked List to read a rule set into memory

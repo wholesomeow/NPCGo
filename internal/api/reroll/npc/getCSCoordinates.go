@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	npcapi "github.com/wholesomeow/npcGo/pkg/npcGen/api"
+	npcapi "github.com/wholesomeow/npcGo/internal/api"
 )
 
 func GetCSCoordinates(context *gin.Context) ([2]int, error) {

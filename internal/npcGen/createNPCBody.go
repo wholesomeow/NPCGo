@@ -5,7 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/wholesomeow/npcGo/internal/utilities"
-	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
+	"github.com/wholesomeow/npcGo/internal/npcGen/enums"
 )
 
 func makeBMI(BMI float64) int {

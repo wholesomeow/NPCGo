@@ -5,7 +5,7 @@ import (
 	"log"
 	"math/rand"
 
-	"github.com/wholesomeow/npcGo/pkg/npcGen/enums"
+	"github.com/wholesomeow/npcGo/internal/npcGen/enums"
 )
 
 func CreateGenderType(npc_object *NPCBase) error {
