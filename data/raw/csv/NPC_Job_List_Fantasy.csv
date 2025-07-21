@@ -1,4 +1,4 @@
-Category,Name,Alt_Name,Description,Can_Own,Min_Status_Name,Max_Status_Name,Min_Status_Level,Max_Status_Level
+category,job_name,alt_name,job_description,can_own,min_status_name,max_status_name,min_status_level,max_status_level
 Agriculture,Animal Handler,,"responsible for the safe keeping, dietary care, and exercise of animals.",0,"Peasant, Farmer, Laborer","Master craftsman, Artisan, Miller, Scout",3,6
 Agriculture,Arborist,,"maintains and cares for trees, often by surgically removing dying limbs.",0,"Peasant, Farmer, Laborer","Master craftsman, Artisan, Miller, Scout",3,6
 Agriculture,Baler,,"bales hay, or in the mills, wool and cotton goods.",0,"Peasant, Farmer, Laborer","Master craftsman, Artisan, Miller, Scout",3,6

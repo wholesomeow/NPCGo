@@ -77,6 +77,8 @@ func printHelp() {
 }
 
 func main() {
+	log.Print("Staring NPCGo Application")
+	
 	if len(os.Args) < 2 {
 		printHelp()
 		return

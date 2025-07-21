@@ -1,4 +1,4 @@
-Race,Subrace,Adult_Age_Min,Adult_Age_Max,Covering,Covering_Alt,Incidence,Size,Speed,Language,Str,Dex,Con,Int,Wis,Cha,Extra
+race,subrace,adult_age_min,adult_age_max,covering,covering_alt,incidence,race_size,speed,race_language,strength,dexterity,constitution,intelligence,wisdom,charisma,extra
 Aarakocra,none,3,30,Feathers,None,Very Rare,Medium,25,"Common, Aarakocra, Auran",0,2,0,0,1,0,50' fly; Talons (1d4)
 Aasimar,Variant,18,160,Hair,None,Rare,Medium,30,"Common, Celestial",0,0,0,0,1,2,60' Darkvision; Healing Hands; Light cantrip; Necrotic & Radiant res.; (-Healing Hands); Celestial Legacy (2 additional spells)
 Aasimar,Protector,18,160,Hair,None,Rare,Medium,30,"Common, Celestial",0,0,0,0,1,2,60' Darkvision; Healing Hands; Light cantrip; Necrotic & Radiant res.; Radiant Soul (mobility; damage buff)

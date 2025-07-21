@@ -14,29 +14,35 @@ fi
 # Create Build directory if it doesn't exist
 mkdir -p ./build
 
-# Clean previous builds
-rm -f build/npcgen build/npcgen.exe build/npcgen-linux build/devtools
-
 case $1 in
   main-build )
+    # Clean previous builds
+    rm -f build/npcgo
+
     # Run the tests first so the binary wont build if tests fail
     echo "Running NPC Generator tests"
     go test ./...
 
     echo "Building NPC Generator Binary"
-    CGO_ENABLED=0 go build -o build/npcgen ./cmd
-    echo "Binary built at: build/npcgen-linux"
+    CGO_ENABLED=1 go build -o build/npcgo ./cmd
+    echo "Binary built at: build/npcgo"
     ;;
   dev-build )
+    # Clean previous builds
+    rm -f build/devtools
+
     # Run the tests first so the binary wont build if tests fail
     echo "Running NPC Generator Devtools tests"
     go test ./...
 
     echo "Building NPC Generator Binary"
-    CGO_ENABLED=0 go build -o build/devtools ./cmd/devtools
+    CGO_ENABLED=1 go build -o build/devtools ./cmd/devtools
     echo "Binary built at: build/devtools"
     ;;
   release-build )
+    # Clean previous builds
+    rm -f build/npcgo.exe build/npcgo-linux
+
     # Run the tests first so the binary wont build if tests fail
     echo "Running NPC Generator tests"
     go test ./...
@@ -51,16 +57,16 @@ case $1 in
     go build -ldflags="-X main.version=$VERSION -X main.commit=$COMMIT -X main.buildTime=$BUILD_TIME"
 
     # Linux 64-bit
-    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/npcgen-linux
-    echo "Binary built at: build/npcgen-linux"
+    GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o build/npcgo-linux
+    echo "Binary built at: build/npcgo-linux"
 
     # Windows 64-bit
-    GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o build/npcgen.exe
-    echo "Binary built at: build/npcgen.exe"
+    GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -o build/npcgo.exe
+    echo "Binary built at: build/npcgo.exe"
 
     echo "Compressing builds..."
-    zip build/npcgen-linux.zip build/npcgen-linux
-    zip build/npcgen-windows.zip build/npcgen.exe
+    zip build/npcgo-linux.zip build/npcgo-linux
+    zip build/npcgo-windows.zip build/npcgo.exe
     ;;
   
 esac

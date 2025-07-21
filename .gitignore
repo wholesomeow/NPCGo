@@ -30,6 +30,7 @@ tmp/
 data/raw/jsonl/
 # data/rawdata/jsonl/*.jsonl
 private-docs/
+build/
 
 # # Docker files
 # .dockerignore

@@ -39,7 +39,7 @@ func ReadConfig(path string) (*Config, error) {
 	defer f.Close()
 
 	// Open files and decode into the singleton instance
-	log.Printf("reading %s file", path)
+	log.Printf("Reading %s file", path)
 	yaml_decoder := yaml.NewDecoder(f)
 	once.Do(func() {
 		instance = &Config{}

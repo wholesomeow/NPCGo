@@ -2,11 +2,11 @@ letter,name_value
 A,Aamarus
 B,Baccira
 C,Cacia
-D,D'Anza
-E,E'luaz
+D,"D'Anza"
+E,"E'luaz"
 F,Fadilah
 G,Gaben
-H,H'thana
+H,"H'thana"
 I,Iadara
 J,Jaafer
 K,Kaarthiga
@@ -15,7 +15,7 @@ M,Macaan
 N,Nabril
 O,Oalwa
 P,Pacetor
-Q,Q'orianka
+Q,"Q'orianka"
 R,Rachna
 S,Sabirine
 T,Taarnahm
@@ -24,11 +24,11 @@ V,Vadalma
 W,Wace
 X,Xactan
 Y,Yablik
-Z,Z'nyra
+Z,"Z'nyra"
 A,Aaminah
 B,Bacola
 C,Cada
-D,D'Atra
+D,"D'Atra"
 E,Eadwine
 F,Fadrinne
 G,Gabirel
@@ -54,7 +54,7 @@ Z,Zabadiah
 A,Aanon
 B,Badem
 C,Cadell
-D,D'Avonni
+D,"D'Avonni"
 E,Eadyth
 F,Faduma
 G,Gaddis
@@ -1923,7 +1923,7 @@ U,Uthmang
 V,Vashaak
 W,Wispar
 Y,Yriden
-Z,Zel'va
+Z,"Zel'va"
 A,Aerlson
 B,Bedwyck
 C,Calwyn
@@ -2202,7 +2202,7 @@ H,Hardwicke
 I,Inglix
 J,Jarvis
 K,Kasporio
-L,Le'for
+L,"Le'for"
 M,Manida
 N,Nauer
 O,Ommer
@@ -2877,7 +2877,7 @@ Z,Ziddim
 A,Ajira
 B,Belor
 C,Carteya
-D,Dar'Tan
+D,"Dar'Tan"
 E,Elnam
 F,Feride
 G,Gelsomina
@@ -3147,7 +3147,7 @@ S,Sczarni
 T,Tebryn
 V,Vere
 Z,Zinzerena
-A,Al'lyrr
+A,"Al'lyrr"
 B,Bennon
 C,Cathal
 D,Darien
@@ -5125,7 +5125,7 @@ G,Giraldus
 H,Holt
 J,Jomara
 K,Kherris
-L,Lorl'vana
+L,"Lorl'vana"
 M,Melchor
 N,Nivaldo
 P,Purgali
@@ -5250,7 +5250,7 @@ F,Fuxina
 G,Gisel
 H,Horizakaul
 J,Jonwine
-K,Ki'thay
+K,"Ki'thay"
 L,Loscan
 M,Meleager
 N,Njorn
@@ -6658,7 +6658,6 @@ K,Kreighton
 M,Mindirae
 N,Nytera
 R,Rupin
-tha
 T,Timor
 A,Ardan
 C,Comitia
@@ -7596,11 +7595,11 @@ D,Dvorak
 M,Mulia
 S,Suron
 A,Avaldamon
-D,Dy'neer
+D,"Dy'neer"
 M,Mulpet
 S,Sustarre
 A,Avanoa
-D,Dy'nesend
+D,"Dy'nesend"
 M,Multane
 S,Suulka
 A,Avaron

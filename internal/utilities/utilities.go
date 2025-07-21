@@ -16,7 +16,7 @@ func ReadCSV(path string, header bool) ([][]string, error) {
 	var nil_data [][]string
 
 	// Open CSV File
-	log.Printf("reading %s file", path)
+	log.Printf("Reading %s file", path)
 	f, err := os.OpenFile(path, os.O_RDONLY, 0)
 	if err != nil {
 		return nil_data, err

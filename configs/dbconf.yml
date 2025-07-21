@@ -3,12 +3,12 @@ database:
   dbpath: db/npcgendata.db
   csvpath: data/raw/csv
   jsonpath: data/raw/json
-  migrationpath: file://internal/sql/migrations
+  migrationpath: file://db/migrations
   files:
-    - filename: Fantasy_Names.csv
-      required: true
-      header: false
-      tablename: names_fantasy
+    # - filename: Fantasy_Names_Corrected.csv
+    #   required: true
+    #   header: false
+    #   tablename: names_fantasy
     - filename: Genders.csv
       required: true
       header: true
@@ -29,11 +29,11 @@ database:
       required: true
       header: true
       tablename: cognitive_data_npc
-    - filename: enneagramData.json
+    - filename: Enneagram_Data.csv
       required: true
       header: false
       tablename: enneagram
-    - filename: Fantasy_Names_NGrams.csv
-      required: false
-      header: false
-      tablename: ngrams_fantasy
+    # - filename: Fantasy_Names_NGrams.csv
+    #   required: false
+    #   header: false
+    #   tablename: ngrams_fantasy

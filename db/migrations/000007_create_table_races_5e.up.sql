@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS races_5e(
     adult_age_min INT NOT NULL,
     adult_age_max INT NOT NULL,
     covering VARCHAR(128) NOT NULL,
-    convering_alt VARCHAR(128),
+    covering_alt VARCHAR(128) NOT NULL,
     incidence VARCHAR(128) NOT NULL,
     race_size VARCHAR(128) NOT NULL,
     speed INT NOT NULL,

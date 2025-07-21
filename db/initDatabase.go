@@ -56,16 +56,43 @@ func seedDatabase(db *sql.DB, config *config.Config) error {
 	// Read in all the files from the config
 	files := config.Database.Files
 	for file := range files {
-		log.Printf("Reading in ")
 		ext := strings.ToLower(filepath.Ext(files[file].Filename))
 
+		// Clear existing data before seeding
+		res, err := db.Exec(fmt.Sprintf("DELETE FROM %s;", files[file].Tablename))
+		if err != nil {
+			return fmt.Errorf("failed to clear table %s: %w", files[file].Tablename, err)
+		}
+
+		rows, _ := res.RowsAffected()
+		log.Printf("Deleted %d rows from %s", rows, files[file].Tablename  )
+
 		if ext == ".csv" {
-			filePath := csvPath + files[file].Filename
+			filePath := csvPath + "/" + files[file].Filename
 			data, err := utilities.ReadCSV(filePath, false)
 			if err != nil {
 				return err
 			}
 			header := data[0]
+
+			qMarks := make([]string, len(header))
+			for i := range header {
+				qMarks[i] = "?"
+			}
+
+			query := fmt.Sprintf(
+				"INSERT INTO %s (%s) VALUES (%s);",
+				files[file].Tablename,
+				join(header, ","),
+				join(qMarks, ","),
+			)
+
+			// Prepare statement insertion for proper safety
+			stmt, err := db.Prepare(query)
+			if err != nil {
+				return fmt.Errorf("prepare insert: %w", err)
+			}
+			defer stmt.Close()
 
 			// Seed csv data into database; First row is the header
 			for _, row := range data[1:] {
@@ -73,30 +100,17 @@ func seedDatabase(db *sql.DB, config *config.Config) error {
 					return fmt.Errorf("column mismatch in row: %v", row)
 				}
 
-				// Create SQL INSERT
-				qMarks := make([]string, len(header))
-				for i := range header {
-					qMarks[i] = "?"
-				}
-
-				query := fmt.Sprintf(
-					"INSERT INTO %s (%s) VALUES (%s);",
-					files[file].Tablename,
-					join(header, ","),
-					join(qMarks, ","),
-				)
-
 				vals := make([]interface{}, len(row))
 				for i, v := range row {
 					vals[i] = v
 				}
 
-				if _, err := db.Exec(query, vals...); err != nil {
+				if _, err := stmt.Exec(vals...); err != nil {
 					return fmt.Errorf("insert failed: %w", err)
 				}
 			}
 		} else if ext == ".json" {
-			filePath := jsonPath + files[file].Filename
+			filePath := jsonPath + "/" + files[file].Filename
 			data, err := utilities.ReadJSON(filePath)
 			if err != nil {
 				return err
