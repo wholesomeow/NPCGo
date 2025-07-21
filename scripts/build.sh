@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ -z $1 ]; then
   echo "Must provide build mode as argument"
   echo "Options are:"
@@ -9,6 +11,12 @@ if [ -z $1 ]; then
   exit 1
 fi
 
+# Create Build directory if it doesn't exist
+mkdir -p ./build
+
+# Clean previous builds
+rm -f build/npcgen build/npcgen.exe build/npcgen-linux build/devtools
+
 case $1 in
   main-build )
     # Run the tests first so the binary wont build if tests fail
@@ -16,7 +24,8 @@ case $1 in
     go test ./...
 
     echo "Building NPC Generator Binary"
-    go build -o npcgen ./cmd
+    CGO_ENABLED=0 go build -o build/npcgen ./cmd
+    echo "Binary built at: build/npcgen-linux"
     ;;
   dev-build )
     # Run the tests first so the binary wont build if tests fail
@@ -24,7 +33,8 @@ case $1 in
     go test ./...
 
     echo "Building NPC Generator Binary"
-    go build -o devtools ./cmd/devtools
+    CGO_ENABLED=0 go build -o build/devtools ./cmd/devtools
+    echo "Binary built at: build/devtools"
     ;;
   release-build )
     # Run the tests first so the binary wont build if tests fail
@@ -33,10 +43,16 @@ case $1 in
 
     echo "Building NPC Generator Binary"
     # Linux 64-bit
-    GOOS=linux GOARCH=amd64 go build -o npcgen-linux
+    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/npcgen-linux
+    echo "Binary built at: build/npcgen-linux"
 
     # Windows 64-bit
-    GOOS=windows GOARCH=amd64 go build -o npcgen.exe
+    GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o build/npcgen.exe
+    echo "Binary built at: build/npcgen.exe"
+
+    echo "Compressing builds..."
+    zip build/npcgen-linux.zip build/npcgen-linux
+    zip build/npcgen-windows.zip build/npcgen.exe
     ;;
   
 esac
