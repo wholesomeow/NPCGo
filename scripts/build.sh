@@ -42,6 +42,14 @@ case $1 in
     go test ./...
 
     echo "Building NPC Generator Binary"
+
+    # Including Build Metadata
+    VERSION=$(git describe --tags --always)
+    COMMIT=$(git rev-parse --short HEAD)
+    BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+    go build -ldflags="-X main.version=$VERSION -X main.commit=$COMMIT -X main.buildTime=$BUILD_TIME"
+
     # Linux 64-bit
     GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o build/npcgen-linux
     echo "Binary built at: build/npcgen-linux"
