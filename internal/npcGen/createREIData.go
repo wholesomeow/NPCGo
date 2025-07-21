@@ -1,22 +1,21 @@
 package npcgen
 
 import (
-	"context"
+	"database/sql"
 	"errors"
 	"log"
 	"math"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
-	utilities "github.com/wholesomeow/npcGo/internal/utilities"
+	db "github.com/wholesomeow/npcGo/db"
 )
 
-func getREIData(db *pgx.Conn, q_str string) ([][]string, error) {
+func getREIData(db *sql.DB, q_str string) ([][]string, error) {
 	data := [][]string{}
 
 	// Query for required data to generate NPC
 	log.Print("querying db for REI data")
-	rows, err := db.Query(context.Background(), q_str)
+	rows, err := db.Query(q_str)
 	if err != nil {
 		return data, err
 	}
@@ -60,19 +59,18 @@ func CreateREIData(npc_object *NPCBase) error {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create Personality Data Query
 	rei_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='REI_Dimensions'"
 
 	// Create Personality Data Container
-	rei_data, err := getREIData(db, rei_query)
+	rei_data, err := getREIData(database, rei_query)
 	if err != nil {
 		return err
 	}

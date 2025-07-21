@@ -1,14 +1,21 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
+
+	config "github.com/wholesomeow/npcGo/configs"
+	db "github.com/wholesomeow/npcGo/db"
 	npcapi "github.com/wholesomeow/npcGo/internal/api"
 	npcapi_npc "github.com/wholesomeow/npcGo/internal/api/npc"
 	npcapi_reroll_enum "github.com/wholesomeow/npcGo/internal/api/reroll/enum"
 	npcapi_reroll_npc "github.com/wholesomeow/npcGo/internal/api/reroll/npc"
 )
 
-func main() {
+func startAPIServer() {
 	router := gin.Default()
 
 	router.Use(gin.Logger())
@@ -45,4 +52,57 @@ func main() {
 	enum_reroll.GET("/sexType", npcapi_reroll_enum.APICreateSex)
 
 	router.Run("0.0.0.0:8080")
+}
+
+func printHelp() {
+	helpText := `
+				Usage:
+				npcgen <command>
+
+				Available Commands:
+				server            Start the NPC API server
+				init              Initialize the database (create tables, schemas, etc.)
+				version           Print the current version of npcgen
+				help              Show this help message
+
+				Examples:
+				npcgen server
+				npcgen init
+				npcgen version
+
+				Use "npcgen help" for more information about a command.
+				`
+
+	fmt.Fprintln(os.Stderr, helpText)
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		printHelp()
+		return
+	}
+
+	switch os.Args[1] {
+	case "server":
+		startAPIServer()
+	case "init":
+		// Read in Database Config file
+		config, err := config.ReadConfig("configs/dbconf.yml")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Start Database Initialization
+		if err := db.InitDatabase(config); err != nil {
+			log.Fatalf("Init failed: %v", err)
+		}
+	case "version":
+		fmt.Fprintln(os.Stdout, "NPC Generator - v0.0a")
+	case "help":
+		printHelp()
+	default:
+		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", os.Args[1])
+		printHelp()
+		os.Exit(1)
+	}
 }

@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS ocean_data;
+
+DROP TABLE IF EXISTS mice_data;
+
+DROP TABLE IF EXISTS rei_data;
+
+DROP TABLE IF EXISTS cs_data;
+
+DROP TABLE IF EXISTS enneagram_data;

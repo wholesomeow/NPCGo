@@ -10,20 +10,8 @@ import (
 
 type Config struct {
 	// NOTE(wholesomeow): Used https://zhwt.github.io/yaml-to-go/ to auto-convert lol
-	Server struct {
-		Host     string `yaml:"host"`
-		Port     int    `yaml:"port"`
-		Mode     string `yaml:"mode"`
-		Loglevel string `yaml:"loglevel"`
-		Network  string `yaml:"network"`
-	} `yaml:"server"`
 	Database struct {
-		DBName        string `yaml:"dbname"`
-		Hostname      string `yaml:"hostname"`
-		Username      string `yaml:"user"`
-		Password      string `yaml:"password"`
-		Port          int    `yaml:"port"`
-		SSLMode       string `yaml:"sslmode"`
+		Path          string `yaml:"dbpath"`
 		CSVPath       string `yaml:"csvpath"`
 		JSONPath      string `yaml:"jsonpath"`
 		MigrationPath string `yaml:"migrationpath"`

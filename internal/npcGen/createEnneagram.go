@@ -1,14 +1,12 @@
 package npcgen
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"math/rand"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
-	utilities "github.com/wholesomeow/npcGo/internal/utilities"
+	db "github.com/wholesomeow/npcGo/db"
 )
 
 func SelectEnneagram() int {
@@ -142,13 +140,12 @@ func CreateEnneagram(npc_object *NPCBase) error {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create preprocess enneagram variables
 	var enn_keywords string
@@ -160,7 +157,7 @@ func CreateEnneagram(npc_object *NPCBase) error {
 
 	log.Print("querying db for Enneagram data")
 	enneagram_query := fmt.Sprintf("SELECT * FROM generator.enneagram WHERE id='%d'", enneagram_id)
-	err = db.QueryRow(context.Background(), enneagram_query).Scan(
+	err = database.QueryRow(enneagram_query).Scan(
 		&npc_object.Enneagram.ID,
 		&npc_object.Enneagram.Archetype,
 		&enn_keywords,

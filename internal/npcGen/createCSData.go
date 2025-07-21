@@ -1,20 +1,20 @@
 package npcgen
 
 import (
-	"context"
+	"database/sql"
 	"log"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
+	db "github.com/wholesomeow/npcGo/db"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
-func getCSData(db *pgx.Conn, q_str string) ([][]string, error) {
+func getCSData(db *sql.DB, q_str string) ([][]string, error) {
 	data := [][]string{}
 
 	// Query for required data to generate NPC
 	log.Print("querying db for CS data")
-	rows, err := db.Query(context.Background(), q_str)
+	rows, err := db.Query(q_str)
 	if err != nil {
 		return data, err
 	}
@@ -69,19 +69,18 @@ func CreateCSData(npc_object *NPCBase) error {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create Personality Data Queries
 	cs_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='CS_Dimensions'"
 
 	// Create Personality Data Containers
-	cs_data, err := getCSData(db, cs_query)
+	cs_data, err := getCSData(database, cs_query)
 	if err != nil {
 		return err
 	}

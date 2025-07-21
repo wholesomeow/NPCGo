@@ -1,12 +1,11 @@
 package namegen
 
 import (
-	"context"
 	"log"
 	"strings"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
+	db "github.com/wholesomeow/npcGo/db"
 	"github.com/wholesomeow/npcGo/internal/utilities"
 )
 
@@ -38,18 +37,16 @@ func QueryNames() ([]string, error) {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return nil, err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Query for required data to generate NPC
-	var rows pgx.Rows
 	log.Print("querying db for names data")
-	rows, err = db.Query(context.Background(), "SELECT * FROM generator.names_fantasy")
+	rows, err := database.Query("SELECT * FROM generator.names_fantasy")
 	if err != nil {
 		return nil, err
 	}

@@ -1,7 +1,7 @@
 package npcgen
 
 import (
-	"context"
+	"database/sql"
 	"errors"
 	"log"
 	"math"
@@ -9,18 +9,17 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
+	db "github.com/wholesomeow/npcGo/db"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
-func getMICEData(db *pgx.Conn, q_str string) ([][]string, error) {
+func getMICEData(db *sql.DB, q_str string) ([][]string, error) {
 	data := [][]string{}
 
 	// Query for required data to generate NPC
-	var rows pgx.Rows
 	log.Print("querying db for MICE data")
-	rows, err := db.Query(context.Background(), q_str)
+	rows, err := db.Query(q_str)
 	if err != nil {
 		return data, err
 	}
@@ -60,19 +59,18 @@ func CreateMICEData(npc_object *NPCBase) error {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create Personality Data Query
 	mice_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='MICE'"
 
 	// Create Personality Data Container
-	mice_data, err := getMICEData(db, mice_query)
+	mice_data, err := getMICEData(database, mice_query)
 	if err != nil {
 		return err
 	}

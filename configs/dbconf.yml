@@ -1,19 +1,6 @@
-# Server Configurations
-server:
-  host: localhost
-  port: 8000
-  mode: dev-db
-  loglevel: info
-  network: npcg-network
-
 # Database Configurations
 database:
-  dbname: npcg
-  hostname: npcg-pg
-  user: postgres
-  password: secret
-  port: 5432
-  sslmode: disable
+  dbpath: db/npcgendata.db
   csvpath: data/raw/csv
   jsonpath: data/raw/json
   migrationpath: file://internal/sql/migrations

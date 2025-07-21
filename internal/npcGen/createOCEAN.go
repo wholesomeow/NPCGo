@@ -1,25 +1,25 @@
 package npcgen
 
 import (
-	"context"
+	"database/sql"
 	"errors"
 	"log"
 	"math"
 	"strconv"
 	"strings"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
+	db "github.com/wholesomeow/npcGo/db"
 	texttypes "github.com/wholesomeow/npcGo/internal/textGen/textTypes"
 	utilities "github.com/wholesomeow/npcGo/internal/utilities"
 )
 
-func getOCEANData(db *pgx.Conn, q_str string) ([][]string, error) {
+func getOCEANData(db *sql.DB, q_str string) ([][]string, error) {
 	data := [][]string{}
 
 	// Query for required data to generate NPC
 	log.Print("querying db for OCEAN data")
-	rows, err := db.Query(context.Background(), q_str)
+	rows, err := db.Query(q_str)
 	if err != nil {
 		return data, err
 	}
@@ -59,19 +59,18 @@ func CreateOCEANData(npc_object *NPCBase) error {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create Personality Data Query
 	ocean_query := "SELECT * FROM generator.cognitive_data_npc WHERE category='OCEAN'"
 
 	// Create Personality Data Container
-	ocean_data, err := getOCEANData(db, ocean_query)
+	ocean_data, err := getOCEANData(database, ocean_query)
 	if err != nil {
 		return err
 	}

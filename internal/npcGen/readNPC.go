@@ -1,13 +1,11 @@
 package npcgen
 
 import (
-	"context"
 	"fmt"
 	"log"
 
-	"github.com/jackc/pgx/v4"
 	config "github.com/wholesomeow/npcGo/configs"
-	utilities "github.com/wholesomeow/npcGo/internal/utilities"
+	db "github.com/wholesomeow/npcGo/db"
 )
 
 func ReadNPC(uuids map[string]string) (NPCBase, error) {
@@ -20,13 +18,12 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 	}
 
 	// Create DB Object
-	var db *pgx.Conn
-	db, err = utilities.ConnectDatabase(config)
+	database, err := db.ConnectDatabase(config)
 	if err != nil {
 		return npc_object, err
 	}
 
-	defer db.Close(context.Background())
+	defer database.Close()
 
 	// Create NPC Data Query
 	if id, ok := uuids["npc_id"]; ok {
@@ -34,7 +31,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 		// Scan data into NPC Object
 		log.Print("querying db for existing NPC data - MAIN")
-		err = db.QueryRow(context.Background(), npc_query).Scan(
+		err = database.QueryRow(npc_query).Scan(
 			&npc_object.UUID,
 			&npc_object.Name,
 			&npc_object.Pronouns,
@@ -63,7 +60,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - OCEAN")
-	err = db.QueryRow(context.Background(), ocean_query).Scan(
+	err = database.QueryRow(ocean_query).Scan(
 		&npc_object.OCEAN.UUID,
 		&npc_object.OCEAN.Aspect,
 		&npc_object.OCEAN.Degree,
@@ -80,7 +77,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - MICE")
-	err = db.QueryRow(context.Background(), mice_query).Scan(
+	err = database.QueryRow(mice_query).Scan(
 		&npc_object.MICE.UUID,
 		&npc_object.MICE.Aspect,
 		&npc_object.MICE.Degree,
@@ -97,7 +94,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - CS")
-	err = db.QueryRow(context.Background(), cs_query).Scan(
+	err = database.QueryRow(cs_query).Scan(
 		&npc_object.CS.UUID,
 		&npc_object.CS.Aspect,
 		&npc_object.CS.Traits,
@@ -114,7 +111,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - REI")
-	err = db.QueryRow(context.Background(), rei_query).Scan(
+	err = database.QueryRow(rei_query).Scan(
 		&npc_object.REI.UUID,
 		&npc_object.REI.Aspect,
 		&npc_object.REI.Degree,
@@ -131,7 +128,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - Enneagram")
-	err = db.QueryRow(context.Background(), enn_query).Scan(
+	err = database.QueryRow(enn_query).Scan(
 		&npc_object.Enneagram.UUID,
 		&npc_object.Enneagram.ID,
 		&npc_object.Enneagram.Archetype,
@@ -158,7 +155,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - NPC Type")
-	err = db.QueryRow(context.Background(), type_query).Scan(
+	err = database.QueryRow(type_query).Scan(
 		&npc_object.NPCType.UUID,
 		&npc_object.NPCType.Name,
 		&npc_object.NPCType.Description,
@@ -172,7 +169,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - NPC Body")
-	err = db.QueryRow(context.Background(), body_query).Scan(
+	err = database.QueryRow(body_query).Scan(
 		&npc_object.BodyType.UUID,
 		&npc_object.BodyType.Name,
 		&npc_object.BodyType.Enum,
@@ -185,7 +182,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - NPC Sex")
-	err = db.QueryRow(context.Background(), sex_query).Scan(
+	err = database.QueryRow(sex_query).Scan(
 		&npc_object.SexType.UUID,
 		&npc_object.SexType.Name,
 		&npc_object.SexType.Enum,
@@ -198,7 +195,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - NPC Gender")
-	err = db.QueryRow(context.Background(), gender_query).Scan(
+	err = database.QueryRow(gender_query).Scan(
 		&npc_object.GenderType.UUID,
 		&npc_object.GenderType.Name,
 		&npc_object.GenderType.Description,
@@ -212,7 +209,7 @@ func ReadNPC(uuids map[string]string) (NPCBase, error) {
 
 	// Scan data into NPC Object
 	log.Print("querying db for existing NPC data - NPC Orientation")
-	err = db.QueryRow(context.Background(), ori_query).Scan(
+	err = database.QueryRow(ori_query).Scan(
 		&npc_object.SexualOrientationType.UUID,
 		&npc_object.SexualOrientationType.Name,
 		&npc_object.SexualOrientationType.Description,

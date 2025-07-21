@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS generator.cognitive_data_npc;
