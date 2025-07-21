@@ -34,7 +34,50 @@ Once the NPC dataset is compiled, it is referenced against local databases and W
 
 # Install
 
-TBD
+Download the latest release for your platform: [Linux](https://github.comw/wholesomeow/NPCGo/releases/latest/download/npcgen-linux.zip) | [Windows](https://github.comw/wholesomeow/NPCGo/releases/latest/download/npcgen-windows.zip)
+
+To Install:
+
+Linux/macOS
+```
+unzip npcgen-linux.zip
+chmod +x npcgen-linux
+sudo mv npcgen-linux /usr/local/bin/npcgen
+```
+
+Windows (PowerShell)
+```
+Expand-Archive -Path .\npcgen-windows.zip -DestinationPath .
+Rename-Item .\npcgen.exe npcgen.exe
+Move-Item npcgen.exe C:\Windows\
+```
+
+Once installed, run:
+```
+npcgen help
+```
+
+Build from Source (Go > 1.20)
+Ensure [Go is installed](https://golang.org/dl):
+```
+git clone https://github.com/youruser/yourrepo.git
+cd yourrepo
+./build.sh main-build
+```
+
+The binary will be created in the project root as `npcgen`.
+
+# Directory Overview
+
+```
+.
+├── cmd/            # CLI entrypoints
+├── db/             # Migrations and seed data
+├── internal/       # Application logic
+├── scripts/        # Build and dev tooling
+├── build.sh        # Cross-platform build script
+└── README.md
+```
 
 # Usage
 
