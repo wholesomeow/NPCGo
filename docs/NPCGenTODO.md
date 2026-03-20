@@ -34,22 +34,22 @@
 
 ## 3. Correctness Bugs
 
-- [ ] **Fix `makeBMI` boundary logic in `createNPCBody.go`** — The conditions use `||` where `&&` is needed:
+- [x] **Fix `makeBMI` boundary logic in `createNPCBody.go`** — The conditions use `||` where `&&` is needed:
   - `18.5 < BMI || BMI <= 24.9` should be `18.5 < BMI && BMI <= 24.9`
   - `25 < BMI || BMI <= 29.29` should be `25 < BMI && BMI <= 29.29`
   As written, every BMI value matches the second condition because `||` short-circuits incorrectly. This means the BMI bucket is almost always wrong.
 
-- [ ] **Fix `CreateCSData` — coords set after they are used** — `coordsToSelection` is called with `npc_object.CS.Coords` before those coords are populated, meaning `Coords` is always `[0, 0]` on first generation. The coord generation (`utilities.RandomRange(...)`) happens *after* the selection. Swap the order.
+- [x] **Fix `CreateCSData` — coords set after they are used** — `coordsToSelection` is called with `npc_object.CS.Coords` before those coords are populated, meaning `Coords` is always `[0, 0]` on first generation. The coord generation (`utilities.RandomRange(...)`) happens *after* the selection. Swap the order.
 
-- [ ] **Fix `CreateOrientationType` — writes UUID to wrong field** — In `createNPCSexOri.go`, the UUID is written to `npc_object.NPCType.UUID` instead of `npc_object.SexualOrientationType.UUID`. This silently corrupts the NPC type UUID on every generation.
+- [x] **Fix `CreateOrientationType` — writes UUID to wrong field** — In `createNPCSexOri.go`, the UUID is written to `npc_object.NPCType.UUID` instead of `npc_object.SexualOrientationType.UUID`. This silently corrupts the NPC type UUID on every generation.
 
-- [ ] **Fix `BodTransition` copy-paste bug in `bodyTypeEnum.go`** — The cases for `"LARGE"`, `"REEDY"`, `"SOFT"`, and `"PLUMP"` all return `FAT` instead of their correct enum values. This is clearly a copy-paste error.
+- [x] **Fix `BodTransition` copy-paste bug in `bodyTypeEnum.go`** — The cases for `"LARGE"`, `"REEDY"`, `"SOFT"`, and `"PLUMP"` all return `FAT` instead of their correct enum values. This is clearly a copy-paste error.
 
-- [ ] **Fix `SelectEnneagram` range in `createEnneagram.go`** — `rand.Intn(8) + 1` produces values 1–8. The Enneagram has 9 types. Type 9 is never generated. Change to `rand.Intn(9) + 1`.
+- [x] **Fix `SelectEnneagram` range in `createEnneagram.go`** — `rand.Intn(8) + 1` produces values 1–8. The Enneagram has 9 types. Type 9 is never generated. Change to `rand.Intn(9) + 1`.
 
-- [ ] **Fix `CreateEnneaLODLevel` range** — Same issue: `rand.Intn(8) + 1` produces 1–8 but `enn_LOD` is a `[9]string` (indices 0–8). Index 0 is never selected, and the intent of the LOD system is unclear. Decide on 0-indexed or 1-indexed and be consistent.
+- [x] **Fix `CreateEnneaLODLevel` range** — Same issue: `rand.Intn(8) + 1` produces 1–8 but `enn_LOD` is a `[9]string` (indices 0–8). Index 0 is never selected, and the intent of the LOD system is unclear. Decide on 0-indexed or 1-indexed and be consistent.
 
-- [ ] **Fix `CreatePronouns` random selection** — `rand.Intn(len(enums.Pronouns)) + 1` can produce index 4 when `Pronouns` has 3 entries (indices 1–3), causing a map miss and returning a nil slice. Clamp to the actual map size.
+- [x] **Fix `CreatePronouns` random selection** — `rand.Intn(len(enums.Pronouns)) + 1` can produce index 4 when `Pronouns` has 3 entries (indices 1–3), causing a map miss and returning a nil slice. Clamp to the actual map size.
 
 - [ ] **Fix `coordsToSelection` missing case** — When both coords are exactly `0`, the function returns `0` via the `<= 0 && <= 0` branch. When one is exactly `0` it could fall into multiple branches depending on order. Define explicit behavior for the zero boundary.
 
