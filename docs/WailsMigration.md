@@ -4,7 +4,7 @@
 
 - [x] Install Wails CLI (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
 - [x] Verify Wails system dependencies are met (platform-specific: WebView2 on Windows, WebKit on Linux/macOS)
-- [ ] Decide on a frontend framework for the UI (Svelte, React, Vue, or vanilla JS — Wails supports all via templates)
+- [x] Decide on a frontend framework for the UI (Svelte, React, Vue, or vanilla JS — Wails supports all via templates)
 - [x] Install Node.js / npm (required by Wails for frontend build tooling)
 
 ---

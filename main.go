@@ -56,29 +56,29 @@ func startAPIServer() {
 
 func printHelp() {
 	helpText := `
-				Usage:
-				npcgen <command>
+Usage:
+npcgen <command>
 
-				Available Commands:
-				server            Start the NPC API server
-				init              Initialize the database (create tables, schemas, etc.)
-				version           Print the current version of npcgen
-				help              Show this help message
+Available Commands:
+server            Start the NPC API server
+init              Initialize the database (create tables, schemas, etc.)
+version           Print the current version of npcgen
+help              Show this help message
 
-				Examples:
-				npcgen server
-				npcgen init
-				npcgen version
+Examples:
+npcgen server
+npcgen init
+npcgen version
 
-				Use "npcgen help" for more information about a command.
-				`
+Use "npcgen help" for more information about a command.
+`
 
 	fmt.Fprintln(os.Stderr, helpText)
 }
 
 func main() {
 	log.Print("Staring NPCGo Application")
-	
+
 	if len(os.Args) < 2 {
 		printHelp()
 		return
