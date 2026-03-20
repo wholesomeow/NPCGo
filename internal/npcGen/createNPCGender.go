@@ -31,7 +31,7 @@ func CreateGenderType(npc_object *NPCBase) error {
 func CreatePronouns(npc_object *NPCBase) error {
 	log.Print("selecting NPC Pronouns")
 	// TODO(wholesomeow): Rework better random selection
-	r_val := rand.Intn(len(enums.Pronouns)) + 1
+	r_val := rand.Intn(len(enums.Pronouns))
 	switch npc_object.GenderType.Enum {
 	case 1:
 		npc_object.Pronouns = enums.Pronouns[enums.Neutral_Pronouns]
