@@ -11,7 +11,7 @@ func CreateOrientationType(npc_object *NPCBase) error {
 	var err error
 
 	log.Print("generating NPC Sexual Orientation UUID")
-	npc_object.NPCType.UUID, err = CreateUUIDv4()
+	npc_object.SexualOrientationType.UUID, err = CreateUUIDv4()
 	if err != nil {
 		return err
 	}
