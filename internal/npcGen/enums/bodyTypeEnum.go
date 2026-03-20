@@ -67,13 +67,13 @@ func BodTransition(bod_state BodyType, desired_state string) BodyType {
 		case "BIGGER":
 			return BIGGER
 		case "LARGE":
-			return FAT
+			return LARGE
 		case "REEDY":
-			return FAT
+			return REEDY
 		case "SOFT":
-			return FAT
+			return SOFT
 		case "PLUMP":
-			return FAT
+			return PLUMP
 		case "FAT":
 			return FAT
 		default:
