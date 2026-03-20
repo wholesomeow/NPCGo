@@ -11,7 +11,7 @@ import (
 
 func SelectEnneagram() int {
 	log.Print("selecting NPC Enneagram")
-	return rand.Intn(8) + 1
+	return rand.Intn(9) + 1
 }
 
 // func CreateEnneaArch(id int, data EnneagramData) string {
