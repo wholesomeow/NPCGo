@@ -91,14 +91,14 @@ func CreateCSData(npc_object *NPCBase) error {
 		return err
 	}
 
+	log.Print("generating Cognitive Science Coordiantes for NPC")
+	npc_object.CS.Coords[0] = utilities.RandomRange(-100, 100)
+	npc_object.CS.Coords[1] = utilities.RandomRange(-100, 100)
+
 	log.Print("generating Cognitive Science Aspect for NPC")
 	idx := coordsToSelection(npc_object.CS.Coords)
 	selection := cs_data[idx]
 	npc_object.CS.Aspect = selection[1]
-
-	log.Print("generating Cognitive Science Coordiantes for NPC")
-	npc_object.CS.Coords[0] = utilities.RandomRange(-100, 100)
-	npc_object.CS.Coords[1] = utilities.RandomRange(-100, 100)
 
 	// TODO(wholesomeow): Create the logic for this
 	log.Print("generating Cognitive Science Traits for NPC")
