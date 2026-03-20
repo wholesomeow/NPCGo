@@ -91,7 +91,7 @@ func SelectEnneagram() int {
 func CreateEnneaLODLevel() int {
 	log.Print("selecting Enneagram Level of Health")
 	// TODO(wholesomeow): Change this from random to normal distribution
-	return rand.Intn(8) + 1
+	return rand.Intn(9) + 1
 }
 
 func CreateEnneaCLOD(LOD_list *[9]string, LODLevel int) string {
