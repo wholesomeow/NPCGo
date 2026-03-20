@@ -12,9 +12,9 @@ func makeBMI(BMI float64) int {
 	log.Print("creating NPC BMI")
 	if BMI <= 18.5 {
 		return 1
-	} else if 18.5 < BMI || BMI <= 24.9 {
+	} else if 18.5 < BMI && BMI <= 24.9 {
 		return 2
-	} else if 25 < BMI || BMI <= 29.29 {
+	} else if 25 < BMI && BMI <= 29.29 {
 		return 3
 	} else {
 		return 4
