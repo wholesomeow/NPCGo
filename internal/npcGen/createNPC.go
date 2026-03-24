@@ -7,91 +7,90 @@ import (
 	textgen "github.com/wholesomeow/npcGo/internal/textGen"
 )
 
-func CreateNPC(name_version int) (NPCBase, error) {
+func (npc_object *NPCBase) CreateNPC(name_version int) error {
 	log.Print("start of NPC creation")
-	npc_object := NPCBase{}
 	var err error
 
 	log.Print("generating NPC UUID")
 	npc_object.UUID, err = CreateUUIDv4()
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// Create NPC Name
 	npc_object.Name, err = namegen.CreateName(name_version)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// ----- GENERATE PERSONALITY DATA -----
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
 	// Generate CS Base Data
-	err = CreateCSData(&npc_object)
+	err = CreateCSData(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// Generate REI Base Data
-	err = CreateREIData(&npc_object)
+	err = CreateREIData(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// Generate OCEAN Base Data
-	err = CreateOCEANData(&npc_object)
+	err = CreateOCEANData(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// Generate Enneagram Data
-	err = CreateEnneagram(&npc_object)
+	err = CreateEnneagram(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// Generate MICE Base Data
-	err = CreateMICEData(&npc_object)
+	err = CreateMICEData(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// ----- GENERATE PHYSICALITY DATA -----
 	// TODO(wholesomeow): Implement NPC options data for optional user-driven configuration overrides
 	log.Print("setting NPC Type values from Enum")
-	err = CreateNPCType(&npc_object)
+	err = CreateNPCType(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("setting NPC Body Type values from Enum")
-	err = CreateBodyType(&npc_object)
+	err = CreateBodyType(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("setting NPC Sex values from Enum")
-	err = CreateSexType(&npc_object)
+	err = CreateSexType(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("setting NPC Gender values from Enum")
-	err = CreateGenderType(&npc_object)
+	err = CreateGenderType(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("setting NPC Pronoun values from Enum")
-	err = CreatePronouns(&npc_object)
+	err = CreatePronouns(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("setting NPC Sexual Orientation values from Enum")
-	err = CreateOrientationType(&npc_object)
+	err = CreateOrientationType(npc_object)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	// ----- GENERATE TEXT -----
@@ -103,9 +102,9 @@ func CreateNPC(name_version int) (NPCBase, error) {
 	)
 	npc_object.OCEAN.Text, err = textgen.SimpleSentenceBuilder(OCEANTextData)
 	if err != nil {
-		return npc_object, err
+		return err
 	}
 
 	log.Print("NPC generation finished")
-	return npc_object, nil
+	return nil
 }

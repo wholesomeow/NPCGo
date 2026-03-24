@@ -38,8 +38,8 @@
 
 ## 5. Database Handling
 
-- [ ] Decide whether to keep SQLite (good for a local desktop app) or drop PostgreSQL support — PostgreSQL is unlikely to be useful for a standalone desktop tool
-- [ ] Remove `github.com/jackc/pgx/v4` and related `pgconn`, `pgtype`, `pgproto3` packages from `go.mod` if PostgreSQL is being dropped
+- [x] Decide whether to keep SQLite (good for a local desktop app) or drop PostgreSQL support — PostgreSQL is unlikely to be useful for a standalone desktop tool
+- [x] Remove `github.com/jackc/pgx/v4` and related `pgconn`, `pgtype`, `pgproto3` packages from `go.mod` if PostgreSQL is being dropped
 - [ ] Ensure the SQLite database file path resolves correctly for a packaged desktop app (use Wails' runtime to get the app data directory rather than a hardcoded relative path)
 - [ ] Update `db/` migrations and seed scripts to only target SQLite if PostgreSQL is removed
 
